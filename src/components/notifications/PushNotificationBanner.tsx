@@ -136,7 +136,7 @@ export const PushNotificationBanner: React.FC<PushNotificationBannerProps> = ({
       {/* 1. Main Floating Push Notification Alert Card */}
       <aside
         aria-label="Push Notification Alert"
-        className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 animate-in fade-in slide-in-from-bottom-5 duration-300"
+        className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 animate-in fade-in slide-in-from-bottom-5 duration-300"
       >
         <div className="bg-slate-900/95 backdrop-blur-md text-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-emerald-500/40 relative overflow-hidden">
           {/* Ambient Glow */}

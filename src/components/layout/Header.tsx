@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, ShieldCheck, LogOut, GraduationCap, X, ArrowLeft, Bell } from 'lucide-react';
+import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, ShieldCheck, LogOut, GraduationCap, X, ArrowLeft } from 'lucide-react';
 import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
@@ -132,12 +132,12 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-3">
           
           {/* 1. App Identity (Flexible with max-w on narrow screens to prevent pushing right hub off-screen) */}
-          <div className="flex items-center gap-2.5 min-w-0 shrink">
+          <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 shrink-0">
             <Link href="/" className="shrink-0 cursor-pointer block hover:scale-105 transition-transform" aria-label="Citzos Home">
               <BrandIconSvg sizePx={38} className="w-8 h-8 sm:w-10 sm:h-10 shadow-xs" />
             </Link>
             <div className="min-w-0">
-              <Link href="/" className="flex items-center gap-1.5 hover:opacity-90 transition-opacity">
+              <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
                 <span className="font-black tracking-tight text-base sm:text-xl font-sans text-slate-900 dark:text-white">
                   CIT<span className="text-emerald-600">ZOS</span>
                 </span>
@@ -171,20 +171,35 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </div>
 
-          {/* 3. Action Hub (Compact 32px targets on mobile, 0 overflow, profile button always visible) */}
-          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-            {/* Mobile Search Icon Button */}
+          {/* 3. Action Hub (Compact targets on mobile, 0 overflow, clean ordered pills) */}
+          <div className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-initial justify-end">
+            {/* Mobile Search Button (Stretched Pill) */}
             <button
               type="button"
               onClick={() => setIsMobileSearchOpen(true)}
-              className="sm:hidden h-8 w-8 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 flex items-center justify-center text-slate-600 transition-all cursor-pointer shrink-0"
+              className="sm:hidden flex-1 min-w-[58px] max-w-[88px] h-8 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 flex items-center justify-center gap-1 text-slate-700 transition-all cursor-pointer shrink shadow-2xs"
               title={t('search_placeholder')}
               aria-label={t('search_placeholder')}
             >
-              <Search className="w-3.5 h-3.5 text-slate-500" />
+              <Search className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+              <span className="text-[11px] font-black text-slate-800 whitespace-nowrap tracking-tight">
+                {language === 'hi' ? 'खोजें' : 'Search'}
+              </span>
             </button>
 
-            {/* Language Switcher Dropdown - Hidden on mobile, accessible in drawer */}
+            {/* Skills & Video Learning Navigation Link (Stretched Pill on Mobile, Pill on Desktop) */}
+            <Link
+              href="/skills"
+              className="flex-1 sm:flex-initial min-w-[70px] sm:min-w-0 max-w-[98px] sm:max-w-none h-8 sm:h-9 px-1.5 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
+              title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
+            >
+              <GraduationCap className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+              <span className="whitespace-nowrap tracking-tight font-black">
+                {language === 'hi' ? 'कौशल' : 'Skill Hub'}
+              </span>
+            </Link>
+
+            {/* Language Switcher Dropdown - Desktop only */}
             <div className="relative hidden md:inline-flex shrink-0">
               <button
                 onClick={() => {
@@ -232,21 +247,11 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Helpline Navigation Link */}
             <Link
               href="/helpline"
-              className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-900 text-xs font-bold border border-red-200 transition-all shrink-0"
+              className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-900 text-xs font-bold border border-red-200 transition-all shrink-0 shadow-2xs"
               title={language === 'hi' ? '24x7 हेल्पलाइन' : '24x7 Helplines'}
             >
               <PhoneCall className="w-3.5 h-3.5 text-red-700 shrink-0" />
               <span className="hidden md:inline ml-1.5">{language === 'hi' ? 'हेल्पलाइन' : 'Helpline'}</span>
-            </Link>
-
-            {/* Skills & Video Learning Navigation Link */}
-            <Link
-              href="/skills"
-              className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold text-xs transition-all shrink-0 shadow-2xs"
-              title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
-            >
-              <GraduationCap className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-emerald-700 shrink-0" />
-              <span className="hidden md:inline ml-1.5">{language === 'hi' ? 'सीखें (Skills)' : 'Skills Hub'}</span>
             </Link>
 
             {/* Favourites / Saved Navigation Button */}
@@ -263,21 +268,6 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               )}
             </Link>
-
-            {/* Live Notification Alerts Toggle Button (Works on iPhone, Android, Laptop, Desktop) */}
-            <button
-              type="button"
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent('open_notification_prompt'));
-              }}
-              className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-950 border border-slate-200 hover:border-emerald-300 font-bold text-xs transition-all shrink-0 relative cursor-pointer shadow-2xs"
-              title={language === 'hi' ? 'अवसर नोटिफिकेशन अलर्ट' : 'Opportunity Notification Alerts'}
-              aria-label="Notification Alerts"
-            >
-              <Bell className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span className="hidden md:inline ml-1.5">{language === 'hi' ? 'अलर्ट' : 'Alerts'}</span>
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            </button>
 
             {/* Single Profile Button (Zero Overflow on Mobile) */}
             <button

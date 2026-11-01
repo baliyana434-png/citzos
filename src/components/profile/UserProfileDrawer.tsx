@@ -6,6 +6,7 @@ import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import { isCitizenSubscribed } from '@/lib/subscriptionValidator';
 import { GoogleAuthService, getGoogleAuthErrorMessage } from '@/services/googleAuth';
+import { pushNotificationService } from '@/services/pushNotification';
 import {
   X,
   ShieldCheck,
@@ -29,6 +30,7 @@ import {
   ArrowRight,
   Sun,
   Moon,
+  Bell,
 } from 'lucide-react';
 
 interface UserProfileDrawerProps {
@@ -70,6 +72,71 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState<boolean>(false);
   const [googleLoginError, setGoogleLoginError] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState<boolean>(false);
+  const [isNotifLoading, setIsNotifLoading] = useState<boolean>(false);
+  const [notifMessage, setNotifMessage] = useState<string | null>(null);
+
+  // Sync notification status when drawer opens
+  useEffect(() => {
+    if (!isOpen || typeof window === 'undefined') return;
+    const perm = pushNotificationService.getPermissionStatus();
+    const stored = localStorage.getItem('citizen_web_push_enabled');
+    if (perm === 'granted' && stored !== 'false') {
+      setIsNotificationsEnabled(true);
+    } else {
+      setIsNotificationsEnabled(false);
+    }
+    setNotifMessage(null);
+  }, [isOpen]);
+
+  const handleToggleNotifications = async () => {
+    if (isNotifLoading) return;
+    setNotifMessage(null);
+
+    if (isNotificationsEnabled) {
+      // User wants to turn OFF notifications
+      localStorage.setItem('citizen_web_push_enabled', 'false');
+      setIsNotificationsEnabled(false);
+      setNotifMessage(language === 'hi' ? 'अलर्ट बंद कर दिए गए हैं' : 'Alerts disabled');
+      setTimeout(() => setNotifMessage(null), 3500);
+      return;
+    }
+
+    // User wants to turn ON notifications
+    setIsNotifLoading(true);
+    try {
+      const res = await pushNotificationService.requestPermission({
+        email: profile?.email || '',
+        phone: profile?.phoneNumber || '',
+        citizenId: profile?.id || '',
+        country: country || 'IN',
+      });
+
+      if (res.success) {
+        setIsNotificationsEnabled(true);
+        localStorage.setItem('citizen_web_push_enabled', 'true');
+        await pushNotificationService.sendLocalTestNotification(language === 'hi' ? 'hi' : 'en');
+        setNotifMessage(language === 'hi' ? 'लाइव अलर्ट सक्रिय हो गए हैं' : 'Live alerts activated');
+        setTimeout(() => setNotifMessage(null), 3500);
+      } else {
+        setIsNotificationsEnabled(false);
+        localStorage.setItem('citizen_web_push_enabled', 'false');
+        if (res.permission === 'denied') {
+          setNotifMessage(
+            language === 'hi'
+              ? 'ब्राउज़र सेटिंग्स में सूचनाएं ब्लॉक हैं। कृपया सेटिंग्स में अनुमति दें।'
+              : 'Notifications blocked in browser settings. Please allow in site permissions.'
+          );
+        } else {
+          setNotifMessage(res.error || (language === 'hi' ? 'अनुमति नहीं मिली' : 'Permission dismissed'));
+        }
+      }
+    } catch (err: any) {
+      setNotifMessage(err?.message || 'Error configuring notifications');
+    } finally {
+      setIsNotifLoading(false);
+    }
+  };
 
   // Sync theme with document class / localStorage
   useEffect(() => {
@@ -526,6 +593,65 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               </div>
             </>
           )}
+
+          {/* Live Opportunity Push Notifications Toggle */}
+          <div className="space-y-2">
+            <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between transition-colors shadow-2xs">
+              <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                  isNotificationsEnabled 
+                    ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400' 
+                    : 'bg-slate-200 dark:bg-slate-700/80 text-slate-500 dark:text-slate-400'
+                }`}>
+                  <Bell className="w-4 h-4 shrink-0" />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-extrabold text-slate-900 dark:text-white truncate">
+                      {language === 'hi' ? 'अवसर नोटिफिकेशन अलर्ट' : 'Opportunity Alerts'}
+                    </span>
+                    {isNotificationsEnabled && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    )}
+                  </div>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                    {isNotificationsEnabled
+                      ? (language === 'hi' ? 'सक्रिय • नए अवसर मिलते ही तुरंत अलर्ट' : 'Active • Instant alerts on new schemes')
+                      : (language === 'hi' ? 'बंद • रियल-टाइम अलर्ट पाने के लिए ऑन करें' : 'Disabled • Turn on for real-time alerts')}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isNotificationsEnabled}
+                disabled={isNotifLoading}
+                onClick={handleToggleNotifications}
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 ${
+                  isNotificationsEnabled ? 'bg-emerald-600' : 'bg-slate-300 dark:bg-slate-700'
+                }`}
+              >
+                <span className="sr-only">Toggle notification alerts</span>
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
+                    isNotificationsEnabled ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                >
+                  {isNotifLoading && (
+                    <Loader2 className="w-3 h-3 text-emerald-600 animate-spin" />
+                  )}
+                </span>
+              </button>
+            </div>
+
+            {notifMessage && (
+              <div className="text-[11px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-2 animate-in fade-in">
+                <AlertCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                <span className="leading-snug">{notifMessage}</span>
+              </div>
+            )}
+          </div>
 
           {/* Theme Switcher Section (Light / Dark) */}
           <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between transition-colors shadow-2xs">
