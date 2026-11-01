@@ -10,48 +10,51 @@ export interface GlowingPendulumBellProps {
 
 export const GlowingPendulumBell: React.FC<GlowingPendulumBellProps> = ({
   className = '',
+  isMobileCompact = false,
 }) => {
   return (
     <div
-      className={`${styles['bell-stage-wrapper']} ${className}`}
+      className={`${styles.bellStageWrapper} ${isMobileCompact ? styles.mobileCompact : ''} ${className}`}
       aria-hidden="true"
     >
-      <div className={styles['bell-container']}>
-        <div className={styles['rope']} />
-        <div className={styles['bell-top']} />
+      {/* Ambient Radial Glow Pool that casts warm illumination onto surrounding content */}
+      <div className={styles.ambientGlowPool} />
 
-        <div className={styles['bell-base']} />
-        <div className={`${styles['bell-base']} ${styles['bell-base-2']}`} />
-        <div className={styles['shadow-l1']} />
-        <div className={styles['shadow-l2']} />
-        <div className={styles['left-glow']} />
-        <div className={styles['left-glow2']} />
-        <div className={styles['r-glow']} />
-        <div className={styles['r-glow2']} />
-        <div className={styles['mid-ring']} />
-        <div className={`${styles['mid-ring']} ${styles['mid-ring-small']}`} />
+      {/* Continuous Pendulum Bell Lantern */}
+      <div className={styles.bellContainer}>
+        <div className={styles.rope} />
+        <div className={styles.bellTop} />
 
-        <div className={styles['glow']} />
-        <div className={styles['glow2']} />
+        <div className={styles.bellBase} />
+        <div className={`${styles.bellBase} ${styles.bellBaseSecondary}`} />
+        <div className={styles.shadowL1} />
+        <div className={styles.shadowL2} />
+        <div className={styles.leftGlow} />
+        <div className={styles.leftGlow2} />
+        <div className={styles.rightGlow} />
+        <div className={styles.rightGlow2} />
+        <div className={styles.midRing} />
+        <div className={`${styles.midRing} ${styles.midRingSmall}`} />
 
-        <div className={styles['bell-buff-t']} />
-        <div className={styles['bell-buff']} />
+        <div className={styles.glow} />
+        <div className={styles.glow2} />
 
-        <div className={styles['bell-btm']} />
-        <div className={styles['bell-btm2']} />
+        <div className={styles.bellBuffTop} />
+        <div className={styles.bellBuff} />
 
-        <div className={styles['bell-ring-container']}>
-          <div className={styles['bell-ring']} />
-          <div className={styles['bell-rays']} />
+        <div className={styles.bellBottom} />
+        <div className={styles.bellBottomRimGlow} />
+
+        <div className={styles.bellRingContainer}>
+          <div className={styles.bellRingClapper} />
+          <div className={styles.bellRays} />
         </div>
 
-        <div className={styles['volumetric']}>
-          <div className={styles['vl']} />
-          <div className={styles['vr']} />
+        <div className={styles.volumetricBeam}>
+          <div className={styles.vl} />
+          <div className={styles.vr} />
         </div>
       </div>
-
-      <div className={styles['grain']} />
     </div>
   );
 };
