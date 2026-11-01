@@ -1,77 +1,76 @@
 .bellStageWrapper {
   position: relative;
   width: 100%;
-  height: 260px;
+  height: 290px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
   pointer-events: none;
   font-size: calc(var(--size) * 0.01);
-  --size: 240px;
+  --size: 270px;
   --base-clr: #b7b5b4;
-  --degofrot: 1.6;
-  margin-bottom: -10px;
+  --degofrot: 0.8;
+  margin-bottom: -15px;
+  isolation: isolate;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @media (min-width: 640px) {
   .bellStageWrapper {
-    height: 290px;
-    --size: 270px;
+    height: 310px;
+    --size: 290px;
   }
 }
 
 @media (min-width: 1024px) {
   .bellStageWrapper {
-    height: 320px;
-    --size: 300px;
+    height: 330px;
+    --size: 310px;
     margin-bottom: -20px;
   }
 }
 
 .mobileCompact {
-  height: 190px !important;
-  --size: 180px !important;
-  --degofrot: 1.3 !important;
+  height: 270px !important;
+  --size: 250px !important;
+  --degofrot: 0.8 !important;
   margin-bottom: -15px !important;
 }
 
-/* Ambient Radial Glow Pool that casts onto the surroundings in both light & dark themes */
+/* Ambient Radial Glow Pool that casts warm illumination onto surrounding content */
 .ambientGlowPool {
   position: absolute;
-  width: 380px;
-  height: 320px;
+  width: min(380px, 92vw);
+  height: 300px;
   border-radius: 50%;
   top: 35%;
   left: 50%;
   transform: translate(-50%, -20%);
   background: radial-gradient(
     ellipse at center,
-    rgba(254, 215, 170, 0.45) 0%,
-    rgba(251, 146, 60, 0.25) 30%,
-    rgba(234, 88, 12, 0.12) 55%,
-    rgba(217, 119, 6, 0) 75%
+    rgba(254, 215, 170, 0.25) 0%,
+    rgba(251, 146, 60, 0.12) 30%,
+    rgba(234, 88, 12, 0.05) 55%,
+    transparent 75%
   );
-  filter: blur(45px);
+  filter: blur(40px);
   pointer-events: none;
   z-index: 1;
-}
-
-.mobileCompact .ambientGlowPool {
-  width: 270px;
-  height: 220px;
-  filter: blur(35px);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 :global(.dark) .ambientGlowPool {
   background: radial-gradient(
     ellipse at center,
-    rgba(254, 215, 170, 0.35) 0%,
-    rgba(251, 146, 60, 0.22) 32%,
-    rgba(234, 88, 12, 0.1) 58%,
-    rgba(217, 119, 6, 0) 80%
+    rgba(254, 215, 170, 0.2) 0%,
+    rgba(251, 146, 60, 0.1) 32%,
+    rgba(234, 88, 12, 0.04) 58%,
+    transparent 80%
   );
-  filter: blur(55px);
+  filter: blur(45px);
 }
 
 .bellContainer {
@@ -84,7 +83,7 @@
   top: 0;
   bottom: 0;
   margin: auto;
-  transform-origin: 50% -30vh;
+  transform-origin: 50% -50vh;
   animation: pendulumSwing 5s ease-in-out infinite;
   z-index: 5;
 }
@@ -115,7 +114,7 @@
 }
 
 .rope {
-  height: 65vh;
+  height: 60vh;
   width: 2em;
   transform: translate3d(0, -52%, 0);
   background: linear-gradient(90deg, #2d54744d 0%, #000b 30%, transparent 100%),
@@ -236,7 +235,7 @@
   width: 100%;
   height: 100%;
   filter: brightness(1) blur(0.3em);
-  opacity: 0.12;
+  opacity: 0.1;
 }
 
 .glow2::before {
@@ -392,11 +391,11 @@
   border-radius: 50%;
   transform: translate3d(0, 24em, 0);
   background: #fffff6;
-  box-shadow: 0 0 1.2em 0.8em #ffe9d4, -0.8em 0.2em 2.2em 1.2em #cca37f,
-    -5.4em -0.6em 3.2em -1em #ce6e1abb, 6em -0.6em 3.2em -1em #ce6e1abb,
+  box-shadow: 0 0 1em 0.6em #ffe9d4, -0.8em 0.2em 2em 1em #cca37f,
+    -5.4em -0.6em 3em -1em #ce6e1abb, 6em -0.6em 3em -1em #ce6e1abb,
     inset 0em 30.3em 0.3em -30em #c7962d, inset 0 -2em 2em -2em #ffe9d4,
     inset 0em -1em 2em 1em #ce6e1a66;
-  filter: brightness(1.15);
+  filter: brightness(1);
 }
 
 .bellRingContainer {
@@ -444,7 +443,7 @@
     transparent 0.6%,
     #fff2 0.8%
   );
-  animation: radiateAnimation 1.2s linear infinite;
+  animation: radiateAnimation 1s linear infinite;
 }
 
 @keyframes radiateAnimation {
@@ -460,7 +459,7 @@
   width: 98%;
   height: 224%;
   transform: translate3d(0, 124em, 0);
-  opacity: 0.35;
+  opacity: 0.22;
   pointer-events: none;
 }
 
@@ -469,7 +468,7 @@
   height: 100%;
   transform-origin: 50% 20em;
   transform: rotate(22deg);
-  box-shadow: inset 40em 0 22em -20em #ffe9d455;
+  box-shadow: inset 40em 0 20em -20em #fff1;
 }
 
 .volumetricBeam .vr {
@@ -477,5 +476,5 @@
   height: 100%;
   transform-origin: 50% 20em;
   transform: rotate(-22deg);
-  box-shadow: inset -40em 0 22em -20em #ffe9d455;
+  box-shadow: inset -40em 0 20em -20em #fff1;
 }

@@ -1893,8 +1893,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               backfaceVisibility: 'hidden',
             }}
           >
-            {/* Hyper-realistic Glowing Pendulum Bell Lantern (Desktop) */}
-            <div className="w-full hidden lg:flex justify-start -mb-4 pointer-events-none">
+            {/* Hyper-realistic Glowing Pendulum Bell Lantern */}
+            <div className="w-full flex justify-center lg:justify-start -mb-4 pointer-events-none">
               <GlowingPendulumBell />
             </div>
 
@@ -1977,10 +1977,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           {/* Right Column on Desktop / Top on Mobile: The Auth Card */}
           <div className="w-full lg:w-1/2 flex flex-col items-center justify-center order-1 lg:order-2">
-            {/* Mobile Hanging Bell - Positioned on Top of the Login Box on Mobile Devices */}
-            <div className="w-full flex justify-center lg:hidden -mb-4 pointer-events-none">
-              <GlowingPendulumBell isMobileCompact={true} />
-            </div>
             {renderAuthCard()}
           </div>
         </main>
@@ -2006,13 +2002,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-4 bg-slate-950/75 backdrop-blur-md">
       <div className="fixed inset-0" onClick={() => { setIsLoading(false); onClose(); }} />
-      <div className="relative z-10 w-full max-w-lg flex flex-col items-center">
-        {/* Glowing Bell hanging above the modal card */}
-        <div className="w-full flex justify-center -mb-6 pointer-events-none">
-          <GlowingPendulumBell isMobileCompact={true} />
-        </div>
-        {renderAuthCard()}
-      </div>
+      {renderAuthCard()}
     </div>
   );
 };
