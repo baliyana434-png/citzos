@@ -11,7 +11,6 @@ import {
   getGoogleRedirectResultSafe,
 } from '@/services/googleAuth';
 import { BrandIconSvg } from '@/components/common/BrandLogo';
-import { GlowingPendulumBell } from './GlowingPendulumBell';
 import {
   validateRealName,
   validateRealDob,
@@ -1893,11 +1892,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               backfaceVisibility: 'hidden',
             }}
           >
-            {/* Hyper-realistic Glowing Pendulum Bell Lantern */}
-            <div className="w-full flex justify-center lg:justify-start -mb-4 pointer-events-none">
-              <GlowingPendulumBell />
-            </div>
-
             <div className="relative z-20 space-y-4">
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                 {language === 'hi' ? (
