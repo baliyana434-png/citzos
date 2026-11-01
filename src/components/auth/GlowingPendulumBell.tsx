@@ -17,10 +17,7 @@ export const GlowingPendulumBell: React.FC<GlowingPendulumBellProps> = ({
       className={`${styles.bellStageWrapper} ${isMobileCompact ? styles.mobileCompact : ''} ${className}`}
       aria-hidden="true"
     >
-      {/* Ambient Radial Glow Pool that casts warm illumination onto surrounding content */}
-      <div className={styles.ambientGlowPool} />
-
-      {/* Continuous Pendulum Bell Lantern */}
+      {/* Hyper-realistic Glowing Pendulum Bell Lantern */}
       <div className={styles.bellContainer}>
         <div className={styles.rope} />
         <div className={styles.bellTop} />

@@ -1,7 +1,7 @@
 .bellStageWrapper {
   position: relative;
   width: 100%;
-  height: 290px;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,15 +19,17 @@
 
 @media (min-width: 640px) {
   .bellStageWrapper {
-    height: 310px;
+    height: 320px;
     --size: 290px;
   }
 }
 
 @media (min-width: 1024px) {
   .bellStageWrapper {
-    height: 330px;
+    height: 340px;
     --size: 310px;
+    justify-content: flex-start;
+    margin-left: 10px;
     margin-bottom: -20px;
   }
 }
@@ -37,40 +39,6 @@
   --size: 250px !important;
   --degofrot: 0.8 !important;
   margin-bottom: -15px !important;
-}
-
-/* Ambient Radial Glow Pool with Warm Golden Amber Illumination */
-.ambientGlowPool {
-  position: absolute;
-  width: min(420px, 94vw);
-  height: 340px;
-  border-radius: 50%;
-  top: 35%;
-  left: 50%;
-  transform: translate(-50%, -20%);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(251, 191, 36, 0.35) 0%,
-    rgba(245, 158, 11, 0.20) 30%,
-    rgba(217, 119, 6, 0.08) 55%,
-    transparent 75%
-  );
-  filter: blur(40px);
-  pointer-events: none;
-  z-index: 1;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-:global(.dark) .ambientGlowPool {
-  background: radial-gradient(
-    ellipse at center,
-    rgba(251, 191, 36, 0.30) 0%,
-    rgba(245, 158, 11, 0.18) 32%,
-    rgba(217, 119, 6, 0.06) 58%,
-    transparent 80%
-  );
-  filter: blur(45px);
 }
 
 .bellContainer {
@@ -116,7 +84,7 @@
 .rope {
   height: 60vh;
   width: 2em;
-  transform: translate3d(0, -52%, 0);
+  transform: translate(0, -52%);
   background: linear-gradient(90deg, #2d54744d 0%, #000b 30%, transparent 100%),
     repeating-linear-gradient(-70deg, #252525, #888 2%, #3a3a3a 3%);
 }
@@ -125,7 +93,7 @@
   width: 14%;
   height: 14%;
   border-radius: 50%;
-  transform: translate3d(0, -28em, 0);
+  transform: translate(0, -28em);
   background: var(--base-clr);
   box-shadow: inset -1em -0.5em 2em 0.5em #fff, inset 1em -1em 2em 3em #000,
     0 -0.1em 0.4em 0.3em #c6eaffa8;
@@ -135,7 +103,7 @@
   width: 50%;
   height: 50%;
   border-radius: 50%;
-  transform: translate3d(0, -24%, 0);
+  transform: translate(0, -24%);
   background: var(--base-clr);
   box-shadow: 0 -0.1em 0.4em 0.2em #c6eaffa8;
 }
@@ -148,7 +116,7 @@
     var(--base-clr) 50em
   );
   position: absolute;
-  transform: translate3d(-18em, 20em, 0);
+  transform: translate(-18em, 20em);
   width: 100%;
   height: 80%;
 }
@@ -162,21 +130,21 @@
     var(--base-clr) 50.5em
   );
   position: absolute;
-  transform: translate3d(18em, 20em, 0) rotateY(180deg);
+  transform: translate(18em, 20em) rotateY(180deg);
   width: 100%;
   height: 80%;
 }
 
 .bellBaseSecondary {
   filter: brightness(3) blur(1em);
-  transform: translate3d(0em, -11em, 0) scale(0.74, 0.84);
+  transform: translate(0em, -11em) scale(0.74, 0.84);
 }
 
 .shadowL1 {
   width: 30em;
   height: 42em;
   border-radius: 50%;
-  transform: translate3d(-3em, -6em, 0) rotate(12deg);
+  transform: translate(-3em, -6em) rotate(12deg);
   filter: blur(2em);
   background: #797a80;
 }
@@ -185,7 +153,7 @@
   width: 130%;
   height: 90%;
   filter: blur(5em);
-  transform: translate3d(-6em, 9em, 0);
+  transform: translate(-6em, 9em);
 }
 
 .shadowL2::before {
@@ -194,7 +162,7 @@
   width: 68%;
   height: 64%;
   border-radius: 50%;
-  transform: translate3d(-8em, 2em, 0) rotate(-54deg);
+  transform: translate(-8em, 2em) rotate(-54deg);
   background: #000000;
 }
 
@@ -225,7 +193,7 @@
   );
   width: 100%;
   height: 80%;
-  transform: translate3d(0, 6em, 0) scale(0.94, 0.94);
+  transform: translate(0, 6em) scale(0.94, 0.94);
   background: #fff3;
   display: block;
   content: "";
@@ -261,7 +229,7 @@
   );
   width: 100%;
   height: 84%;
-  transform: translate3d(-1em, 8.4em, 0);
+  transform: translate(-1em, 8.4em);
   background: #fff3;
   display: block;
   content: "";
@@ -272,7 +240,7 @@
   width: 50%;
   height: 50%;
   border-radius: 50%;
-  transform: translate3d(0, -24%, 0);
+  transform: translate(0, -24%);
   background: transparent;
   box-shadow: inset 1em 0em 1em 0.2em var(--lgc);
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
@@ -290,7 +258,7 @@
     transparent 52em
   );
   position: absolute;
-  transform: translate3d(-19em, 10.35em, 0);
+  transform: translate(-19em, 10.35em);
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 78%, 0 78%);
   clip-path: polygon(0 0, 100% 0, 100% 78%, 0 78%);
 }
@@ -300,7 +268,7 @@
   width: 50%;
   height: 50%;
   border-radius: 50%;
-  transform: translate3d(0, -24%, 0) rotateY(180deg);
+  transform: translate(0, -24%) rotateY(180deg);
   background: transparent;
   box-shadow: inset 1em 0em 1em 0.2em var(--lgc);
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%);
@@ -318,20 +286,20 @@
     transparent 52em
   );
   position: absolute;
-  transform: translate3d(18.2em, 10.35em, 0) rotateY(180deg) rotateZ(-2deg);
+  transform: translate(18.2em, 10.35em) rotateY(180deg) rotateZ(-2deg);
   -webkit-clip-path: polygon(0 0, 100% 0, 100% 78%, 0 78%);
   clip-path: polygon(0 0, 100% 0, 100% 78%, 0 78%);
 }
 
 .midRingSmall {
-  transform: translate3d(0.04em, -8em, 0) scale(0.8, 0.5);
+  transform: translate(0.04em, -8em) scale(0.8, 0.5);
 }
 
 .midRing {
   width: 64%;
   height: 10%;
   border-radius: 50%;
-  transform: translate3d(-0.1em, 10em, 0);
+  transform: translate(-0.1em, 10em);
   box-shadow: inset -0.3em 1.3em 0.4em -1em #fff5,
     -0.2em -1.2em 0.4em -0.4em #505050, -0.1em -1.8em 0.4em -0.4em #fff5,
     0 -2.5em 0.4em -1em #000000;
@@ -364,7 +332,7 @@
   width: 72%;
   height: 12%;
   border-radius: 50%;
-  transform: translate3d(0, 16em, 0);
+  transform: translate(0, 16em);
   filter: blur(1em);
 }
 
@@ -373,7 +341,7 @@
   width: 88%;
   height: 20%;
   border-radius: 50% 50% 50% 50% / 50% 50% 30% 30%;
-  transform: translate3d(0, 20em, 0);
+  transform: translate(0, 20em);
   box-shadow: inset 1em 0 2em -1em #5d819666, inset -1em 0 2em -1em #fff;
 }
 
@@ -381,55 +349,57 @@
   width: 88%;
   height: 18%;
   border-radius: 50%;
-  transform: translate3d(0, 23em, 0);
+  transform: translate(0, 23em);
   background: linear-gradient(90deg, black 40%, var(--base-clr) 90%);
 }
 
-/* THE GLOWING 3D OVAL MOUTH (Smooth perspective ellipse - completely eliminates rectangle artifact) */
+/* THE SMOOTH 3D OVAL GLOWING BELL RIM */
 .bellBottomRimGlow {
   width: 74%;
-  height: 18%;
+  height: 12%;
   border-radius: 50%;
-  transform: translate3d(0, 24.5em, 0);
-  background: radial-gradient(
-    ellipse at 50% 50%,
-    #fffff0 0%,
-    #fef08a 35%,
-    #f59e0b 70%,
-    #b45309 95%
-  );
-  box-shadow:
-    0 0 1.5em 0.8em #fde047,
-    0 0 3em 1.5em #f59e0b88,
+  transform: translate(0, 24em);
+  background: #fffff6;
+  box-shadow: 0 0 1.2em 0.8em #ffe9d4,
     -0.8em 0.2em 2em 1em #cca37f,
-    inset 0 0.5em 1.2em 0 #b45309,
-    inset 0 -0.8em 1.5em 0 #fef08a;
-  filter: brightness(1.2);
+    -5.4em -0.6em 3em -1em #ce6e1abb,
+    6em -0.6em 3em -1em #ce6e1abb,
+    inset 0em 30.3em 0.3em -30em #c7962d,
+    inset 0 -2em 2em -2em #ffe9d4,
+    inset 0em -1em 2em 1em #ce6e1a66;
+  filter: brightness(1.1);
 }
 
+/* CLAPPER CONTAINER WITH WEBKIT MASK TO GUARANTEE NO RECTANGULAR CUTOFF ON IPHONE */
 .bellRingContainer {
   width: 74%;
-  height: 18%;
-  border-radius: 50%;
-  transform: translate3d(0, 24.5em, 0);
+  height: 24%;
+  border-radius: 50% 50% 50% 50% / 25% 25% 0% 0%;
+  transform: translate(0, 29.2em);
   overflow: hidden;
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
 }
 
 .bellRingClapper {
-  width: 10em;
-  height: 10em;
-  background: radial-gradient(circle at 35% 35%, #555, #111 70%, #000 100%);
+  width: 12em;
+  height: 12em;
+  background: #fff;
   border-radius: 50%;
-  transform: translate3d(0, 0, 0);
-  box-shadow:
-    0 0.8em 1.2em rgba(0, 0, 0, 0.8),
-    0 0 1.5em 0.5em rgba(245, 158, 11, 0.4);
+  transform: translate(0, -6em);
+  box-shadow: 0 0.8em 1em -0.3em #f8e1d0,
+    inset 0 -6em 4em -4em #e3b695,
+    inset 0 1em 3em 1em #fff4,
+    inset 0 2em 3em 1em #fff,
+    inset 0 100em 0 100em #2c2c2c;
 }
 
 .bellRays {
   mix-blend-mode: soft-light;
+  box-shadow: inset 0 -21em 4em -20em #000;
   width: 100%;
-  height: 100%;
+  height: 140%;
+  transform: translate(0, -4em);
   border-radius: 50%;
 }
 
@@ -446,9 +416,9 @@
   filter: blur(0.6em);
   background: repeating-conic-gradient(
     at 50% 50%,
-    #fff3 0%,
+    rgba(254, 240, 138, 0.45) 0%,
     transparent 0.6%,
-    #fff3 0.8%
+    rgba(254, 240, 138, 0.45) 0.8%
   );
   animation: radiateAnimation 1s linear infinite;
 }
@@ -462,12 +432,12 @@
   }
 }
 
-/* VOLUMETRIC CONE WITH WARM YELLOW LIGHT RAYS & RICH CONTRAST */
+/* WARM VOLUMETRIC CONE WITH ENHANCED CONTRAST */
 .volumetricBeam {
   width: 98%;
   height: 224%;
-  transform: translate3d(0, 124em, 0);
-  opacity: 0.44;
+  transform: translate(0, 124em);
+  opacity: 0.55;
   pointer-events: none;
 }
 
@@ -476,9 +446,8 @@
   height: 100%;
   transform-origin: 50% 20em;
   transform: rotate(22deg);
-  box-shadow:
-    inset 40em 0 20em -20em rgba(254, 240, 138, 0.65),
-    inset 25em 0 15em -15em rgba(245, 158, 11, 0.45);
+  box-shadow: inset 40em 0 20em -20em rgba(254, 240, 138, 0.7),
+    inset 20em 0 15em -15em rgba(245, 158, 11, 0.5);
 }
 
 .volumetricBeam .vr {
@@ -486,7 +455,6 @@
   height: 100%;
   transform-origin: 50% 20em;
   transform: rotate(-22deg);
-  box-shadow:
-    inset -40em 0 20em -20em rgba(254, 240, 138, 0.65),
-    inset -25em 0 15em -15em rgba(245, 158, 11, 0.45);
+  box-shadow: inset -40em 0 20em -20em rgba(254, 240, 138, 0.7),
+    inset -20em 0 15em -15em rgba(245, 158, 11, 0.5);
 }

@@ -11,6 +11,7 @@ import {
   getGoogleRedirectResultSafe,
 } from '@/services/googleAuth';
 import { BrandIconSvg } from '@/components/common/BrandLogo';
+import { GlowingPendulumBell } from './GlowingPendulumBell';
 import {
   validateRealName,
   validateRealDob,
@@ -64,6 +65,7 @@ interface AuthModalProps {
   onGoogleSuccess?: (googleUser: { name: string; email: string; photoURL?: string }) => void;
   onOpenGoogleChooser?: () => void;
   isFullPageGate?: boolean;
+  showBellLight?: boolean;
 }
 
 export const AuthModal: React.FC<AuthModalProps> = ({
@@ -75,6 +77,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onLoginSuccess,
   onGoogleSuccess,
   isFullPageGate = false,
+  showBellLight = false,
 }) => {
   const { t, language, setLanguage } = useTranslation();
   const { country, setCountry, countryMeta } = useCountry();
@@ -769,7 +772,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const renderAuthCard = () => {
     return (
-      <div className={`w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 p-4 sm:p-7 flex flex-col z-10 text-slate-900 ${
+      <div className={`w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-100 p-4 sm:p-7 flex flex-col z-20 text-slate-900 ${
       isFullPageGate ? 'relative' : 'relative my-auto max-h-[94vh] overflow-y-auto'
     }`}>
       {/* Top Navigation Bar */}
@@ -1892,6 +1895,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               backfaceVisibility: 'hidden',
             }}
           >
+            {/* Hyper-realistic Glowing Pendulum Bell Lantern (Only when showBellLight is true) */}
+            {showBellLight && (
+              <div className="w-full flex justify-center lg:justify-start -mb-4 pointer-events-none">
+                <GlowingPendulumBell />
+              </div>
+            )}
+
             <div className="relative z-20 space-y-4">
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                 {language === 'hi' ? (

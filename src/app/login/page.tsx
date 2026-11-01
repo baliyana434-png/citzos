@@ -136,6 +136,7 @@ function LoginContent() {
       prefillData={pendingPrefill || undefined}
       initialNotice={initialNotice}
       onLoginSuccess={handleLoginSuccess}
+      showBellLight={true}
     />
   );
 }
