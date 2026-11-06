@@ -664,10 +664,10 @@ export default function FormsPage() {
                     </div>
 
                     <a
-                      href={opp.gazette.officialPortalUrl}
+                      href={opp.gazette?.officialPortalUrl || 'https://india.gov.in'}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-sm transition-all active:scale-95 shrink-0"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm transition-all active:scale-95 shrink-0"
                     >
                       <span>{language === 'hi' ? 'आधिकारिक फॉर्म खोलें' : 'Open Registration Portal'}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
