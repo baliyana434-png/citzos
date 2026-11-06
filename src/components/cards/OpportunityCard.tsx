@@ -238,7 +238,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
           <button
             type="button"
             onClick={handleAddToCalendar}
-            className="p-2 sm:px-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-slate-800/60 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold transition-colors cursor-pointer shrink-0 flex items-center gap-1.5"
+            className="p-2 sm:px-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-[#18181c] hover:bg-slate-100 dark:hover:bg-[#222227] text-slate-600 dark:text-zinc-200 text-xs font-bold transition-colors cursor-pointer shrink-0 flex items-center gap-1.5"
             title={language === 'hi' ? 'गूगल कैलेंडर में जोड़ें' : 'Add to Google Calendar'}
           >
             <Calendar className="w-3.5 h-3.5 text-slate-500" />

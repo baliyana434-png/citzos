@@ -89,7 +89,7 @@ export default function HelplinePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased overflow-x-hidden">
       {/* Top Banner Strip */}
       <div className="w-full bg-slate-900 text-slate-300 text-[10px] sm:text-[11px] py-1.5 px-3 sm:px-8 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-1.5 sm:gap-2 truncate">

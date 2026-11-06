@@ -1788,7 +1788,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   if (isFullPageGate) {
     return (
-      <div className="min-h-screen w-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col relative overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+      <div className="min-h-screen w-full bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col relative overflow-x-hidden selection:bg-emerald-500 selection:text-white">
         {/* Subtle Ambient Light Glows */}
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-100/70 dark:bg-emerald-950/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-teal-100/70 dark:bg-teal-950/20 rounded-full blur-3xl pointer-events-none" />
@@ -1827,7 +1827,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   : 'Switch to Dark Mode'
               }
               aria-label={isDarkTheme ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              className="h-8 sm:h-9 w-8 sm:w-9 rounded-xl bg-white/90 dark:bg-slate-800/90 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+              className="h-8 sm:h-9 w-8 sm:w-9 rounded-xl bg-white/90 dark:bg-[#18181b] hover:bg-slate-100 dark:hover:bg-[#222227] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-200 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
             >
               {isDarkTheme ? (
                 <Sun className="w-4 h-4 text-amber-400" />
@@ -1841,7 +1841,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <button
                 type="button"
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                className="h-8 sm:h-9 px-3 rounded-xl bg-white/90 dark:bg-slate-800/90 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95"
+                className="h-8 sm:h-9 px-3 rounded-xl bg-white/90 dark:bg-[#18181b] hover:bg-slate-100 dark:hover:bg-[#222227] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-zinc-200 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95"
               >
                 <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                 <span className="uppercase">{language}</span>
@@ -1849,7 +1849,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {isLangMenuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsLangMenuOpen(false)} />
-                  <div className="absolute right-0 mt-1.5 w-44 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-1.5 z-50">
+                  <div className="absolute right-0 mt-1.5 w-44 bg-white dark:bg-[#121215] rounded-2xl shadow-xl border border-slate-200 dark:border-white/10 p-1.5 z-50">
                     {[
                       { code: 'en', label: 'English' },
                       { code: 'hi', label: 'हिन्दी' },
@@ -1928,49 +1928,49 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-                <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex items-start gap-3">
+                <div className="p-3.5 rounded-2xl bg-white dark:bg-[#101013] border border-slate-200 dark:border-white/10 shadow-xs flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
                       {language === 'hi' ? '100% सत्यापित पोर्टल' : '100% Verified Portals'}
                     </p>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
                       {language === 'hi' ? 'केवल आधिकारिक डायरेक्ट लिंक्स' : 'Direct official application URLs'}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex items-start gap-3">
+                <div className="p-3.5 rounded-2xl bg-white dark:bg-[#101013] border border-slate-200 dark:border-white/10 shadow-xs flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
                       {language === 'hi' ? 'आयु व पात्रता ऑटो-मैच' : 'Instant Eligibility Match'}
                     </p>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
                       {language === 'hi' ? 'राज्य व श्रेणी अनुसार फिल्टर' : 'Auto-filtered by state and role'}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex items-start gap-3">
+                <div className="p-3.5 rounded-2xl bg-white dark:bg-[#101013] border border-slate-200 dark:border-white/10 shadow-xs flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
                       {language === 'hi' ? '1-वर्षीय नागरिक पास' : '1-Year Citizen Pass'}
                     </p>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
                       {language === 'hi' ? 'केवल ₹1 में असीमित पहुंच' : 'Full access for just ₹1/year'}
                     </p>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex items-start gap-3">
+                <div className="p-3.5 rounded-2xl bg-white dark:bg-[#101013] border border-slate-200 dark:border-white/10 shadow-xs flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
                       {language === 'hi' ? '24x7 नागरिक हेल्पलाइन' : '24x7 Citizen Helplines'}
                     </p>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
                       {language === 'hi' ? 'आपातकालीन सहायता नंबर' : 'National emergency & youth lines'}
                     </p>
                   </div>
@@ -1986,7 +1986,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         </main>
 
         {/* Footer */}
-        <footer className="w-full border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 px-4 py-4 text-center text-xs text-slate-500 dark:text-slate-400 relative z-10">
+        <footer className="w-full border-t border-slate-200 dark:border-white/10 bg-white/90 dark:bg-black/90 px-4 py-4 text-center text-xs text-slate-500 dark:text-zinc-400 relative z-10">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
             <p>Citzos • Global Civic & Opportunities Platform</p>
             <div className="flex flex-wrap items-center justify-center gap-4 text-slate-500 dark:text-slate-400">

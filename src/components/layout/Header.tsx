@@ -83,17 +83,17 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-30 w-full glass-header transition-all relative">
       {/* Mobile Full-Width Search Bar Overlay (Covers Header completely for effortless typing) */}
       {isMobileSearchOpen && (
-        <div className="absolute inset-0 bg-white px-3 flex items-center gap-2 z-50 sm:hidden animate-in fade-in duration-100">
+        <div className="absolute inset-0 bg-white dark:bg-black px-3 flex items-center gap-2 z-50 sm:hidden animate-in fade-in duration-100">
           <button
             type="button"
             onClick={() => setIsMobileSearchOpen(false)}
-            className="p-1.5 rounded-xl text-slate-600 hover:bg-slate-100 shrink-0"
+            className="p-1.5 rounded-xl text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-[#18181c] shrink-0"
             aria-label="Back"
           >
-            <ArrowLeft className="w-5 h-5 text-slate-700" />
+            <ArrowLeft className="w-5 h-5 text-slate-700 dark:text-zinc-200" />
           </button>
           <div className="flex-1 relative flex items-center">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-emerald-600 dark:text-emerald-400" />
             <input
               type="text"
               autoFocus
@@ -105,13 +105,13 @@ export const Header: React.FC<HeaderProps> = ({
                 }
               }}
               placeholder={t('search_placeholder')}
-              className="w-full pl-9 pr-8 py-2 text-sm bg-slate-100 focus:bg-white text-slate-900 placeholder-slate-400 rounded-xl border border-slate-300 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+              className="w-full pl-9 pr-8 py-2 text-sm bg-slate-100 dark:bg-[#141417] focus:bg-white dark:focus:bg-[#18181c] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 rounded-xl border border-slate-300 dark:border-white/10 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => onSearchChange?.('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-white"
                 aria-label="Clear search"
               >
                 <X className="w-4 h-4" />
@@ -157,13 +157,13 @@ export const Header: React.FC<HeaderProps> = ({
                 value={searchQuery}
                 onChange={(e) => onSearchChange?.(e.target.value)}
                 placeholder={t('search_placeholder')}
-                className="w-full pl-9 pr-8 py-2 text-sm bg-slate-100 hover:bg-slate-100/90 focus:bg-white text-slate-900 placeholder-slate-400 rounded-full border border-slate-200 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
+                className="w-full pl-9 pr-8 py-2 text-sm bg-slate-100 dark:bg-[#141417] hover:bg-slate-100/90 dark:hover:bg-[#18181c] focus:bg-white dark:focus:bg-[#18181c] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 rounded-full border border-slate-200 dark:border-white/10 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
               />
               {searchQuery && (
                 <button
                   type="button"
                   onClick={() => onSearchChange?.('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-700"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-slate-400 dark:text-zinc-400 hover:text-slate-700 dark:hover:text-white"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -177,12 +177,12 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setIsMobileSearchOpen(true)}
-              className="sm:hidden flex-1 min-w-[58px] max-w-[88px] h-8 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 flex items-center justify-center gap-1 text-slate-700 transition-all cursor-pointer shrink shadow-2xs"
+              className="sm:hidden flex-1 min-w-[58px] max-w-[88px] h-8 px-2 rounded-xl bg-slate-100 dark:bg-[#141417] hover:bg-slate-200 dark:hover:bg-[#1c1c20] border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1 text-slate-700 dark:text-zinc-200 transition-all cursor-pointer shrink shadow-2xs"
               title={t('search_placeholder')}
               aria-label={t('search_placeholder')}
             >
-              <Search className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              <span className="text-[11px] font-black text-slate-800 whitespace-nowrap tracking-tight">
+              <Search className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400 shrink-0" />
+              <span className="text-[11px] font-black text-slate-800 dark:text-white whitespace-nowrap tracking-tight">
                 {language === 'hi' ? 'खोजें' : 'Search'}
               </span>
             </button>
@@ -205,10 +205,10 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => {
                   setIsLangMenuOpen(!isLangMenuOpen);
                 }}
-                className="h-9 inline-flex items-center gap-1.5 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-xs font-bold text-slate-800 transition-all cursor-pointer shrink-0"
+                className="h-9 inline-flex items-center gap-1.5 px-2.5 rounded-xl bg-slate-100 dark:bg-[#141417] hover:bg-slate-200/80 dark:hover:bg-[#1c1c20] border border-slate-200 dark:border-white/10 text-xs font-bold text-slate-800 dark:text-zinc-200 transition-all cursor-pointer shrink-0"
                 title={t('settings.language_label')}
               >
-                <Globe className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                <Globe className="w-3.5 h-3.5 text-slate-600 dark:text-zinc-400 shrink-0" />
                 <span className="text-[11px] uppercase font-mono">{language}</span>
               </button>
 
@@ -218,8 +218,8 @@ export const Header: React.FC<HeaderProps> = ({
                     className="fixed inset-0 z-40"
                     onClick={() => setIsLangMenuOpen(false)}
                   />
-                  <div className="absolute right-0 mt-1.5 w-40 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
-                    <div className="px-3 py-1 border-b border-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <div className="absolute right-0 mt-1.5 w-40 bg-white dark:bg-[#121215] rounded-2xl shadow-xl border border-slate-200 dark:border-white/10 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100">
+                    <div className="px-3 py-1 border-b border-slate-100 dark:border-white/5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-zinc-400">
                       {t('settings.language_label')}
                     </div>
                     {languages.map((l) => (
@@ -231,8 +231,8 @@ export const Header: React.FC<HeaderProps> = ({
                         }}
                         className={`w-full px-3 py-2 text-left text-xs font-semibold flex items-center justify-between transition-colors ${
                           language === l.code
-                            ? 'bg-emerald-50 text-emerald-950 font-bold'
-                            : 'text-slate-700 hover:bg-slate-50'
+                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-950 dark:text-emerald-300 font-bold'
+                            : 'text-slate-700 dark:text-zinc-200 hover:bg-slate-50 dark:hover:bg-[#18181c]'
                         }`}
                       >
                         <span>{l.label}</span>

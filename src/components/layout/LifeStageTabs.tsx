@@ -92,11 +92,11 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
               onClick={() => onTabChange(tab.id)}
               className={`shrink-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 px-3 sm:px-4 rounded-lg text-xs sm:text-sm transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'bg-white dark:bg-slate-800 text-slate-950 dark:text-white shadow-sm border border-white dark:border-white/15 font-black'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-800/50 font-semibold'
+                  ? 'bg-white dark:bg-[#18181c] text-slate-950 dark:text-white shadow-sm border border-white dark:border-white/15 font-black'
+                  : 'text-slate-600 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-[#18181c]/50 font-semibold'
               }`}
             >
-              <span className={`transition-colors shrink-0 ${isActive ? 'text-emerald-600' : 'text-slate-400'}`}>
+              <span className={`transition-colors shrink-0 ${isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-zinc-400'}`}>
                 {tab.icon}
               </span>
               <span className="whitespace-nowrap">{displayLabel}</span>
@@ -104,8 +104,8 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
                 <span
                   className={`ml-1 px-1.5 py-0.2 text-[10px] font-mono font-bold rounded-md ${
                     isActive
-                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
-                      : 'bg-slate-200/60 dark:bg-slate-700/60 text-slate-600 dark:text-slate-400'
+                      ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                      : 'bg-slate-200/60 dark:bg-[#222227] text-slate-600 dark:text-zinc-400'
                   }`}
                 >
                   {matchCount}
@@ -127,7 +127,7 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
               className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer border ${
                 isSubActive
                   ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                  : 'bg-white/80 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800'
+                  : 'bg-white/80 dark:bg-[#141417] text-slate-700 dark:text-zinc-200 border-slate-200/80 dark:border-white/10 hover:bg-white dark:hover:bg-[#1c1c20]'
               }`}
             >
               {sub.label}

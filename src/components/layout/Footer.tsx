@@ -10,7 +10,7 @@ export const Footer: React.FC = () => {
   const { t, language } = useTranslation();
 
   return (
-    <footer className="w-full bg-slate-950 text-slate-400 text-xs border-t border-slate-800 mt-12 transition-all">
+    <footer className="w-full bg-black text-zinc-400 text-xs border-t border-white/10 mt-12 transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-8">
         
         {/* 1. Main Grid */}

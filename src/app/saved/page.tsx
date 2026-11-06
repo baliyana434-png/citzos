@@ -267,7 +267,7 @@ export default function SavedPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col antialiased">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased">
       {/* 0. Top Strip */}
       <div className="w-full bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2">

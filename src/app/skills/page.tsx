@@ -352,7 +352,7 @@ export default function SkillsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -407,7 +407,7 @@ export default function SkillsPage() {
 
       {/* 2. Hero Section (Matching Home Page Dark Slate Card) */}
       <section className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 pt-3 sm:pt-6">
-        <div className="bg-slate-900 text-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 border border-slate-800 shadow-xl relative overflow-hidden space-y-3 sm:space-y-5">
+        <div className="bg-slate-900 dark:bg-[#101013] text-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-7 border border-slate-800 dark:border-white/10 shadow-xl relative overflow-hidden space-y-3 sm:space-y-5">
           <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl space-y-1.5 sm:space-y-2">

@@ -10,8 +10,8 @@
 }
 
 .dark {
-  --background: #090d16;
-  --foreground: #f8fafc;
+  --background: #000000;
+  --foreground: #ffffff;
   color-scheme: dark;
 }
 
@@ -26,75 +26,189 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Comprehensive Full-Website Dark Mode Rules */
+/* True OLED Pitch-Black (Blinkit & Uber Style) Global Dark Theme System */
 .dark body {
-  background-color: #090d16 !important;
-  color: #f8fafc !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
 }
 
-.dark .bg-slate-50 {
-  background-color: #090d16 !important;
+.dark .bg-slate-50,
+.dark .bg-gray-50,
+.dark .bg-zinc-50 {
+  background-color: #000000 !important;
 }
 
 .dark .bg-white {
-  background-color: #0f172a !important;
+  background-color: #101013 !important;
 }
 
-.dark .bg-slate-100 {
-  background-color: #1e293b !important;
+.dark .bg-slate-100,
+.dark .bg-gray-100,
+.dark .bg-zinc-100 {
+  background-color: #17171a !important;
 }
 
-.dark .bg-slate-200 {
-  background-color: #334155 !important;
+.dark .bg-slate-200,
+.dark .bg-gray-200,
+.dark .bg-zinc-200 {
+  background-color: #222227 !important;
+}
+
+.dark .bg-slate-800 {
+  background-color: #17171a !important;
+}
+
+.dark .bg-slate-900 {
+  background-color: #101013 !important;
+}
+
+.dark .bg-slate-950 {
+  background-color: #000000 !important;
 }
 
 .dark header {
-  background-color: rgba(15, 23, 42, 0.95) !important;
-  border-color: #1e293b !important;
+  background-color: rgba(0, 0, 0, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 .dark .border-slate-200,
-.dark .border-slate-100 {
-  border-color: #1e293b !important;
+.dark .border-slate-100,
+.dark .border-slate-300,
+.dark .border-slate-700,
+.dark .border-slate-800,
+.dark .border-gray-200,
+.dark .border-gray-300 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-.dark .border-slate-300 {
-  border-color: #334155 !important;
+/* Contrast & Word Visibility Booster Across All Themes */
+/* 1. Light Mode: make muted labels, placeholders, and dates crisp and legible (WCAG AA 4.5:1+) */
+:root .text-slate-400,
+:root .text-gray-400 {
+  color: #64748b;
 }
 
+:root input::placeholder,
+:root textarea::placeholder {
+  color: #64748b;
+}
+
+/* 2. Dark Mode: Pure white headings, crisp body, high-contrast muted text */
 .dark .text-slate-900,
-.dark .text-slate-800 {
-  color: #f8fafc !important;
+.dark .text-slate-800,
+.dark .text-slate-950,
+.dark .text-black,
+.dark .text-neutral-900,
+.dark .text-zinc-900 {
+  color: #ffffff !important;
 }
 
 .dark .text-slate-700,
-.dark .text-slate-600 {
-  color: #cbd5e1 !important;
+.dark .text-slate-600,
+.dark .text-gray-700,
+.dark .text-gray-600,
+.dark .text-zinc-700,
+.dark .text-zinc-600 {
+  color: #e4e4e7 !important;
 }
 
-.dark .text-slate-500 {
-  color: #94a3b8 !important;
+.dark .text-slate-500,
+.dark .text-slate-400,
+.dark .text-gray-500,
+.dark .text-gray-400,
+.dark .text-zinc-500,
+.dark .text-zinc-400 {
+  color: #a1a1aa !important;
 }
 
-.dark .hover\:bg-slate-50:hover {
-  background-color: #1e293b !important;
+/* 3. Dark Mode Pill & Accent Colors - Prevents black-on-black or dark-on-dark unreadable words */
+.dark .text-emerald-900,
+.dark .text-emerald-950 {
+  color: #6ee7b7 !important;
 }
 
-.dark .hover\:bg-slate-100:hover {
-  background-color: #334155 !important;
+.dark .text-amber-900,
+.dark .text-amber-950 {
+  color: #fcd34d !important;
+}
+
+.dark .text-red-900,
+.dark .text-red-950 {
+  color: #fca5a5 !important;
+}
+
+.dark .text-blue-900,
+.dark .text-blue-950 {
+  color: #93c5fd !important;
+}
+
+.dark .bg-emerald-50,
+.dark .bg-emerald-100 {
+  background-color: rgba(6, 78, 59, 0.4) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+.dark .bg-amber-50,
+.dark .bg-amber-100 {
+  background-color: rgba(120, 53, 15, 0.4) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+.dark .bg-red-50,
+.dark .bg-red-100 {
+  background-color: rgba(127, 29, 29, 0.4) !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+
+.dark .bg-blue-50,
+.dark .bg-blue-100 {
+  background-color: rgba(30, 58, 138, 0.4) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+
+.dark .border-emerald-200,
+.dark .border-emerald-300 {
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+.dark .border-amber-200,
+.dark .border-amber-300 {
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+.dark .border-red-200,
+.dark .border-red-300 {
+  border-color: rgba(239, 68, 68, 0.35) !important;
+}
+
+.dark .border-blue-200,
+.dark .border-blue-300 {
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+
+.dark .group-hover\:text-emerald-900:hover,
+.dark .group:hover .group-hover\:text-emerald-900 {
+  color: #34d399 !important;
+}
+
+.dark .hover\:bg-slate-50:hover,
+.dark .hover\:bg-slate-100:hover,
+.dark .hover\:bg-slate-700:hover,
+.dark .hover\:bg-slate-800:hover {
+  background-color: #222227 !important;
 }
 
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark select,
 .dark textarea {
-  background-color: #1e293b !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
+  background-color: #141417 !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #64748b !important;
+  color: #71717a !important;
 }
 
 /* Glassmorphism System - 3D Specular Crystalline Edges */
@@ -112,16 +226,16 @@ body {
 }
 
 .dark .glass-panel {
-  background: rgba(15, 23, 42, 0.82) !important;
-  backdrop-filter: blur(18px) saturate(190%);
-  -webkit-backdrop-filter: blur(18px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.45) !important;
+  background: rgba(14, 14, 17, 0.92) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6) !important;
   box-shadow: 
-    0 1px 2px 0 rgba(0, 0, 0, 0.6),
-    0 16px 32px -4px rgba(0, 0, 0, 0.65),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 0 rgba(0, 0, 0, 0.35);
+    0 1px 2px 0 rgba(0, 0, 0, 0.8),
+    0 16px 36px -4px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.5);
 }
 
 .glass-card {
@@ -151,25 +265,25 @@ body {
 }
 
 .dark .glass-card {
-  background: rgba(15, 23, 42, 0.8) !important;
+  background: rgba(16, 16, 19, 0.92) !important;
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6) !important;
   box-shadow: 
-    0 1px 2px 0 rgba(0, 0, 0, 0.6),
-    0 8px 24px -2px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 0 rgba(0, 0, 0, 0.4);
+    0 1px 2px 0 rgba(0, 0, 0, 0.8),
+    0 8px 24px -2px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.5);
 }
 
 .dark .glass-card:hover {
-  background: rgba(15, 23, 42, 0.94) !important;
+  background: rgba(22, 22, 26, 0.98) !important;
   border-color: rgba(16, 185, 129, 0.6) !important;
   box-shadow: 
     0 20px 42px -4px rgba(16, 185, 129, 0.22),
-    0 8px 20px -2px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+    0 8px 24px -2px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
     inset 0 -1px 0 0 rgba(16, 185, 129, 0.3);
 }
 
@@ -185,11 +299,11 @@ body {
 }
 
 .dark .glass-pill {
-  background: rgba(30, 41, 59, 0.75) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: rgba(24, 24, 28, 0.88) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 
-    0 1px 2px 0 rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+    0 1px 2px 0 rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 .glass-header {
@@ -203,11 +317,11 @@ body {
 }
 
 .dark .glass-header {
-  background: rgba(9, 13, 22, 0.85) !important;
+  background: rgba(0, 0, 0, 0.88) !important;
   backdrop-filter: blur(20px) saturate(190%);
   -webkit-backdrop-filter: blur(20px) saturate(190%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 24px -2px rgba(0, 0, 0, 0.8);
 }
 
 .glass-tab-bar {
@@ -224,13 +338,13 @@ body {
 }
 
 .dark .glass-tab-bar {
-  background: rgba(15, 23, 42, 0.8) !important;
+  background: rgba(12, 12, 14, 0.92) !important;
   backdrop-filter: blur(18px) saturate(190%);
   -webkit-backdrop-filter: blur(18px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 
-    0 4px 20px -1px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+    0 4px 20px -1px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
 }
 
 /* Crisp, High-Contrast Card Styles */
@@ -252,18 +366,18 @@ body {
 }
 
 .dark .card-clean {
-  background: #0f172a !important;
-  border-color: #1e293b !important;
+  background: #101013 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
   box-shadow: 
-    0 1px 3px 0 rgba(0, 0, 0, 0.4),
-    0 4px 12px -2px rgba(0, 0, 0, 0.3);
+    0 1px 3px 0 rgba(0, 0, 0, 0.6),
+    0 4px 12px -2px rgba(0, 0, 0, 0.5);
 }
 
 .dark .card-clean:hover {
   border-color: rgba(16, 185, 129, 0.5) !important;
   box-shadow: 
-    0 14px 28px -6px rgba(0, 0, 0, 0.6),
-    0 4px 10px -2px rgba(0, 0, 0, 0.4);
+    0 14px 28px -6px rgba(0, 0, 0, 0.8),
+    0 4px 10px -2px rgba(0, 0, 0, 0.6);
 }
 
 /* Radar Pulse Glows */

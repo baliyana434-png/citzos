@@ -280,12 +280,12 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     : profile.educationLevel || profile.qualification || (language === 'hi' ? 'स्नातक' : 'Graduate');
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-4 md:p-6 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
+    <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/60 dark:bg-black/85 backdrop-blur-xs animate-fade-in">
       <div className="fixed inset-0" onClick={onClose} />
 
       <div className="relative w-full max-w-lg glass-panel rounded-2xl shadow-2xl flex flex-col max-h-[90vh] z-10 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-slate-900/40 backdrop-blur-md">
+        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-black/40 backdrop-blur-md">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-emerald-400 font-bold shadow-xs">
               <ShieldCheck className="w-5 h-5" />
@@ -596,12 +596,12 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
 
           {/* Live Opportunity Push Notifications Toggle */}
           <div className="space-y-2">
-            <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between transition-colors shadow-2xs">
+            <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#161619] flex items-center justify-between transition-colors shadow-2xs">
               <div className="flex items-center gap-2.5 min-w-0 pr-2">
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                   isNotificationsEnabled 
                     ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400' 
-                    : 'bg-slate-200 dark:bg-slate-700/80 text-slate-500 dark:text-slate-400'
+                    : 'bg-slate-200 dark:bg-[#222227] text-slate-500 dark:text-zinc-400'
                 }`}>
                   <Bell className="w-4 h-4 shrink-0" />
                 </div>
@@ -614,7 +614,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
                     )}
                   </div>
-                  <span className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1">
                     {isNotificationsEnabled
                       ? (language === 'hi' ? 'सक्रिय • नए अवसर मिलते ही तुरंत अलर्ट' : 'Active • Instant alerts on new schemes')
                       : (language === 'hi' ? 'बंद • रियल-टाइम अलर्ट पाने के लिए ऑन करें' : 'Disabled • Turn on for real-time alerts')}
@@ -629,7 +629,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 disabled={isNotifLoading}
                 onClick={handleToggleNotifications}
                 className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 ${
-                  isNotificationsEnabled ? 'bg-emerald-600' : 'bg-slate-300 dark:bg-slate-700'
+                  isNotificationsEnabled ? 'bg-emerald-600' : 'bg-slate-300 dark:bg-[#27272a]'
                 }`}
               >
                 <span className="sr-only">Toggle notification alerts</span>
@@ -646,7 +646,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
             </div>
 
             {notifMessage && (
-              <div className="text-[11px] text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-2 animate-in fade-in">
+              <div className="text-[11px] text-slate-700 dark:text-zinc-300 bg-slate-100 dark:bg-[#18181c] px-3 py-2 rounded-xl border border-slate-200 dark:border-white/10 flex items-center gap-2 animate-in fade-in">
                 <AlertCircle className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                 <span className="leading-snug">{notifMessage}</span>
               </div>
@@ -654,16 +654,16 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
           </div>
 
           {/* Theme Switcher Section (Light / Dark) */}
-          <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 flex items-center justify-between transition-colors shadow-2xs">
+          <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#161619] flex items-center justify-between transition-colors shadow-2xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-slate-700/80 flex items-center justify-center text-slate-700 dark:text-amber-400">
+              <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-[#222227] flex items-center justify-center text-slate-700 dark:text-amber-400">
                 {theme === 'dark' ? <Moon className="w-4 h-4 text-indigo-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
               </div>
               <div>
                 <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
                   {language === 'hi' ? 'थीम प्राथमिकता (Theme)' : 'Theme Preference'}
                 </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                <span className="text-[11px] text-slate-500 dark:text-zinc-400">
                   {theme === 'dark'
                     ? (language === 'hi' ? 'डार्क मोड सक्रिय' : 'Dark Mode Active')
                     : (language === 'hi' ? 'लाइट मोड सक्रिय' : 'Light Mode Active')}
@@ -671,7 +671,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               </div>
             </div>
 
-            <div className="inline-flex p-1 rounded-xl bg-slate-200/90 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+            <div className="inline-flex p-1 rounded-xl bg-slate-200/90 dark:bg-[#101013] border border-slate-300 dark:border-white/10">
               <button
                 type="button"
                 onClick={() => handleToggleTheme('light')}

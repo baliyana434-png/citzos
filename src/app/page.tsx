@@ -947,10 +947,10 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#090d16] flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-hidden">
       {/* Ambient Glassmorphic Aura Background Orbs */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-400/20 dark:bg-emerald-500/15 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-400/20 dark:bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
         <div className="absolute top-1/4 -right-32 w-96 h-96 bg-teal-400/15 dark:bg-teal-500/10 rounded-full blur-3xl" />
         <div className="absolute top-2/3 left-1/4 w-80 h-80 bg-cyan-400/15 dark:bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-32 right-1/4 w-96 h-96 bg-emerald-500/15 dark:bg-emerald-600/10 rounded-full blur-3xl" />
@@ -993,7 +993,7 @@ export default function HomePage() {
         )}
 
         {/* Hero Personalized Insight Bar (3D Cyber-Gov Terminal) - Hidden on mobile during search to show opportunities directly */}
-        <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-gradient-to-br from-slate-950/90 via-slate-900/90 to-emerald-950/90 backdrop-blur-xl rounded-2xl p-5 sm:p-7 text-white shadow-2xl relative overflow-hidden border border-emerald-500/40`}>
+        <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-gradient-to-br from-black/95 via-[#0e0e11]/95 to-[#041a10]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-7 text-white shadow-2xl relative overflow-hidden border border-emerald-500/40`}>
           {/* Subtle Cyber Grid Texture */}
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.18),transparent_50%)] pointer-events-none" />
 

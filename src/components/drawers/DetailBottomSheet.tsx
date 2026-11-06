@@ -147,7 +147,7 @@ export const DetailBottomSheet: React.FC<DetailBottomSheetProps> = ({
               </span>
               <VoiceReader textToSpeak={isSubscribed ? `${displayTitle}. ${displayBenefit}` : (language === 'hi' ? 'अवसर विवरण देखने हेतु 1-वर्षीय नागरिक पास केवल ₹1 में सक्रिय करें' : language === 'es' ? 'Active el Pase Ciudadano de 1 año por 1 ₹ para desbloquear detalles' : language === 'fr' ? 'Activez le Pass Citoyen 1 an pour 1 ₹ pour débloquer les détails' : language === 'de' ? 'Aktivieren Sie den 1-Jahres-Bürgerpass für 1 ₹, um Details freizuschalten' : language === 'ar' ? 'قم بتفعيل تصريح المواطن لمدة عام مقابل 1 روبية فقط لفتح التفاصيل' : 'Activate 1-Year Citizen Pass for 1 rupee to unlock opportunity details')} />
             </div>
-            <h2 className={`text-base sm:text-xl font-extrabold text-slate-900 leading-snug ${
+            <h2 className={`text-base sm:text-xl font-extrabold text-slate-900 dark:text-white leading-snug ${
               !isSubscribed ? 'filter blur-[6px] select-none pointer-events-none opacity-40' : ''
             }`}>
               {displayTitle}
