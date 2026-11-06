@@ -36,6 +36,7 @@ import { generateGoogleCalendarUrl } from '@/lib/calendar';
 import { evaluateCitizenEligibility } from '@/lib/eligibility';
 import { formatDeadlineText } from '@/lib/dateUtils';
 import { isCitizenSubscribed } from '@/lib/subscriptionValidator';
+import { resolveOfficialPortalUrl } from '@/lib/officialPortalResolver';
 
 interface DetailBottomSheetProps {
   opportunity: Opportunity | null;
@@ -46,42 +47,6 @@ interface DetailBottomSheetProps {
   onToggleFavorite?: (id: string) => void;
   onRequireSubscription?: () => void;
 }
-
-// Bulletproof URL Resolver: guarantees 100% genuine official government URL without any crash or 404
-export const resolveOfficialPortalUrl = (opp: Opportunity): string => {
-  let raw = opp.gazette?.officialPortalUrl?.trim() || '';
-  if (!raw || raw === '#' || raw === 'about:blank') {
-    if (opp.country === 'US') return 'https://www.usa.gov';
-    if (opp.country === 'GB') return 'https://www.gov.uk';
-    if (opp.country === 'CA') return 'https://www.canada.ca';
-    if (opp.country === 'AU') return 'https://www.australia.gov.au';
-    if (opp.country === 'DE') return 'https://www.bund.de';
-    if (opp.country === 'FR') return 'https://www.service-public.fr';
-    if (opp.country === 'JP') return 'https://www.japan.go.jp';
-    if (opp.country === 'AE') return 'https://u.ae';
-    if (opp.country === 'BR') return 'https://www.gov.br';
-    if (opp.country === 'SG') return 'https://www.gov.sg';
-    if (opp.country === 'KR') return 'https://www.gov.kr';
-    if (opp.country === 'SA') return 'https://www.my.gov.sa';
-    if (opp.country === 'NZ') return 'https://www.govt.nz';
-    if (opp.country === 'ZA') return 'https://www.gov.za';
-    if (opp.country === 'IT') return 'https://www.governo.it';
-    return 'https://www.india.gov.in';
-  }
-
-  if (raw.startsWith('//')) {
-    raw = `https:${raw}`;
-  } else if (!/^https?:\/\//i.test(raw)) {
-    raw = `https://${raw}`;
-  }
-
-  try {
-    const parsed = new URL(raw);
-    return parsed.href;
-  } catch (_) {
-    return 'https://www.india.gov.in';
-  }
-};
 
 // Accurate Required Documents Resolver: specific to each scheme/exam/job portal
 export const getAccurateRequiredDocuments = (
@@ -429,10 +394,10 @@ export const DetailBottomSheet: React.FC<DetailBottomSheetProps> = ({
             <div className="flex items-center justify-between gap-2 mb-2.5">
               <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
                 <FileText className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span>{language === 'hi' ? 'आवेदन व फॉर्म हेतु आवश्यक दस्तावेज' : t('drawer.required_documents')}</span>
+                <span>{language === 'hi' ? 'आवेदन व फॉर्म हेतु आवश्यक सरकारी दस्तावेज' : 'Official Required Documents'}</span>
               </h3>
               <span className="text-[10px] text-slate-500 dark:text-zinc-400 font-medium hidden sm:inline">
-                {language === 'hi' ? 'पोर्टल अपलोड हेतु सत्यापित सूची' : 'Verified for Portal Upload'}
+                {language === 'hi' ? 'सत्यापित सरकारी दस्तावेज' : 'Verified Required Documents'}
               </span>
             </div>
 

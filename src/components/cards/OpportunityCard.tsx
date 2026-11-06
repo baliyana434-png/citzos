@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Calendar,
   ArrowRight,
+  ExternalLink,
   Star,
   Clock,
   Banknote,
@@ -30,6 +31,7 @@ import { generateGoogleCalendarUrl } from '@/lib/calendar';
 import { formatDeadlineText } from '@/lib/dateUtils';
 import { isOpportunityNewActive } from '@/lib/newBadgeTracker';
 import { isCitizenSubscribed } from '@/lib/subscriptionValidator';
+import { resolveOfficialPortalUrl } from '@/lib/officialPortalResolver';
 
 interface OpportunityCardProps {
   opportunity: Opportunity;
@@ -67,6 +69,8 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
     language,
     t('card.days_left')
   );
+
+  const safePortalUrl = resolveOfficialPortalUrl(opportunity);
 
   const handleAddToCalendar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -235,22 +239,62 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         </div>
 
         <div className="flex items-center gap-2 pt-1">
-          <button
-            type="button"
-            onClick={handleAddToCalendar}
-            className="p-2 sm:px-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-[#18181c] hover:bg-slate-100 dark:hover:bg-[#222227] text-slate-600 dark:text-zinc-200 text-xs font-bold transition-colors cursor-pointer shrink-0 flex items-center gap-1.5"
-            title={language === 'hi' ? 'गूगल कैलेंडर में जोड़ें' : 'Add to Google Calendar'}
-          >
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
-            <span className="hidden md:inline">{language === 'hi' ? 'कैलेंडर' : 'Calendar'}</span>
-          </button>
+          {isSubscribed ? (
+            <>
+              {/* Ultra-Highlighted "View Portal" CTA with Radar Beacon */}
+              <a
+                href={safePortalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (typeof window !== 'undefined') {
+                    window.open(safePortalUrl, '_blank', 'noopener,noreferrer');
+                  }
+                }}
+                className="flex-1 py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition-all shadow-md shadow-emerald-600/30 border border-emerald-400/50 ring-1 ring-emerald-400/30 flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.98] group"
+                title={language === 'hi' ? 'सत्यापित आधिकारिक पोर्टल खोलें' : 'Open Verified Official Portal'}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-white radar-pulse shrink-0" />
+                <span className="truncate">{language === 'hi' ? 'पोर्टल खोलें' : 'View Portal'}</span>
+                <ExternalLink className="w-3.5 h-3.5 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+
+              {/* View Full Details Drawer Button */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSelect(opportunity);
+                }}
+                className="py-2 sm:py-2.5 px-2.5 sm:px-3 rounded-xl border border-slate-300 dark:border-white/10 bg-white dark:bg-[#18181c] hover:bg-slate-100 dark:hover:bg-[#222227] text-slate-800 dark:text-zinc-200 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shrink-0"
+                title={language === 'hi' ? 'पूर्ण विवरण देखें' : 'View Full Details'}
+              >
+                <span>{language === 'hi' ? 'विवरण' : 'Details'}</span>
+                <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRequireSubscription?.();
+              }}
+              className="flex-1 py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-extrabold text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Lock className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+              <span>{language === 'hi' ? 'अनलॉक करें (₹1)' : 'Unlock (₹1)'}</span>
+            </button>
+          )}
 
           <button
             type="button"
-            className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
+            onClick={handleAddToCalendar}
+            className="p-2 sm:p-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-white/60 dark:bg-[#18181c] hover:bg-slate-100 dark:hover:bg-[#222227] text-slate-600 dark:text-zinc-200 text-xs font-bold transition-colors cursor-pointer shrink-0 flex items-center gap-1.5"
+            title={language === 'hi' ? 'गूगल कैलेंडर में जोड़ें' : 'Add to Google Calendar'}
           >
-            <span>{isSubscribed ? (language === 'hi' ? 'विवरण देखें' : 'View Details') : (language === 'hi' ? 'अनलॉक करें (₹1)' : 'Unlock (₹1)')}</span>
-            <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+            <Calendar className="w-3.5 h-3.5 text-slate-500" />
           </button>
         </div>
       </div>

@@ -29,6 +29,7 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { LiveFeedService } from '@/services/liveFeedService';
 import { Opportunity, CitizenProfile } from '@/types';
+import { resolveOfficialPortalUrl } from '@/lib/officialPortalResolver';
 
 // Guest Citizen Profile (No dummy/fake data)
 const GUEST_PROFILE: CitizenProfile = {
@@ -461,12 +462,12 @@ export default function FormsPage() {
           )}
         </div>
 
-        {/* 2. Document Readiness Checklist Box (Zero Cartoon Emojis) */}
+        {/* 2. Document Readiness Requirements Box (Zero Cartoon Emojis) */}
         <div className="bg-emerald-950 text-white rounded-3xl p-5 border border-emerald-800 shadow-md">
           <div className="flex items-center gap-2 mb-3">
             <FileCheck className="w-5 h-5 text-emerald-400" />
             <h3 className="text-sm sm:text-base font-bold text-white">
-              {language === 'hi' ? 'फॉर्म भरने से पहले आवश्यक दस्तावेज़ चेकलिस्ट' : 'Mandatory Document Readiness Checklist'}
+              {language === 'hi' ? 'फॉर्म भरने से पहले आवश्यक सरकारी दस्तावेज़' : 'Mandatory Required Documents'}
             </h3>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
@@ -641,7 +642,7 @@ export default function FormsPage() {
                     {opp.documents && opp.documents.length > 0 && (
                       <div className="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
                         <span className="text-[11px] font-bold text-slate-700 block mb-1">
-                          {language === 'hi' ? 'आवेदन हेतु आवश्यक प्रपत्र:' : 'Mandatory Documents Checklist:'}
+                          {language === 'hi' ? 'आवेदन हेतु आवश्यक सरकारी दस्तावेज:' : 'Required Application Documents:'}
                         </span>
                         <div className="flex flex-wrap gap-1.5">
                           {opp.documents.map((doc) => (
@@ -664,12 +665,13 @@ export default function FormsPage() {
                     </div>
 
                     <a
-                      href={opp.gazette?.officialPortalUrl || 'https://india.gov.in'}
+                      href={resolveOfficialPortalUrl(opp)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-sm transition-all active:scale-95 shrink-0"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-black shadow-md shadow-emerald-600/30 border border-emerald-400/50 ring-1 ring-emerald-400/30 transition-all active:scale-95 shrink-0"
                     >
-                      <span>{language === 'hi' ? 'आधिकारिक फॉर्म खोलें' : 'Open Registration Portal'}</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-white radar-pulse shrink-0" />
+                      <span>{language === 'hi' ? 'आधिकारिक पोर्टल खोलें' : 'Open Official Portal'}</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </div>

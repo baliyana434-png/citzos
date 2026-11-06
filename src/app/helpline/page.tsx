@@ -321,7 +321,7 @@ export default function HelplinePage() {
                         <div className="rounded-xl bg-slate-50 border border-slate-200/90 text-xs p-2.5">
                           <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-700 mb-1.5">
                             <Lock className="w-3 h-3 text-slate-500 shrink-0" />
-                            <span>{language === 'hi' ? 'कॉल पूर्व जरूरी तैयारी (चेकलिस्ट)' : 'Before you call (Checklist)'}</span>
+                            <span>{language === 'hi' ? 'कॉल पूर्व जरूरी तैयारी एवं मार्गदर्शन' : 'Before you call (Important Guidance)'}</span>
                           </div>
                           <ul className="space-y-1 text-[11px] text-slate-600 pl-4 list-disc marker:text-emerald-600">
                             {guidanceList.map((g, idx) => (

@@ -175,7 +175,7 @@ export async function downloadOpportunityPdf(
     <!-- Document Checklist -->
     <div style="margin-bottom: 16px;">
       <div style="font-size: 12px; font-weight: 800; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
-        2. आवश्यक दस्तावेज़ चेकलिस्ट (Required Documents Checklist)
+        2. आवश्यक सरकारी दस्तावेज़ (Official Required Documents)
       </div>
       <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 14px;">
         ${
@@ -198,7 +198,7 @@ export async function downloadOpportunityPdf(
             1. आधिकारिक पोर्टल <strong>${portal}</strong> पर सीधे जाएँ।<br/>
             2. "New Citizen / Applicant Registration" लिंक पर क्लिक करें।<br/>
             3. अपने आधार और मोबाइल नंबर से OTP द्वारा पंजीकरण पूर्ण करें।<br/>
-            4. उपर्युक्त चेकलिस्ट के अनुसार दस्तावेज़ अपलोड करके रसीद डाउनलोड करें।
+            4. उपर्युक्त आवश्यक दस्तावेज़ अपलोड करके रसीद डाउनलोड करें।
           </div>
         `
         }

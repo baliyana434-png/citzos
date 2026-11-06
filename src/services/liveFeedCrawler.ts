@@ -2,6 +2,7 @@ import Parser from 'rss-parser';
 import { Opportunity, LifeStage, OpportunityCategory, CountryCode } from '@/types';
 import { LiveFeedService } from './liveFeedService';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
+import { resolveOfficialPortalUrl } from '@/lib/officialPortalResolver';
 
 interface CrawlerCache {
   timestamp: number;
@@ -486,6 +487,117 @@ export class LiveFeedCrawler {
           }
         }
 
+        const guaranteedPortalUrl = resolveOfficialPortalUrl({
+          title: engTitle,
+          titleHi: rawTitle,
+          category,
+          lifeStage,
+          country: 'IN',
+          gazette: {
+            issuingAuthority: 'Press Information Bureau, Government of India',
+            officialPortalUrl: rawLink,
+          } as any,
+        });
+
+        // Generate tailored accurate required documents for this live opportunity
+        let accurateDocs = [
+          {
+            id: `doc-aadhaar-${prid}`,
+            name: 'Aadhaar Card (Linked with Active Mobile)',
+            nameHi: 'आधार कार्ड (सक्रिय मोबाइल नंबर से लिंक)',
+            isMandatory: true,
+          },
+          {
+            id: `doc-res-${prid}`,
+            name: 'Domicile / Resident Identity Proof',
+            nameHi: 'मूल निवास प्रमाण पत्र / फोटो पहचान पत्र',
+            isMandatory: true,
+          },
+        ];
+
+        if (lifeStage === 'exams') {
+          accurateDocs = [
+            {
+              id: `doc-10th-${prid}`,
+              name: '10th Class Certificate (DOB Proof)',
+              nameHi: '10वीं कक्षा का मूल प्रमाणपत्र (जन्म तिथि सत्यापन हेतु)',
+              isMandatory: true,
+            },
+            {
+              id: `doc-edu-${prid}`,
+              name: 'Educational Qualification Marksheet / Degree',
+              nameHi: 'न्यूनतम शैक्षणिक योग्यता अंकतालिका / डिग्री (12वीं/स्नातक)',
+              isMandatory: true,
+            },
+            {
+              id: `doc-aadhaar-${prid}`,
+              name: 'Aadhaar Card / Govt Photo ID',
+              nameHi: 'आधार कार्ड / सरकारी फोटो पहचान पत्र',
+              isMandatory: true,
+            },
+            {
+              id: `doc-photo-${prid}`,
+              name: 'Recent Passport Photo & Scanned Signature',
+              nameHi: 'हालिया पासपोर्ट साइज फोटो एवं डिजिटल हस्ताक्षर',
+              isMandatory: true,
+            },
+            {
+              id: `doc-cat-${prid}`,
+              name: 'Category / EWS Certificate (If Applicable)',
+              nameHi: 'जाति / ईडब्ल्यूएस प्रमाणपत्र (यदि लागू हो)',
+              isMandatory: false,
+            },
+          ];
+        } else if (lifeStage === 'schemes' || lifeStage === 'health') {
+          accurateDocs = [
+            {
+              id: `doc-aadhaar-${prid}`,
+              name: 'Aadhaar Card (Linked with Active Mobile)',
+              nameHi: 'आधार कार्ड (सक्रिय मोबाइल से लिंक)',
+              isMandatory: true,
+            },
+            {
+              id: `doc-bank-${prid}`,
+              name: 'Bank Passbook / DBT Enabled Account Statement',
+              nameHi: 'बैंक पासबुक / डीबीटी सक्रिय खाता विवरण',
+              isMandatory: true,
+            },
+            {
+              id: `doc-res-${prid}`,
+              name: 'Domicile / Residence Certificate',
+              nameHi: 'मूल निवास / डोमिसाइल प्रमाणपत्र',
+              isMandatory: true,
+            },
+            {
+              id: `doc-income-${prid}`,
+              name: 'Income Certificate / Ration Card (If Applicable)',
+              nameHi: 'आय प्रमाणपत्र / राशन कार्ड (पात्रता अनुसार)',
+              isMandatory: false,
+            },
+          ];
+        } else if (lifeStage === 'internships' || lifeStage === 'private_jobs') {
+          accurateDocs = [
+            {
+              id: `doc-resume-${prid}`,
+              name: 'Updated Resume / Curriculum Vitae (CV)',
+              nameHi: 'अद्यतन बायोडाटा / रिज्यूम',
+              isMandatory: true,
+            },
+            {
+              id: `doc-id-${prid}`,
+              name: 'College ID Card / Highest Educational Certificate',
+              nameHi: 'कॉलेज आईडी कार्ड / उच्चतम शैक्षणिक योग्यता प्रमाणपत्र',
+              isMandatory: true,
+            },
+            {
+              id: `doc-photo-${prid}`,
+              name: 'Aadhaar Card / Govt Photo ID',
+              nameHi: 'आधार कार्ड / फोटो पहचान पत्र',
+              isMandatory: true,
+            },
+          ];
+        }
+
         return {
           id: `live-pib-${prid}`,
           title: engTitle,
@@ -509,39 +621,26 @@ export class LiveFeedCrawler {
             issuingAuthorityHi: 'प्रेस सूचना ब्यूरो (भारत सरकार)',
             gazetteDate: todayStr,
             lastVerifiedAt: `Live PIB Bharat Sarkar (${formattedTime})`,
-            officialPortalUrl: rawLink || 'https://pib.gov.in',
+            officialPortalUrl: guaranteedPortalUrl,
             scamAlertWarning: 'This official circular is sourced directly from Press Information Bureau (pib.gov.in), Government of India.',
             officialGovtFee: '₹0 (100% Free Official Circular)',
           },
-          documents: [
-            {
-              id: `doc-aadhaar-${prid}`,
-              name: 'Aadhaar Card (Linked to Mobile)',
-              nameHi: 'आधार कार्ड (मोबाइल से लिंक)',
-              isMandatory: true,
-            },
-            {
-              id: `doc-res-${prid}`,
-              name: 'Resident / State Identity Proof',
-              nameHi: 'निवास प्रमाण पत्र / पहचान पत्र',
-              isMandatory: false,
-            },
-          ],
+          documents: accurateDocs,
           applySteps: [
             {
               step: 1,
-              text: 'Click the Official Government Portal link to view the original Press Release.',
-              textHi: 'प्रेस सूचना ब्यूरो के आधिकारिक लिंक पर क्लिक करके पूरी सरकारी विज्ञप्ति पढ़ें।',
+              text: 'Visit the Official Departmental Registration Portal.',
+              textHi: 'सत्यापित आधिकारिक विभागीय पोर्टल पर जाएं।',
             },
             {
               step: 2,
-              text: 'Review the ministry guidelines and eligibility criteria mentioned in the circular.',
-              textHi: 'विज्ञप्ति में दिए गए संबद्ध मंत्रालय के दिशा-निर्देशों एवं पात्रता को जांचें।',
+              text: 'Verify eligibility criteria, guidelines, and document requirements.',
+              textHi: 'विभागीय दिशा-निर्देशों एवं आवश्यक दस्तावेजों की जांच करें।',
             },
             {
               step: 3,
-              text: 'Apply directly through the designated official departmental portal without any service fee.',
-              textHi: 'संबंधित आधिकारिक विभागीय पोर्टल पर बिना किसी शुल्क के सीधे आवेदन करें।',
+              text: 'Complete online registration directly on the government portal without any service fee.',
+              textHi: 'बिना किसी अतिरिक्त सेवा शुल्क के सीधे आधिकारिक सरकारी पोर्टल पर फॉर्म भरें।',
             },
           ],
           tags: ['PIB Bharat Sarkar', 'Live Govt Circular', '100% Verified', 'Official 2026'],
