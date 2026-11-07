@@ -679,8 +679,8 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 onClick={handleToggleNotifications}
                 className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full p-0.5 border transition-colors duration-300 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 ${
                   isNotificationsEnabled 
-                    ? 'bg-emerald-600 border-emerald-500 shadow-inner' 
-                    : 'bg-slate-200 dark:bg-[#202127] border-slate-300 dark:border-zinc-700 shadow-inner'
+                    ? 'bg-emerald-600 border-emerald-600 shadow-inner' 
+                    : 'bg-slate-200/90 dark:bg-[#202127] border-slate-400/90 dark:border-zinc-700 shadow-inner'
                 }`}
               >
                 <span className="sr-only">Toggle notification alerts</span>
@@ -690,12 +690,12 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                   className={`pointer-events-none inline-block h-5.5 w-5.5 rounded-full flex items-center justify-center transition-transform ${
                     isNotificationsEnabled 
                       ? 'translate-x-5 bg-white text-emerald-700 shadow-md' 
-                      : 'translate-x-0 bg-white dark:bg-zinc-200 text-slate-400 shadow-sm'
+                      : 'translate-x-0 bg-white dark:bg-zinc-200 text-slate-500 shadow-sm'
                   }`}
                   style={{
                     boxShadow: isNotificationsEnabled 
                       ? '0 2px 6px rgba(0,0,0,0.25), inset 0 1.5px 1px #fff'
-                      : '0 1px 4px rgba(0,0,0,0.15), inset 0 1px 1px #fff',
+                      : '0 2px 5px rgba(15,23,42,0.22), inset 0 1px 1px #fff, 0 0 0 1px rgba(15,23,42,0.12)',
                   }}
                 >
                   {isNotifLoading && (
