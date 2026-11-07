@@ -8,6 +8,7 @@ import { useCountry } from '@/context/CountryContext';
 import { isCitizenSubscribed } from '@/lib/subscriptionValidator';
 import { GoogleAuthService, getGoogleAuthErrorMessage } from '@/services/googleAuth';
 import { pushNotificationService } from '@/services/pushNotification';
+import { executeThemeTransition } from '@/lib/themeTransition';
 import {
   X,
   ShieldCheck,
@@ -213,18 +214,26 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     };
   }, [isOpen, isGoogleLoggingIn]);
 
-  const handleToggleTheme = (newTheme: 'light' | 'dark') => {
-    setTheme(newTheme);
-    if (typeof window !== 'undefined') {
-      if (newTheme === 'dark') {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('citizen_theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('citizen_theme', 'light');
-      }
-      window.dispatchEvent(new Event('citizen_theme_changed'));
-    }
+  const handleToggleTheme = (newTheme: 'light' | 'dark', e?: React.MouseEvent) => {
+    if (newTheme === theme) return;
+    executeThemeTransition({
+      newTheme,
+      event: e,
+      targetElement: themeButtonRefs.current[newTheme],
+      onThemeApply: (appliedTheme) => {
+        setTheme(appliedTheme);
+        if (typeof window !== 'undefined') {
+          if (appliedTheme === 'dark') {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('citizen_theme', 'dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('citizen_theme', 'light');
+          }
+          window.dispatchEvent(new Event('citizen_theme_changed'));
+        }
+      },
+    });
   };
 
   const handleSignInGoogle = async () => {
@@ -777,7 +786,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 ref={(el) => {
                   themeButtonRefs.current['light'] = el;
                 }}
-                onClick={() => handleToggleTheme('light')}
+                onClick={(e) => handleToggleTheme('light', e)}
                 className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
                   theme === 'light'
                     ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
@@ -792,7 +801,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 ref={(el) => {
                   themeButtonRefs.current['dark'] = el;
                 }}
-                onClick={() => handleToggleTheme('dark')}
+                onClick={(e) => handleToggleTheme('dark', e)}
                 className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
                   theme === 'dark'
                     ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')

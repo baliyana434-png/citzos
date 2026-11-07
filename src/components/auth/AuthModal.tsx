@@ -12,6 +12,7 @@ import {
 } from '@/services/googleAuth';
 import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { GlowingPendulumBell } from './GlowingPendulumBell';
+import { executeThemeTransition } from '@/lib/themeTransition';
 import {
   validateRealName,
   validateRealDob,
@@ -128,19 +129,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   }, [isOpen]);
 
-  const handleToggleTheme = () => {
-    const nextTheme = !isDarkTheme;
-    setIsDarkTheme(nextTheme);
-    if (typeof window !== 'undefined') {
-      if (nextTheme) {
-        document.documentElement.classList.add('dark');
-        localStorage.setItem('citizen_theme', 'dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-        localStorage.setItem('citizen_theme', 'light');
-      }
-      window.dispatchEvent(new Event('citizen_theme_changed'));
-    }
+  const handleToggleTheme = (e?: React.MouseEvent) => {
+    const nextTheme = !isDarkTheme ? 'dark' : 'light';
+    executeThemeTransition({
+      newTheme: nextTheme,
+      event: e,
+      targetElement: e?.currentTarget as HTMLElement,
+      onThemeApply: (appliedTheme) => {
+        const isDark = appliedTheme === 'dark';
+        setIsDarkTheme(isDark);
+        if (typeof window !== 'undefined') {
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('citizen_theme', 'dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('citizen_theme', 'light');
+          }
+          window.dispatchEvent(new Event('citizen_theme_changed'));
+        }
+      },
+    });
   };
 
   // Forgot Password Two-Step Flow States
@@ -1816,7 +1825,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Theme Toggle Button (Light / Dark) */}
             <button
               type="button"
-              onClick={handleToggleTheme}
+              onClick={(e) => handleToggleTheme(e)}
               title={
                 isDarkTheme
                   ? language === 'hi'
