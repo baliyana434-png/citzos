@@ -287,7 +287,9 @@ export const Header: React.FC<HeaderProps> = ({
                 {profile.fullName.split(' ')[0]}
               </span>
               {isCitizenSubscribed(profile) && (
-                <span className="absolute top-1 right-1 sm:static w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white shrink-0" title="1-Year Active Citizen Pass" />
+                <span title="1-Year Active Citizen Pass" className="inline-flex items-center">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
+                </span>
               )}
             </button>
           </div>

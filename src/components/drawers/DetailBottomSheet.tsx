@@ -534,7 +534,7 @@ export const DetailBottomSheet: React.FC<DetailBottomSheetProps> = ({
             className="flex-1 min-w-[150px] py-2.5 sm:py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-black tracking-wide transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-500/50 border border-emerald-400/50 ring-2 ring-emerald-500/20 active:scale-[0.98] cursor-pointer group"
             title={language === 'hi' ? 'सत्यापित आधिकारिक पोर्टल खोलें' : 'Open Verified Official Portal'}
           >
-            <span className="w-2 h-2 rounded-full bg-white radar-pulse shrink-0" />
+            <ShieldCheck className="w-4 h-4 shrink-0 text-white" />
             <span className="hidden sm:inline truncate">{t('drawer.official_portal_btn')}</span>
             <span className="sm:hidden whitespace-nowrap">{language === 'hi' ? 'पोर्टल देखें' : 'View Portal'}</span>
             <ExternalLink className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

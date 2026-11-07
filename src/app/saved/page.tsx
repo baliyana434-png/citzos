@@ -268,11 +268,11 @@ export default function SavedPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased">
-      {/* 0. Top Strip */}
-      <div className="w-full bg-slate-900 text-slate-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-slate-800 flex items-center justify-between">
+      {/* 0. Top Strip - Theme Adaptive */}
+      <div className="w-full bg-white dark:bg-[#0c0d12] text-slate-700 dark:text-slate-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-slate-300 dark:border-zinc-800 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-2">
-          <span className="font-bold tracking-wider text-slate-100 flex items-center gap-1.5">
-            <span className="inline-block w-2 h-2 rounded-full bg-amber-400"></span>
+          <span className="font-bold tracking-wider text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500 shrink-0" />
             {language === 'hi' ? 'सत्यापित सुरक्षित अवसर • सिटिजन लाइफ' : 'Citzos • SAVED & STARRED OPPORTUNITIES'}
           </span>
           <span className="text-slate-600 hidden md:inline">•</span>

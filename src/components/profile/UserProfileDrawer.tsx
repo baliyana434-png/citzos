@@ -287,7 +287,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-black/40 backdrop-blur-md">
           <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-emerald-400 font-bold shadow-xs">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-zinc-800 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-white/10 shadow-xs">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -330,13 +330,13 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 </div>
               )}
 
-              {/* Unified Auth Access Card */}
-              <div className="p-5 rounded-3xl bg-slate-900 text-white space-y-4 shadow-xl border border-slate-800">
+              {/* Unified Auth Access Card - Theme Adaptive */}
+              <div className="p-5 rounded-2xl bg-white dark:bg-[#0c0d12] text-slate-900 dark:text-white space-y-4 shadow-sm dark:shadow-xl border-2 border-slate-300 dark:border-zinc-700">
                 <div>
-                  <h4 className="text-base font-extrabold text-white leading-tight">
+                  <h4 className="text-base font-extrabold text-slate-900 dark:text-white leading-tight">
                     {language === 'hi' ? 'नागरिक लॉगिन व पंजीकरण' : 'Citizen Login & Sign Up'}
                   </h4>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 leading-relaxed">
                     {language === 'hi'
                       ? 'अपने खाते में लॉगिन करें या प्रामाणिक विवरण द्वारा नया खाता बनाएं।'
                       : 'Sign in to access your profile or register a new verified account.'}
@@ -352,7 +352,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       if (onOpenAuth) onOpenAuth();
                       else if (onOpenOnboarding) onOpenOnboarding();
                     }}
-                    className="w-full py-3.5 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
+                    className="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs sm:text-sm font-extrabold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md hover:shadow-lg"
                   >
                     <User className="w-4 h-4" />
                     <span>{language === 'hi' ? 'लॉगिन / नया खाता बनाएं' : 'Log In / Create Account'}</span>
@@ -362,10 +362,10 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                   {/* Or Continue with Google */}
                   <div className="relative py-1">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-white/10" />
+                      <div className="w-full border-t border-slate-200 dark:border-white/10" />
                     </div>
-                    <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-wider text-slate-400">
-                      <span className="bg-slate-900 px-2">{language === 'hi' ? 'अथवा' : 'Or'}</span>
+                    <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400">
+                      <span className="bg-white dark:bg-[#0c0d12] px-2">{language === 'hi' ? 'अथवा' : 'Or'}</span>
                     </div>
                   </div>
 
@@ -373,7 +373,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                     type="button"
                     onClick={handleSignInGoogle}
                     disabled={isGoogleLoggingIn}
-                    className="w-full py-3 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-60"
+                    className="w-full py-3 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white dark:hover:bg-slate-100 text-slate-900 text-xs sm:text-sm font-bold border border-slate-300 dark:border-transparent transition-all flex items-center justify-center gap-2.5 cursor-pointer shadow-xs active:scale-[0.99] disabled:opacity-60"
                   >
                     {isGoogleLoggingIn ? (
                       <Loader2 className="w-4 h-4 animate-spin text-slate-900 shrink-0" />
@@ -393,7 +393,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       <button
                         type="button"
                         onClick={() => setIsGoogleLoggingIn(false)}
-                        className="text-[11px] font-bold text-slate-400 hover:text-white underline cursor-pointer"
+                        className="text-[11px] font-bold text-slate-500 dark:text-slate-400 hover:underline cursor-pointer"
                       >
                         {language === 'hi' ? 'रद्द करें (Cancel)' : 'Cancel Processing'}
                       </button>
@@ -405,20 +405,20 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
           ) : (
             /* Verified Citizen Mode */
             <>
-              {/* Official Citizen Digital Identity Card */}
-              <div className="rounded-3xl bg-slate-950 p-5 text-white shadow-xl border border-slate-800 space-y-4">
+              {/* Official Citizen Digital Identity Card - Theme Adaptive */}
+              <div className="rounded-2xl p-5 bg-white dark:bg-[#0c0d12] text-slate-900 dark:text-white shadow-sm dark:shadow-xl border-2 border-slate-300 dark:border-zinc-700 space-y-4 transition-colors">
                 {/* ID Card Top Header */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
                   <div className="flex items-center gap-2">
                     <span className="text-base">{countryMeta.flag}</span>
-                    <span className="text-xs font-mono font-bold tracking-wider text-emerald-400">
+                    <span className="text-xs font-mono font-bold tracking-wider text-emerald-700 dark:text-emerald-400">
                       {countryMeta.alpha3 || country}
                     </span>
-                    <span className="text-[11px] font-bold tracking-wider uppercase text-slate-300">
+                    <span className="text-[11px] font-bold tracking-wider uppercase text-slate-800 dark:text-slate-300">
                       {t('profile.title')}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-300 px-2 py-0.5 rounded-md bg-white/10 border border-white/10">
+                  <span className="text-[10px] font-mono text-slate-700 dark:text-slate-300 px-2 py-0.5 rounded-md bg-slate-100 dark:bg-white/10 border border-slate-300 dark:border-white/10">
                     {profile.nationalIdMasked || `${countryMeta.alpha3 || country}-CIT-8921`}
                   </span>
                 </div>
@@ -426,87 +426,87 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 {/* Identity Attributes Grid */}
                 <div className="grid grid-cols-2 gap-2.5 text-xs">
                   {/* Role / Occupation */}
-                  <div className="col-span-2 bg-white/5 p-3 rounded-2xl border border-white/10">
-                    <span className="text-slate-400 block text-[10px] font-bold uppercase tracking-wider">
+                  <div className="col-span-2 bg-slate-50 dark:bg-white/5 p-3 rounded-xl border border-slate-200 dark:border-white/10">
+                    <span className="text-slate-500 dark:text-slate-400 block text-[10px] font-bold uppercase tracking-wider">
                       {t('profile.occupation')}
                     </span>
-                    <span className="text-emerald-400 font-bold text-sm mt-1 block">
+                    <span className="text-emerald-700 dark:text-emerald-400 font-bold text-sm mt-1 block">
                       {roleName}
                     </span>
                   </div>
 
                   {/* Age & DOB */}
-                  <div className="bg-white/5 p-2.5 rounded-2xl border border-white/10">
-                    <span className="text-slate-400 block text-[10px] font-bold uppercase tracking-wider">
+                  <div className="bg-slate-50 dark:bg-white/5 p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                    <span className="text-slate-500 dark:text-slate-400 block text-[10px] font-bold uppercase tracking-wider">
                       {t('hero.age_label')}
                     </span>
                     <div className="flex items-baseline gap-1.5 mt-0.5">
-                      <span className="text-white font-bold text-sm">
+                      <span className="text-slate-900 dark:text-white font-bold text-sm">
                         {profile.age || 21} {t('hero.years_suffix')}
                       </span>
                     </div>
                     {profile.dob && (
-                      <span className="text-[10px] text-emerald-400/90 block font-mono">
+                      <span className="text-[10px] text-emerald-700 dark:text-emerald-400/90 block font-mono">
                         {profile.dob}
                       </span>
                     )}
                   </div>
 
                   {/* Caste or Country Demographic Category */}
-                  <div className="bg-white/5 p-2.5 rounded-2xl border border-white/10">
-                    <span className="text-slate-400 block text-[10px] font-bold uppercase tracking-wider truncate">
+                  <div className="bg-slate-50 dark:bg-white/5 p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                    <span className="text-slate-500 dark:text-slate-400 block text-[10px] font-bold uppercase tracking-wider truncate">
                       {countryMeta.hasCasteSystem 
                         ? (language === 'hi' ? 'जाति वर्ग' : 'Caste') 
                         : (language === 'hi' ? countryMeta.categoryLabelHi : countryMeta.categoryLabel)}
                     </span>
-                    <span className="text-white font-bold text-sm mt-0.5 block truncate" title={profile.casteCategory || 'General'}>
+                    <span className="text-slate-900 dark:text-white font-bold text-sm mt-0.5 block truncate" title={profile.casteCategory || 'General'}>
                       {profile.casteCategory || 'General'}
                     </span>
                   </div>
 
                   {/* Resident State / Region */}
-                  <div className="bg-white/5 p-2.5 rounded-2xl border border-white/10">
-                    <span className="text-slate-400 block text-[10px] font-bold uppercase tracking-wider truncate">
+                  <div className="bg-slate-50 dark:bg-white/5 p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                    <span className="text-slate-500 dark:text-slate-400 block text-[10px] font-bold uppercase tracking-wider truncate">
                       {countryMeta.administrativeLabel}
                     </span>
-                    <span className="text-white font-bold text-sm mt-0.5 block truncate">
+                    <span className="text-slate-900 dark:text-white font-bold text-sm mt-0.5 block truncate">
                       {profile.state || countryMeta.divisions[0] || 'State'}
                     </span>
                   </div>
 
                   {/* Educational Qualification */}
-                  <div className="bg-white/5 p-2.5 rounded-2xl border border-white/10">
-                    <span className="text-slate-400 block text-[10px] font-bold uppercase tracking-wider truncate">
+                  <div className="bg-slate-50 dark:bg-white/5 p-2.5 rounded-xl border border-slate-200 dark:border-white/10">
+                    <span className="text-slate-500 dark:text-slate-400 block text-[10px] font-bold uppercase tracking-wider truncate">
                       {language === 'hi' ? 'शैक्षणिक योग्यता' : 'Qualification'}
                     </span>
-                    <span className="text-white font-bold text-xs mt-0.5 block truncate" title={qualLabel}>
+                    <span className="text-slate-900 dark:text-white font-bold text-xs mt-0.5 block truncate" title={qualLabel}>
                       {qualLabel}
                     </span>
                   </div>
                 </div>
 
                 {/* ID Card Footer */}
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400 flex items-center gap-1.5 font-medium">
-                    <Lock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[11px]">
+                  <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5 font-medium">
+                    <Lock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     <span>{t('onboarding.locked_note').split('.')[0]}</span>
                   </span>
-                  <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-500/30">
+                  <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded-md border border-emerald-300 dark:border-emerald-500/30">
                     {t('profile.aadhaar_badge')}
                   </span>
                 </div>
               </div>
 
-              {/* 1-Year Citizen Access Subscription Section */}
-              <div className="rounded-2xl p-4 border transition-all space-y-2.5 bg-gradient-to-br from-slate-900 to-slate-950 text-white border-slate-800 shadow-md">
+              {/* 1-Year Citizen Access Subscription Section - Theme Adaptive */}
+              <div className="rounded-2xl p-4 border-2 transition-all space-y-2.5 bg-white dark:bg-[#0c0d12] text-slate-900 dark:text-white border-slate-300 dark:border-zinc-700 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Award className="w-5 h-5 text-amber-400 shrink-0" />
+                    <Award className="w-5 h-5 text-amber-500 shrink-0" />
                     <div>
-                      <span className="text-xs font-extrabold text-white block">
+                      <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
                         {language === 'hi' ? '1-वर्षीय राष्ट्रीय नागरिक पास' : '1-Year Citizen Access Pass'}
                       </span>
-                      <span className="text-[10px] text-slate-400">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
                         {isCitizenSubscribed(profile) && profile.subscription
                           ? (language === 'hi' ? `सक्रिय • वैधता: ${profile.subscription.validUntil.split('T')[0]}` : `Active • Valid until ${profile.subscription.validUntil.split('T')[0]}`)
                           : (language === 'hi' ? 'निष्क्रिय • केवल ₹1 / 1 वर्ष' : 'Inactive • Only ₹1 / 1 Year')}
@@ -514,8 +514,8 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                     </div>
                   </div>
                   {isCitizenSubscribed(profile) ? (
-                    <span className="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <Check className="w-3 h-3 text-emerald-400" />
+                    <span className="text-[10px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-500/40 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                       <span>{language === 'hi' ? 'सक्रिय' : 'Active'}</span>
                     </span>
                   ) : (
@@ -525,18 +525,18 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                         onClose();
                         onOpenSubscription?.();
                       }}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold transition-all shadow-sm flex items-center gap-1 cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold transition-all shadow-sm flex items-center gap-1 cursor-pointer"
                     >
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <ShieldCheck className="w-3.5 h-3.5" />
                       <span>{language === 'hi' ? '₹1 पास लें' : 'Get Pass'}</span>
                     </button>
                   )}
                 </div>
 
                 {isCitizenSubscribed(profile) && profile.subscription?.transactionId && (
-                  <div className="pt-2 border-t border-white/10 text-[10px] font-mono text-slate-400 flex items-center justify-between">
+                  <div className="pt-2 border-t border-slate-200 dark:border-white/10 text-[10px] font-mono text-slate-500 dark:text-slate-400 flex items-center justify-between">
                     <span>Txn: {profile.subscription.transactionId}</span>
-                    <span className="text-emerald-400">365 Days Unlocked</span>
+                    <span className="text-emerald-700 dark:text-emerald-400 font-semibold">365 Days Unlocked</span>
                   </div>
                 )}
               </div>
@@ -611,7 +611,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       {language === 'hi' ? 'अवसर नोटिफिकेशन अलर्ट' : 'Opportunity Alerts'}
                     </span>
                     {isNotificationsEnabled && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                     )}
                   </div>
                   <span className="text-[11px] text-slate-500 dark:text-zinc-400 line-clamp-1">

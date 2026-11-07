@@ -11,15 +11,15 @@ export const BrandSplashScreen: React.FC<BrandSplashScreenProps> = ({ message })
     <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 selection:bg-emerald-500 selection:text-white antialiased">
       <div className="flex flex-col items-center justify-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
         <div className="relative flex items-center justify-center">
-          {/* Soft ambient emerald glow */}
-          <div className="absolute w-36 h-36 bg-emerald-500/15 rounded-full blur-2xl animate-pulse pointer-events-none" />
+          {/* Soft ambient emerald backdrop */}
+          <div className="absolute w-36 h-36 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
           
           <img
             src="/logo-shield-transparent.png"
             alt="Citzos"
             width={100}
             height={100}
-            className="relative z-10 w-24 sm:w-28 h-auto object-contain drop-shadow-md transition-transform duration-700 animate-pulse"
+            className="relative z-10 w-24 sm:w-28 h-auto object-contain drop-shadow-md"
             loading="eager"
             decoding="async"
           />
@@ -34,9 +34,9 @@ export const BrandSplashScreen: React.FC<BrandSplashScreenProps> = ({ message })
           </span>
         </div>
 
-        {/* Minimal high-tech progress pulse bar */}
+        {/* Minimal high-tech progress bar */}
         <div className="w-28 h-1 bg-slate-200/90 rounded-full overflow-hidden mt-1 shadow-2xs">
-          <div className="w-full h-full bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 rounded-full animate-pulse" />
+          <div className="w-full h-full bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 rounded-full" />
         </div>
 
         {message && (

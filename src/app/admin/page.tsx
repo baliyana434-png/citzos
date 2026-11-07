@@ -2194,7 +2194,7 @@ export default function AdminPage() {
                   {pushStats?.registeredDeviceCount ?? '...'}
                 </div>
                 <div className="text-[11px] text-slate-500 mt-1 flex items-center gap-1.5">
-                  <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   Active FCM & Web Push Token Registry
                 </div>
               </div>

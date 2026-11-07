@@ -924,7 +924,7 @@ export default function SkillsPage() {
                                   key={kIdx}
                                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-semibold text-slate-700"
                                 >
-                                  <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                                  <span className="w-1 h-1 rounded-full bg-slate-400 shrink-0" />
                                   <span>{point}</span>
                                 </span>
                               ))}
@@ -1180,7 +1180,7 @@ export default function SkillsPage() {
                           <div className="flex flex-wrap gap-1">
                             {video.keyTakeaways.map((pt, i) => (
                               <span key={i} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[10px]">
-                                <span className="w-1 h-1 rounded-full bg-emerald-500" />
+                                <span className="w-1 h-1 rounded-full bg-slate-400 shrink-0" />
                                 <span>{pt}</span>
                               </span>
                             ))}

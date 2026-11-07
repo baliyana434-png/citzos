@@ -49,7 +49,7 @@ export const VoiceReader: React.FC<VoiceReaderProps> = ({ textToSpeak, lang = 'h
       onClick={handleTogglePlay}
       className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
         isPlaying
-          ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-400 animate-pulse'
+          ? 'bg-emerald-600 text-white shadow-sm'
           : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
       }`}
       title={isPlaying ? t('voice_stop') : t('voice_listen')}

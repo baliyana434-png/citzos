@@ -90,15 +90,15 @@ export default function HelplinePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased overflow-x-hidden">
-      {/* Top Banner Strip */}
-      <div className="w-full bg-slate-900 text-slate-300 text-[10px] sm:text-[11px] py-1.5 px-3 sm:px-8 border-b border-slate-800 flex items-center justify-between">
+      {/* Top Banner Strip - Theme Adaptive */}
+      <div className="w-full bg-white dark:bg-[#0c0d12] text-slate-700 dark:text-slate-300 text-[10px] sm:text-[11px] py-1.5 px-3 sm:px-8 border-b border-slate-300 dark:border-zinc-800 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-1.5 sm:gap-2 truncate">
           <span className="text-sm shrink-0">{countryMeta.flag}</span>
-          <span className="font-bold text-white shrink-0">{countryMeta.name}</span>
-          <span className="text-slate-500">•</span>
+          <span className="font-bold text-slate-900 dark:text-white shrink-0">{countryMeta.name}</span>
+          <span className="text-slate-400 dark:text-slate-500">•</span>
           <span className="truncate">{language === 'hi' ? 'नागरिक हेल्पलाइन डायरेक्टरी' : '24x7 Helpline Directory'}</span>
         </div>
-        <div className="shrink-0 text-emerald-400 font-mono font-bold text-[10px] ml-2">
+        <div className="shrink-0 text-emerald-700 dark:text-emerald-400 font-mono font-bold text-[10px] ml-2">
           {language === 'hi' ? '1-क्लिक कॉल' : '1-CLICK CALL'}
         </div>
       </div>

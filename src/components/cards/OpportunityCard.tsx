@@ -7,6 +7,7 @@ import { getLocalizedOpportunity } from '@/data/localization/opportunityTranslat
 import { isComplianceReviewer, sanitizeTextForReviewer, REVIEWER_TAB_LABELS } from '@/lib/complianceFilter';
 import {
   ShieldCheck,
+  CheckCircle2,
   Calendar,
   ArrowRight,
   ExternalLink,
@@ -172,7 +173,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
               : 'bg-slate-100 text-slate-700 border-slate-200'
           }`}>
             {opportunity.applicationStatus === 'active_now' ? (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 shrink-0 radar-pulse" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
             ) : (
               <Calendar className="w-3 h-3 text-slate-600 shrink-0" />
             )}
@@ -252,7 +253,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
                 className="flex-1 py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition-all shadow-md shadow-emerald-600/30 border border-emerald-400/50 ring-1 ring-emerald-400/30 flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.98] group"
                 title={language === 'hi' ? 'सत्यापित आधिकारिक पोर्टल खोलें' : 'Open Verified Official Portal'}
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-white radar-pulse shrink-0" />
+                <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-white" />
                 <span className="truncate">{language === 'hi' ? 'पोर्टल खोलें' : 'View Portal'}</span>
                 <ExternalLink className="w-3.5 h-3.5 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>

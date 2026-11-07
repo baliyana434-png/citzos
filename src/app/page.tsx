@@ -948,9 +948,9 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-hidden">
-      {/* Ambient Glassmorphic Aura Background Orbs */}
+      {/* Ambient Glassmorphic Aura Background Orbs - Static Non-pulsing Clean Backdrop */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-400/20 dark:bg-emerald-500/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-400/15 dark:bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/4 -right-32 w-96 h-96 bg-teal-400/15 dark:bg-teal-500/10 rounded-full blur-3xl" />
         <div className="absolute top-2/3 left-1/4 w-80 h-80 bg-cyan-400/15 dark:bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-32 right-1/4 w-96 h-96 bg-emerald-500/15 dark:bg-emerald-600/10 rounded-full blur-3xl" />
@@ -998,7 +998,6 @@ export default function HomePage() {
             {/* Sovereign State & Registry Badge */}
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-300 text-xs font-medium border border-slate-300 dark:border-white/10">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
                 <span className="font-semibold text-slate-900 dark:text-zinc-100">{countryMeta.flag} {countryMeta.name}</span>
                 <span className="text-slate-400 dark:text-zinc-600">•</span>
                 <span className="font-mono text-[11px] text-slate-600 dark:text-zinc-400">{language === 'hi' ? 'राष्ट्रीय नागरिक पोर्टल' : 'National Citizen Portal'}</span>
@@ -1029,22 +1028,22 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* 1B. Skills & Video Learning Hub Highlight Banner - Hidden on mobile, already in header */}
-        <div className="hidden md:flex bg-gradient-to-r from-slate-900 via-emerald-950/40 to-slate-900 text-white rounded-2xl px-4 py-3 border border-emerald-500/30 shadow-md items-center justify-between gap-3 text-xs">
+        {/* 1B. Skills & Video Learning Hub Highlight Banner - Theme Adaptive */}
+        <div className="hidden md:flex bg-white dark:bg-[#0c0d12] text-slate-900 dark:text-white rounded-2xl px-4 py-3 border-2 border-slate-300 dark:border-zinc-700 shadow-sm items-center justify-between gap-3 text-xs transition-colors">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/40">
+            <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-300 dark:border-emerald-700">
               <GraduationCap className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-white text-xs sm:text-sm">
+                <span className="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm">
                   {language === 'hi' ? 'कौशल सीख केंद्र: टॉप 3 यूट्यूब वीडियोज से सीखें' : 'Skills Learning Hub: Learn from Top 3 YouTube Masterclasses'}
                 </span>
-                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.2 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
                   New Hub
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
                 {language === 'hi' 
                   ? 'कोडिंग, सरकारी परीक्षा गणित, वीडियो एडिटिंग, टैली GST, सोलर व EV रिपेयरिंग के 100% फ्री वीडियोज व सर्टिफिकेट'
                   : 'Free curated tutorials & roadmaps for Coding, Govt Maths, Video Editing, Tally, Solar & EV repairs'}
@@ -1053,28 +1052,27 @@ export default function HomePage() {
           </div>
           <Link
             href="/skills"
-            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
+            className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
           >
             <span>{language === 'hi' ? 'सीखना शुरू करें' : 'Explore Skills'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        {/* 2. Official Feed Synchronization Bar - Clean, Precise, Local Laptop Time */}
-        <div className="hidden sm:flex items-center justify-between gap-3 px-4 py-2.5 bg-slate-900/95 text-white rounded-2xl border border-slate-800 shadow-md text-xs">
-          <div className="flex items-center gap-2.5 text-slate-300">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <Clock className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-            <span className="font-medium text-slate-300">
+        {/* 2. Official Feed Synchronization Bar - Theme Adaptive */}
+        <div className="hidden sm:flex items-center justify-between gap-3 px-4 py-2.5 bg-white dark:bg-[#0c0d12] text-slate-800 dark:text-white rounded-2xl border-2 border-slate-300 dark:border-zinc-700 shadow-sm text-xs transition-colors">
+          <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300">
+            <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
               {language === 'hi' ? 'नवीनतम पोर्टल सिंक:' : 'Last Feed Sync:'}
             </span>
-            <span className="font-mono font-bold text-emerald-400 bg-slate-800 px-2 py-0.5 rounded-md border border-slate-700">
+            <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md border border-slate-300 dark:border-zinc-700">
               {formattedSyncTime}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-slate-400 hidden md:inline">
+            <span className="text-[11px] text-slate-600 dark:text-slate-400 hidden md:inline">
               {portalOpportunities.length} {language === 'hi' ? 'सत्यापित अवसर लाइव' : 'Opportunities Live'}
             </span>
             <button

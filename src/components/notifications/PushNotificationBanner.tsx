@@ -138,26 +138,23 @@ export const PushNotificationBanner: React.FC<PushNotificationBannerProps> = ({
         aria-label="Push Notification Alert"
         className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-40 animate-in fade-in slide-in-from-bottom-5 duration-300"
       >
-        <div className="bg-slate-900/95 backdrop-blur-md text-white rounded-3xl p-4 sm:p-5 shadow-2xl border border-emerald-500/40 relative overflow-hidden">
-          {/* Ambient Glow */}
-          <div className="absolute -top-12 -right-12 w-28 h-28 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none" />
-
+        <div className="bg-white dark:bg-[#0c0d12] text-slate-900 dark:text-white rounded-2xl p-4 sm:p-5 shadow-2xl border-2 border-slate-300 dark:border-zinc-700 relative overflow-hidden transition-colors">
           <div className="flex items-start gap-3.5 relative z-10">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-slate-950 font-bold shrink-0 shadow-lg shadow-emerald-500/20">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 flex items-center justify-center text-emerald-800 dark:text-emerald-400 font-bold shrink-0 shadow-sm">
               {isSuccess ? (
-                <CheckCircle2 className="w-5 h-5 text-slate-950" />
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 dark:text-emerald-400" />
               ) : (
-                <BellRing className="w-5 h-5 text-slate-950 animate-bounce" />
+                <BellRing className="w-5 h-5 text-emerald-700 dark:text-emerald-400 animate-bounce" />
               )}
             </div>
 
             <div className="flex-1 min-w-0 pr-4">
               {isSuccess ? (
                 <div>
-                  <h4 className="text-xs sm:text-sm font-extrabold text-emerald-400">
+                  <h4 className="text-xs sm:text-sm font-extrabold text-emerald-700 dark:text-emerald-400">
                     {language === 'hi' ? 'सूचनाएं सक्रिय हो गईं!' : 'Notifications Enabled!'}
                   </h4>
-                  <p className="text-[11px] text-slate-300 mt-0.5">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
                     {language === 'hi'
                       ? 'लाइव अवसर सूचनाएं सक्रिय हो गई हैं। अब सभी नए अपडेट आपको सीधे लॉक स्क्रीन पर मिलेंगे।'
                       : 'Live opportunity alerts are now active directly on your device lock screen.'}
@@ -166,14 +163,13 @@ export const PushNotificationBanner: React.FC<PushNotificationBannerProps> = ({
               ) : (
                 <div>
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <span className="text-xs sm:text-sm font-black text-white tracking-tight">
+                    <span className="text-xs sm:text-sm font-black text-slate-900 dark:text-white tracking-tight">
                       {isIOS
                         ? (language === 'hi' ? 'iPhone पर सीधे लॉक स्क्रीन अलर्ट पाएं' : 'Get Live Alerts on your iPhone')
                         : (language === 'hi' ? 'Lock Screen पर सीधे सरकारी अलर्ट पाएं' : 'Get Live Alerts on Lock Screen')}
                     </span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
-                  <p className="text-[11px] text-slate-300 mt-1 leading-snug">
+                  <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-1 leading-snug">
                     {isIOS
                       ? (language === 'hi'
                           ? 'हर नई सरकारी भर्ती, योजना व एडमिट कार्ड का इंस्टेंट नोटिफिकेशन पाने के लिए अलर्ट चालू करें।'
@@ -188,7 +184,7 @@ export const PushNotificationBanner: React.FC<PushNotificationBannerProps> = ({
                       type="button"
                       onClick={handleEnablePush}
                       disabled={isLoading}
-                      className="py-2 px-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-black shadow-md hover:shadow-lg transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="py-2 px-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black shadow-sm transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       <Bell className="w-3.5 h-3.5" />
                       <span>
@@ -201,7 +197,7 @@ export const PushNotificationBanner: React.FC<PushNotificationBannerProps> = ({
                     <button
                       type="button"
                       onClick={handleDismiss}
-                      className="py-2 px-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-semibold hover:bg-white/5 transition-all cursor-pointer"
+                      className="py-2 px-2.5 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white text-xs font-semibold hover:bg-slate-100 dark:hover:bg-white/5 transition-all cursor-pointer"
                     >
                       {language === 'hi' ? 'बाद में' : 'Later'}
                     </button>
@@ -213,7 +209,7 @@ export const PushNotificationBanner: React.FC<PushNotificationBannerProps> = ({
             <button
               type="button"
               onClick={handleDismiss}
-              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
+              className="text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
               aria-label="Close"
             >
               <X className="w-4 h-4" />
