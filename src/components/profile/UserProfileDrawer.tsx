@@ -283,12 +283,28 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-3 sm:p-4 md:p-6 bg-black/60 dark:bg-black/85 backdrop-blur-xs animate-fade-in">
       <div className="fixed inset-0" onClick={onClose} />
 
-      <div className="relative w-full max-w-lg glass-panel rounded-2xl shadow-2xl flex flex-col max-h-[90vh] z-10 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-lg glass-panel rounded-2xl shadow-2xl flex flex-col max-h-[88dvh] z-10 overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-black/40 backdrop-blur-md">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-zinc-800 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold border border-emerald-200 dark:border-white/10 shadow-xs">
-              <ShieldCheck className="w-5 h-5" />
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl overflow-hidden bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-900 dark:text-white font-bold border-2 border-slate-300 dark:border-zinc-700 shadow-sm shrink-0">
+              {profile.photoURL ? (
+                <img
+                  src={profile.photoURL}
+                  alt={profile.fullName || 'User'}
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLElement).style.display = 'none';
+                  }}
+                />
+              ) : profile.fullName ? (
+                <span className="text-base font-extrabold text-emerald-700 dark:text-emerald-400">
+                  {profile.fullName.charAt(0).toUpperCase()}
+                </span>
+              ) : (
+                <ShieldCheck className="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
+              )}
             </div>
             <div>
               <h3 className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base">
@@ -310,7 +326,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
         </div>
 
         {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-5 overscroll-contain">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 pb-12 sm:pb-14 space-y-5 overscroll-contain">
           {!isVerified ? (
             /* Guest Mode: Unified Auth Access */
             <div className="space-y-4 py-2">
@@ -541,28 +557,28 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 )}
               </div>
 
-              {/* Logout Button Section */}
+              {/* Logout Button Section - High Contrast Accessible in Light & Dark Modes */}
               <div className="pt-2">
                 {!showLogoutConfirm ? (
                   <button
                     type="button"
                     onClick={() => setShowLogoutConfirm(true)}
-                    className="w-full py-3 px-4 rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 text-red-800 text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-2xs active:scale-[0.99]"
+                    className="w-full py-3 px-4 rounded-xl border-2 border-red-300 dark:border-red-800 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
                   >
-                    <LogOut className="w-4 h-4 text-red-700" />
+                    <LogOut className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                     <span>{t('profile.logout_btn')}</span>
                   </button>
                 ) : (
-                  <div className="p-4 rounded-2xl bg-red-50/95 border border-red-300 space-y-3 shadow-sm animate-in fade-in">
+                  <div className="p-4 rounded-2xl bg-white dark:bg-[#150a0d] border-2 border-red-400 dark:border-red-800/90 space-y-3 shadow-lg animate-in fade-in">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                         <LogOut className="w-4 h-4" />
                       </div>
                       <div>
-                        <h4 className="font-extrabold text-slate-900 text-xs sm:text-sm leading-tight">
+                        <h4 className="font-black text-slate-900 dark:text-red-100 text-xs sm:text-sm leading-tight">
                           {t('profile.logout_confirm_title')}
                         </h4>
-                        <p className="text-[11px] text-slate-600 mt-0.5 leading-snug">
+                        <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
                           {t('profile.logout_confirm_desc')}
                         </p>
                       </div>
@@ -575,7 +591,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                           onClose();
                           onLogout?.();
                         }}
-                        className="flex-1 py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-xs font-extrabold text-white cursor-pointer shadow-xs transition-all flex items-center justify-center gap-1.5 active:scale-[0.98]"
+                        className="flex-1 py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-xs font-black text-white cursor-pointer shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-[0.98]"
                       >
                         <LogOut className="w-3.5 h-3.5" />
                         <span>{t('profile.logout_confirm_yes')}</span>
@@ -583,7 +599,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       <button
                         type="button"
                         onClick={() => setShowLogoutConfirm(false)}
-                        className="py-2.5 px-4 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                        className="py-2.5 px-4 rounded-xl border-2 border-slate-300 dark:border-zinc-700 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-900 dark:text-white text-xs font-extrabold transition-all cursor-pointer shadow-2xs"
                       >
                         {t('profile.logout_cancel')}
                       </button>
@@ -654,7 +670,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
           </div>
 
           {/* Theme Switcher Section (Light / Dark) */}
-          <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#161619] flex items-center justify-between transition-colors shadow-2xs">
+          <div className="p-3.5 sm:p-4 rounded-2xl border-2 border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] flex items-center justify-between transition-colors shadow-xs mb-6">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-[#222227] flex items-center justify-center text-slate-700 dark:text-amber-400">
                 {theme === 'dark' ? <Moon className="w-4 h-4 text-indigo-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
