@@ -97,6 +97,18 @@ export default function FormsPage() {
     return () => window.removeEventListener('resize', updateCategoryPill);
   }, [updateCategoryPill]);
 
+  // Auto-scroll the active category into view horizontally
+  useEffect(() => {
+    const activeBtn = categoryBtnRefs.current[activeCategory];
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [activeCategory]);
+
   // Combine initial catalog with live-synced crawler circulars (e.g. IBPS RRB CRP-XV active now)
   const ALL_OPPORTUNITIES = useMemo(() => {
     const seen = new Set<string>();
@@ -559,7 +571,7 @@ export default function FormsPage() {
           {/* Category Filter Pills (Apple Liquid Glass Segmented Controls) */}
           <div 
             ref={categoryBarRef}
-            className="relative flex items-center p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 shadow-sm"
+            className="relative flex items-center p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 shadow-sm touch-pan-x scroll-smooth"
           >
             {categoryPillPos.ready && (
               <motion.div

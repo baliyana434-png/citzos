@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   PhoneCall, 
@@ -33,6 +33,20 @@ export default function HelplinePage() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
+
+  const categoryBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  // Auto-scroll the active category into view horizontally
+  useEffect(() => {
+    const activeBtn = categoryBtnRefs.current[activeCategory];
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [activeCategory]);
 
   const categories = [
     { id: 'all', labelEn: 'All Helplines', labelHi: 'सभी हेल्पलाइन' },
@@ -219,12 +233,15 @@ export default function HelplinePage() {
           </div>
 
           {/* Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar pr-4">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar pr-4 touch-pan-x scroll-smooth">
             {categories.map((cat) => (
               <button
                 key={cat.id}
+                ref={(el) => {
+                  categoryBtnRefs.current[cat.id] = el;
+                }}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer active:scale-95 ${
                   activeCategory === cat.id
                     ? 'bg-slate-900 text-white shadow-sm'
                     : 'bg-slate-100 hover:bg-slate-200 text-slate-700'

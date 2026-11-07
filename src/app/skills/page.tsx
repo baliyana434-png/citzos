@@ -108,6 +108,30 @@ export default function SkillsPage() {
     window.addEventListener('resize', updateSectorPill);
     return () => window.removeEventListener('resize', updateSectorPill);
   }, [updateSectorPill]);
+
+  // Auto-scroll the active sector into view horizontally
+  useEffect(() => {
+    const activeBtn = sectorBtnRefs.current[selectedSector];
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [selectedSector]);
+
+  // Auto-scroll the active level filter into view horizontally
+  useEffect(() => {
+    const activeBtn = levelBtnRefs.current[levelFilter];
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [levelFilter]);
   
   // Citizen Profile & 1-Year Pass Subscription State
   const [profile, setProfile] = useState<CitizenProfile | null>(null);
@@ -516,7 +540,7 @@ export default function SkillsPage() {
             {/* Level Filter: Beginner / Intermediate / Advanced (Apple Liquid Glass Segmented Bar) */}
             <div 
               ref={levelBarRef}
-              className="relative flex items-center p-1 glass-tab-bar rounded-xl shrink-0 overflow-x-auto no-scrollbar max-w-full shadow-2xs"
+              className="relative flex items-center p-1 glass-tab-bar rounded-xl shrink-0 overflow-x-auto no-scrollbar max-w-full shadow-2xs touch-pan-x scroll-smooth"
             >
               {levelPillPos.ready && (
                 <motion.div
@@ -596,7 +620,7 @@ export default function SkillsPage() {
       <section className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 pt-4 pb-2">
         <div 
           ref={sectorBarRef}
-          className="relative flex items-center p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 shadow-sm"
+          className="relative flex items-center p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 shadow-sm touch-pan-x scroll-smooth"
         >
           {sectorPillPos.ready && (
             <motion.div

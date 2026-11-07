@@ -211,7 +211,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         </div>
 
         {/* 3. Benefit Headline Box */}
-        <div className="mb-3 p-2.5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/25 backdrop-blur-xs">
+        <div className="mb-3 p-2.5 rounded-2xl bg-emerald-500/10 dark:bg-emerald-500/15 border border-emerald-500/25">
           <span className="text-xs font-bold text-emerald-950 dark:text-emerald-300 block leading-snug">
             {displayBenefit}
           </span>

@@ -134,6 +134,18 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
     }
   }, [activeTab]);
 
+  // Auto-scroll the active sub-filter into view horizontally
+  React.useEffect(() => {
+    const activeSubBtn = subButtonRefs.current[activeSubFilter];
+    if (activeSubBtn) {
+      activeSubBtn.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
+    }
+  }, [activeSubFilter]);
+
   return (
     <div className="w-full space-y-3">
       {/* 1. Main Life Stage Switch - Apple VisionOS Liquid Glass Capsule */}
@@ -218,7 +230,7 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
       {/* 2. Sub-Filters Bar (Apple Liquid Glass Segmented Pill) */}
       <div 
         ref={subContainerRef}
-        className="relative flex items-center p-1 glass-tab-bar rounded-full overflow-x-auto no-scrollbar gap-1 sm:gap-1.5 shadow-2xs"
+        className="relative flex items-center p-1 glass-tab-bar rounded-full overflow-x-auto no-scrollbar gap-1 sm:gap-1.5 shadow-2xs touch-pan-x scroll-smooth"
       >
         {subPillPos.ready && (
           <motion.div
