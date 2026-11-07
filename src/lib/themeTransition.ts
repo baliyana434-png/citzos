@@ -9,8 +9,8 @@ export interface ThemeTransitionOptions {
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
 
-// 2.0s duration with ease-out
-const DURATION = 2000;
+// 1.0s duration with ease-out
+const DURATION = 1000;
 const EASING = 'ease-out';
 
 let isThemeTransitioning = false;
