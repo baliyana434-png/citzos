@@ -9,12 +9,18 @@ export interface ThemeTransitionOptions {
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
 
+// Frame-by-frame calibrated from reference video:
+// 350ms duration with ease-out (fast start, smooth deceleration)
+const DURATION = 350;
+const EASING = 'ease-out';
+
 let isThemeTransitioning = false;
 
 /**
  * Circular View Transition for Theme Switching
- * Begins expanding from the exact coordinates of the toggle button across the entire viewport.
- * Provides instant click response with zero delay and smooth 500ms ease-in-out expansion.
+ * Frame-by-frame measured:
+ * Toggle ke center se circle nikalta hai aur poore page ko naye theme se cover kar deta hai.
+ * Speed: 350ms, Easing: ease-out.
  */
 export async function executeThemeTransition({
   newTheme,
@@ -29,7 +35,7 @@ export async function executeThemeTransition({
 
   const doc = document as any;
 
-  // Fallback early if View Transition API is not supported or user prefers reduced motion
+  // Fallback if View Transition API is not supported or user prefers reduced motion
   if (
     !doc.startViewTransition ||
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -38,29 +44,25 @@ export async function executeThemeTransition({
     return;
   }
 
-  // Prevent concurrent rapid-fire collisions
+  // Prevent duplicate concurrent rapid-fire collisions
   if (isThemeTransitioning) {
     onThemeApply(newTheme);
     return;
   }
   isThemeTransitioning = true;
 
-  // 1. Calculate origin coordinates (x, y) immediately from the target button
-  const rawEl = targetElement || (event?.currentTarget as HTMLElement) || (event?.target as HTMLElement);
-  const el = rawEl?.closest ? (rawEl.closest('button') as HTMLElement) || rawEl : rawEl;
+  // Synchronously resolve the toggle button element
+  const raw = targetElement || (event?.currentTarget as HTMLElement) || (event?.target as HTMLElement);
+  const button = (raw?.closest ? (raw.closest('button') as HTMLElement) || raw : raw) as HTMLElement;
 
-  let x = Math.round(window.innerWidth / 2);
-  let y = Math.round(window.innerHeight / 2);
+  // Circle center = toggle button center
+  let x = window.innerWidth / 2;
+  let y = window.innerHeight / 2;
 
-  if (el && typeof el.getBoundingClientRect === 'function') {
-    const rect = el.getBoundingClientRect();
-    if (rect.width > 0 || rect.height > 0) {
-      x = Math.round(rect.left + rect.width / 2);
-      y = Math.round(rect.top + rect.height / 2);
-    } else {
-      x = Math.round(rect.left);
-      y = Math.round(rect.top);
-    }
+  if (button && typeof button.getBoundingClientRect === 'function') {
+    const rect = button.getBoundingClientRect();
+    x = rect.left + rect.width / 2;
+    y = rect.top + rect.height / 2;
   } else if (
     event &&
     'clientX' in event &&
@@ -68,26 +70,24 @@ export async function executeThemeTransition({
     typeof event.clientY === 'number' &&
     (event.clientX > 0 || event.clientY > 0)
   ) {
-    x = Math.round(event.clientX);
-    y = Math.round(event.clientY);
+    x = event.clientX;
+    y = event.clientY;
   }
 
-  // Calculates the radius of circle that can cover the screen
-  const right = window.innerWidth - x;
-  const bottom = window.innerHeight - y;
-  const maxRadius = Math.ceil(
-    Math.hypot(
-      Math.max(x, right),
-      Math.max(y, bottom),
-    )
+  // Radius of circle that covers the entire screen from (x, y)
+  const maxRadius = Math.hypot(
+    Math.max(x, window.innerWidth - x),
+    Math.max(y, window.innerHeight - y)
   );
 
-  try {
-    const transition = doc.startViewTransition(() => {
-      flushSync(() => {
-        onThemeApply(newTheme);
-      });
+  const apply = () => {
+    flushSync(() => {
+      onThemeApply(newTheme);
     });
+  };
+
+  try {
+    const transition = doc.startViewTransition(apply);
 
     await transition.ready;
 
@@ -99,8 +99,8 @@ export async function executeThemeTransition({
         ],
       },
       {
-        duration: 500,
-        easing: 'ease-in-out',
+        duration: DURATION,
+        easing: EASING,
         pseudoElement: '::view-transition-new(root)',
       }
     );
