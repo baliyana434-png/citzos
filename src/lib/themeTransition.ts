@@ -9,9 +9,8 @@ export interface ThemeTransitionOptions {
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
 
-// Frame-by-frame calibrated from reference video:
-// 350ms duration with ease-out (fast start, smooth deceleration)
-const DURATION = 350;
+// 2.0s duration with ease-out
+const DURATION = 2000;
 const EASING = 'ease-out';
 
 let isThemeTransitioning = false;

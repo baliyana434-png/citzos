@@ -497,6 +497,10 @@ button, a {
 }
 
 /* Circular Clip-Path View Transition for Theme Switch */
+::view-transition-group(root) {
+  animation-duration: 2s;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
