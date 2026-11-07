@@ -992,114 +992,40 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Unslopped Sovereign Citizen Hero Section */}
-        <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-[#0c0d10] dark:bg-[#070709] rounded-2xl p-5 sm:p-7 text-white border border-white/10 relative overflow-hidden shadow-xs`}>
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            {/* Left Column: Authoritative Civic Intelligence Overview */}
-            <div className="max-w-2xl">
-              {/* Sovereign State & Registry Badge */}
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 text-zinc-300 text-xs font-medium border border-white/10">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
-                  <span>{countryMeta.flag} {countryMeta.name}</span>
-                  <span className="text-zinc-600">•</span>
-                  <span className="text-zinc-400 font-mono text-[11px]">{language === 'hi' ? 'राष्ट्रीय नागरिक पोर्टल' : 'National Citizen Portal'}</span>
+        {/* National Citizen Portal Hero Section - Clean Theme Adaptive */}
+        <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-white dark:bg-[#0c0d12] rounded-2xl p-5 sm:p-7 border-2 border-slate-300 dark:border-zinc-700 shadow-sm relative overflow-hidden transition-colors`}>
+          <div className="relative z-10 max-w-3xl">
+            {/* Sovereign State & Registry Badge */}
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-300 text-xs font-medium border border-slate-300 dark:border-white/10">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+                <span className="font-semibold text-slate-900 dark:text-zinc-100">{countryMeta.flag} {countryMeta.name}</span>
+                <span className="text-slate-400 dark:text-zinc-600">•</span>
+                <span className="font-mono text-[11px] text-slate-600 dark:text-zinc-400">{language === 'hi' ? 'राष्ट्रीय नागरिक पोर्टल' : 'National Citizen Portal'}</span>
+              </span>
+              {activeProfile.isAadhaarVerified && (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] text-emerald-700 dark:text-emerald-400 font-medium bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800/40">
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>{t('hero.verified_status')}</span>
                 </span>
-                {activeProfile.isAadhaarVerified && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] text-emerald-400 font-medium bg-emerald-950/40 border border-emerald-800/40">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>{t('hero.verified_status')}</span>
-                  </span>
-                )}
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-lg sm:text-2xl lg:text-[26px] font-bold text-white tracking-tight leading-snug">
-                {t('hero.headline_prefix')}{' '}
-                <span className="text-emerald-400 font-mono tabular-nums font-extrabold">
-                  {countryMeta.currencySymbol}{totalBenefitSum.toLocaleString('en-IN')}
-                </span>{' '}
-                {t('hero.headline_suffix')}
-              </h1>
-
-              {/* Subtitle */}
-              <p className="text-xs sm:text-sm text-zinc-400 mt-2 leading-relaxed">
-                {isReviewer
-                  ? 'Direct access to curated career skill learning, practical training modules, and academic guides.'
-                  : t('hero.subline')}
-              </p>
-
-              {/* Live Count Indicator */}
-              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-zinc-400">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                  <span className="font-semibold text-zinc-200">{portalOpportunities.length}</span>
-                  <span>{language === 'hi' ? 'सत्यापित अवसर सक्रिय' : 'Verified Opportunities Active'}</span>
-                </div>
-                <span className="text-zinc-600 hidden sm:inline">•</span>
-                <span className="font-mono text-[11px] text-zinc-500">
-                  {language === 'hi' ? 'सरकारी राजपत्र अद्यतन' : 'Bharat Sarkar Gazette Synchronized'}
-                </span>
-              </div>
-            </div>
-
-            {/* Right Column: Tactile Citizen Identity & Pass Ledger Card */}
-            <div className="w-full lg:w-80 bg-[#121318] dark:bg-[#0b0c0f] rounded-xl p-4 border border-white/10 shrink-0">
-              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-lg bg-zinc-800 text-zinc-200 border border-white/10 flex items-center justify-center font-bold text-sm">
-                    {activeProfile.isOnboarded && profile?.fullName ? profile.fullName.charAt(0).toUpperCase() : countryMeta.flag}
-                  </div>
-                  <div>
-                    <span className="block text-xs font-bold text-zinc-100 leading-tight">
-                      {activeProfile.isOnboarded ? (profile?.fullName || t('profile.guest_title')) : t('profile.guest_title')}
-                    </span>
-                    <span className="text-[11px] text-zinc-400">
-                      {activeProfile.isOnboarded
-                        ? `${profile?.lifePhase ? t(`roles.${profile.lifePhase}`) : t('roles.college_student')} • ${profile?.casteCategory || 'General'}`
-                        : countryMeta.name}
-                    </span>
-                  </div>
-                </div>
-                {activeProfile.isOnboarded ? (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium text-emerald-400 bg-emerald-950/40 border border-emerald-800/40">
-                    VERIFIED
-                  </span>
-                ) : (
-                  <span className="px-2 py-0.5 rounded text-[10px] font-mono text-zinc-400 bg-zinc-800 border border-white/10">
-                    GUEST
-                  </span>
-                )}
-              </div>
-
-              {/* Pass Status Row inside the Ledger */}
-              {isCitizenSubscribed(profile) && profile ? (
-                <div className="space-y-1.5 text-xs">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-zinc-400">{language === 'hi' ? 'नागरिक पास स्थिति:' : 'Citizen Pass Status:'}</span>
-                    <span className="text-emerald-400 font-semibold">{language === 'hi' ? 'सक्रिय (1 वर्ष)' : 'Active (1-Year)'}</span>
-                  </div>
-                  <div className="text-[10px] font-mono text-zinc-500 truncate">
-                    {profile.subscription?.transactionId || 'TXN_VERIFIED'}
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-2.5">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="text-zinc-400">{language === 'hi' ? 'वार्षिक पास:' : 'Annual Access:'}</span>
-                    <span className="text-emerald-400 font-bold font-mono">₹1 / 1 Year</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => handleOpenSubscription()}
-                    className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-[0.99]"
-                  >
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    <span>{language === 'hi' ? 'नागरिक पास सक्रिय करें (₹1)' : 'Activate Citizen Pass (₹1)'}</span>
-                  </button>
-                </div>
               )}
             </div>
+
+            {/* Headline */}
+            <h1 className="text-lg sm:text-2xl lg:text-[26px] font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
+              {t('hero.headline_prefix')}{' '}
+              <span className="text-emerald-600 dark:text-emerald-400 font-mono tabular-nums font-extrabold">
+                {countryMeta.currencySymbol}{totalBenefitSum.toLocaleString('en-IN')}
+              </span>{' '}
+              {t('hero.headline_suffix')}
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 mt-2 leading-relaxed">
+              {isReviewer
+                ? 'Direct access to curated career skill learning, practical training modules, and academic guides.'
+                : t('hero.subline')}
+            </p>
           </div>
         </div>
 
