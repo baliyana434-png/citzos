@@ -93,6 +93,35 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
     return () => window.removeEventListener('resize', updatePill);
   }, [updatePill]);
 
+  const subContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const subButtonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const [subPillPos, setSubPillPos] = React.useState<{ left: number; width: number; ready: boolean }>({
+    left: 0,
+    width: 0,
+    ready: false,
+  });
+
+  const updateSubPill = React.useCallback(() => {
+    const activeSubBtn = subButtonRefs.current[activeSubFilter];
+    if (activeSubBtn) {
+      setSubPillPos({
+        left: activeSubBtn.offsetLeft,
+        width: activeSubBtn.offsetWidth,
+        ready: true,
+      });
+    }
+  }, [activeSubFilter]);
+
+  React.useLayoutEffect(() => {
+    updateSubPill();
+  }, [updateSubPill]);
+
+  React.useEffect(() => {
+    updateSubPill();
+    window.addEventListener('resize', updateSubPill);
+    return () => window.removeEventListener('resize', updateSubPill);
+  }, [updateSubPill]);
+
   // Auto-scroll the active tab into view horizontally so user instantly sees the selected section
   React.useEffect(() => {
     const activeBtn = buttonRefs.current[activeTab];
@@ -186,18 +215,49 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
         })}
       </div>
 
-      {/* 2. Sub-Filters Bar */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-1">
+      {/* 2. Sub-Filters Bar (Apple Liquid Glass Segmented Pill) */}
+      <div 
+        ref={subContainerRef}
+        className="relative flex items-center p-1 glass-tab-bar rounded-full overflow-x-auto no-scrollbar gap-1 sm:gap-1.5 shadow-2xs"
+      >
+        {subPillPos.ready && (
+          <motion.div
+            className="apple-liquid-glass apple-liquid-glass-rounded"
+            initial={false}
+            animate={{
+              x: subPillPos.left,
+              width: subPillPos.width,
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 460,
+              damping: 32,
+              mass: 0.75,
+            }}
+            style={{
+              position: 'absolute',
+              top: '4px',
+              bottom: '4px',
+              left: 0,
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+        )}
+
         {subFilters.map((sub) => {
           const isSubActive = activeSubFilter === sub.id;
           return (
             <button
               key={sub.id}
+              ref={(el) => {
+                subButtonRefs.current[sub.id] = el;
+              }}
               onClick={() => onSubFilterChange(sub.id)}
-              className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-150 cursor-pointer border ${
+              className={`relative z-10 px-3 py-1 rounded-full text-xs cursor-pointer select-none whitespace-nowrap transition-colors duration-200 active:scale-[0.97] ${
                 isSubActive
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                  : 'bg-white/80 dark:bg-[#141417] text-slate-700 dark:text-zinc-200 border-slate-300 dark:border-zinc-700 hover:bg-white dark:hover:bg-[#1c1c20]'
+                  ? 'text-slate-950 dark:text-white font-black'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
               }`}
             >
               {sub.label}

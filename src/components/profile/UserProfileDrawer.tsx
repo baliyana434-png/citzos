@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
+import { motion } from 'framer-motion';
 import { CitizenProfile, FamilyMember, QUALIFICATION_OPTIONS } from '@/types';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
@@ -72,6 +73,34 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState<boolean>(false);
   const [googleLoginError, setGoogleLoginError] = useState<string | null>(null);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const themeContainerRef = useRef<HTMLDivElement | null>(null);
+  const themeButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [themePillPos, setThemePillPos] = useState<{ left: number; width: number; ready: boolean }>({
+    left: 0,
+    width: 0,
+    ready: false,
+  });
+
+  const updateThemePill = useCallback(() => {
+    const activeBtn = themeButtonRefs.current[theme];
+    if (activeBtn) {
+      setThemePillPos({
+        left: activeBtn.offsetLeft,
+        width: activeBtn.offsetWidth,
+        ready: true,
+      });
+    }
+  }, [theme]);
+
+  useLayoutEffect(() => {
+    updateThemePill();
+  }, [updateThemePill]);
+
+  useEffect(() => {
+    updateThemePill();
+    window.addEventListener('resize', updateThemePill);
+    return () => window.removeEventListener('resize', updateThemePill);
+  }, [updateThemePill]);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState<boolean>(false);
   const [isNotifLoading, setIsNotifLoading] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string | null>(null);
@@ -648,20 +677,31 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 aria-checked={isNotificationsEnabled}
                 disabled={isNotifLoading}
                 onClick={handleToggleNotifications}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 ${
-                  isNotificationsEnabled ? 'bg-emerald-600' : 'bg-slate-300 dark:bg-[#27272a]'
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full p-0.5 border transition-colors duration-300 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 ${
+                  isNotificationsEnabled 
+                    ? 'bg-emerald-600 border-emerald-500 shadow-inner' 
+                    : 'bg-slate-200 dark:bg-[#202127] border-slate-300 dark:border-zinc-700 shadow-inner'
                 }`}
               >
                 <span className="sr-only">Toggle notification alerts</span>
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out flex items-center justify-center ${
-                    isNotificationsEnabled ? 'translate-x-5' : 'translate-x-0'
+                <motion.span
+                  layout
+                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  className={`pointer-events-none inline-block h-5.5 w-5.5 rounded-full flex items-center justify-center transition-transform ${
+                    isNotificationsEnabled 
+                      ? 'translate-x-5 bg-white text-emerald-700 shadow-md' 
+                      : 'translate-x-0 bg-white dark:bg-zinc-200 text-slate-400 shadow-sm'
                   }`}
+                  style={{
+                    boxShadow: isNotificationsEnabled 
+                      ? '0 2px 6px rgba(0,0,0,0.25), inset 0 1.5px 1px #fff'
+                      : '0 1px 4px rgba(0,0,0,0.15), inset 0 1px 1px #fff',
+                  }}
                 >
                   {isNotifLoading && (
                     <Loader2 className="w-3 h-3 text-emerald-600 animate-spin" />
                   )}
-                </span>
+                </motion.span>
               </button>
             </div>
 
@@ -691,29 +731,63 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               </div>
             </div>
 
-            <div className="inline-flex p-1 rounded-xl bg-slate-200/90 dark:bg-[#101013] border border-slate-300 dark:border-white/10">
+            <div 
+              ref={themeContainerRef}
+              className="relative inline-flex p-1 glass-tab-bar rounded-xl shadow-2xs"
+            >
+              {themePillPos.ready && (
+                <motion.div
+                  className="apple-liquid-glass"
+                  initial={false}
+                  animate={{
+                    x: themePillPos.left,
+                    width: themePillPos.width,
+                  }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 460,
+                    damping: 32,
+                    mass: 0.75,
+                  }}
+                  style={{
+                    position: 'absolute',
+                    top: '4px',
+                    bottom: '4px',
+                    left: 0,
+                    pointerEvents: 'none',
+                    zIndex: 0,
+                  }}
+                />
+              )}
+
               <button
                 type="button"
+                ref={(el) => {
+                  themeButtonRefs.current['light'] = el;
+                }}
                 onClick={() => handleToggleTheme('light')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
                   theme === 'light'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'text-slate-950 dark:text-white font-black'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
                 }`}
               >
-                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <Sun className={`w-3.5 h-3.5 transition-transform ${theme === 'light' ? 'text-amber-500 scale-110' : 'text-slate-400'}`} />
                 <span>{language === 'hi' ? 'लाइट' : 'Light'}</span>
               </button>
               <button
                 type="button"
+                ref={(el) => {
+                  themeButtonRefs.current['dark'] = el;
+                }}
                 onClick={() => handleToggleTheme('dark')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
                   theme === 'dark'
-                    ? 'bg-slate-800 text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'text-slate-950 dark:text-white font-black'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
                 }`}
               >
-                <Moon className="w-3.5 h-3.5 text-indigo-400" />
+                <Moon className={`w-3.5 h-3.5 transition-transform ${theme === 'dark' ? 'text-indigo-400 scale-110' : 'text-slate-400'}`} />
                 <span>{language === 'hi' ? 'डार्क' : 'Dark'}</span>
               </button>
             </div>

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { 
   Star, 
   ArrowLeft, 
@@ -38,6 +39,34 @@ export default function SavedPage() {
   const [selectedOpp, setSelectedOpp] = useState<Opportunity | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'opportunities' | 'skills'>('opportunities');
+  const tabContainerRef = useRef<HTMLDivElement | null>(null);
+  const tabButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [tabPillPos, setTabPillPos] = useState<{ left: number; width: number; ready: boolean }>({
+    left: 0,
+    width: 0,
+    ready: false,
+  });
+
+  const updateTabPill = useCallback(() => {
+    const activeBtn = tabButtonRefs.current[activeTab];
+    if (activeBtn) {
+      setTabPillPos({
+        left: activeBtn.offsetLeft,
+        width: activeBtn.offsetWidth,
+        ready: true,
+      });
+    }
+  }, [activeTab]);
+
+  useLayoutEffect(() => {
+    updateTabPill();
+  }, [updateTabPill]);
+
+  useEffect(() => {
+    updateTabPill();
+    window.addEventListener('resize', updateTabPill);
+    return () => window.removeEventListener('resize', updateTabPill);
+  }, [updateTabPill]);
   const [savedSkillIds, setSavedSkillIds] = useState<Set<string>>(new Set<string>());
   const [savedVideosList, setSavedVideosList] = useState<any[]>([]);
   const [playingSkillVideo, setPlayingSkillVideo] = useState<SkillVideo | null>(null);
@@ -289,25 +318,25 @@ export default function SavedPage() {
       </div>
 
       {/* 1. Header Navigation */}
-      <header className="sticky top-0 z-30 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0c0d12]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-3">
             {/* Back Button & Title */}
             <div className="flex items-center gap-3">
               <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 text-xs font-bold transition-all"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>{language === 'hi' ? 'मुख्य पृष्ठ' : 'All Opportunities'}</span>
               </Link>
-              <div className="h-5 w-px bg-slate-200 hidden sm:block"></div>
+              <div className="h-5 w-px bg-slate-200 dark:bg-zinc-800 hidden sm:block"></div>
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center text-slate-950 shadow-sm">
                   <Star className="w-5 h-5 fill-slate-950 text-slate-950" />
                 </div>
                 <div>
-                  <h1 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-none">
+                  <h1 className="text-base sm:text-lg font-black text-slate-900 dark:text-white tracking-tight leading-none">
                     {language === 'hi' ? 'पसंदीदा एवं सुरक्षित अवसर' : 'Saved & Starred Opportunities'}
                   </h1>
                   <p className="text-[11px] text-slate-500 hidden sm:block mt-0.5">
@@ -346,34 +375,76 @@ export default function SavedPage() {
           </div>
         )}
 
-        {/* Saved Items Type Switch Tabs */}
-        <div className="flex items-center gap-2 p-1.5 bg-slate-200/80 rounded-2xl w-fit">
+        {/* Saved Items Type Switch Tabs (Apple VisionOS Liquid Glass Segmented Bar) */}
+        <div 
+          ref={tabContainerRef}
+          className="relative flex items-center gap-1.5 p-1.5 glass-tab-bar rounded-2xl w-fit shadow-sm"
+        >
+          {tabPillPos.ready && (
+            <motion.div
+              className="apple-liquid-glass"
+              initial={false}
+              animate={{
+                x: tabPillPos.left,
+                width: tabPillPos.width,
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 460,
+                damping: 32,
+                mass: 0.75,
+              }}
+              style={{
+                position: 'absolute',
+                top: '6px',
+                bottom: '6px',
+                left: 0,
+                pointerEvents: 'none',
+                zIndex: 0,
+              }}
+            />
+          )}
+
           <button
+            ref={(el) => {
+              tabButtonRefs.current['opportunities'] = el;
+            }}
             onClick={() => setActiveTab('opportunities')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`relative z-10 px-4 py-2 rounded-xl text-xs cursor-pointer select-none transition-colors duration-200 flex items-center gap-2 active:scale-[0.97] ${
               activeTab === 'opportunities'
-                ? 'bg-white text-slate-900 shadow-sm font-extrabold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'text-slate-950 dark:text-white font-black'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
             }`}
           >
-            <Star className={`w-3.5 h-3.5 ${activeTab === 'opportunities' ? 'fill-amber-500 text-amber-500' : ''}`} />
+            <Star className={`w-3.5 h-3.5 transition-transform ${activeTab === 'opportunities' ? 'fill-amber-500 text-amber-500 scale-110' : 'text-slate-400'}`} />
             <span>{language === 'hi' ? 'अवसर व योजनाएं' : 'Opportunities & Schemes'}</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black">
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+              activeTab === 'opportunities'
+                ? 'bg-amber-500/15 text-amber-900 dark:text-amber-300 border border-amber-500/30'
+                : 'bg-slate-200/90 dark:bg-[#202127] text-slate-700 dark:text-zinc-400'
+            }`}>
               {savedOpportunities.length}
             </span>
           </button>
 
           <button
+            ref={(el) => {
+              tabButtonRefs.current['skills'] = el;
+            }}
             onClick={() => setActiveTab('skills')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+            className={`relative z-10 px-4 py-2 rounded-xl text-xs cursor-pointer select-none transition-colors duration-200 flex items-center gap-2 active:scale-[0.97] ${
               activeTab === 'skills'
-                ? 'bg-white text-slate-900 shadow-sm font-extrabold'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'text-slate-950 dark:text-white font-black'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
             }`}
           >
-            <GraduationCap className={`w-3.5 h-3.5 ${activeTab === 'skills' ? 'text-emerald-600' : ''}`} />
+            <GraduationCap className={`w-3.5 h-3.5 transition-transform ${activeTab === 'skills' ? 'text-emerald-600 dark:text-emerald-400 scale-110' : 'text-slate-400'}`} />
             <span>{language === 'hi' ? 'कौशल व वीडियो' : 'Saved Videos & Skills'}</span>
-            <span className="px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+              activeTab === 'skills'
+                ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30'
+                : 'bg-slate-200/90 dark:bg-[#202127] text-slate-700 dark:text-zinc-400'
+            }`}>
               {savedVideosList.length + savedSkills.length}
             </span>
           </button>

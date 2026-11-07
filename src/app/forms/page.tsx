@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { 
   FileText, 
   ArrowLeft, 
@@ -65,6 +66,36 @@ export default function FormsPage() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [profile, setProfile] = useState<CitizenProfile>(GUEST_PROFILE);
+
+  // Category Filter Apple Liquid Pill
+  const categoryBarRef = useRef<HTMLDivElement | null>(null);
+  const categoryBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [categoryPillPos, setCategoryPillPos] = useState<{ left: number; width: number; ready: boolean }>({
+    left: 0,
+    width: 0,
+    ready: false,
+  });
+
+  const updateCategoryPill = useCallback(() => {
+    const activeBtn = categoryBtnRefs.current[activeCategory];
+    if (activeBtn) {
+      setCategoryPillPos({
+        left: activeBtn.offsetLeft,
+        width: activeBtn.offsetWidth,
+        ready: true,
+      });
+    }
+  }, [activeCategory]);
+
+  useLayoutEffect(() => {
+    updateCategoryPill();
+  }, [updateCategoryPill]);
+
+  useEffect(() => {
+    updateCategoryPill();
+    window.addEventListener('resize', updateCategoryPill);
+    return () => window.removeEventListener('resize', updateCategoryPill);
+  }, [updateCategoryPill]);
 
   // Combine initial catalog with live-synced crawler circulars (e.g. IBPS RRB CRP-XV active now)
   const ALL_OPPORTUNITIES = useMemo(() => {
@@ -525,26 +556,62 @@ export default function FormsPage() {
             </div>
           </div>
 
-          {/* Category Filter Pills */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
-            {formCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap flex items-center gap-1.5 ${
-                  activeCategory === cat.id
-                    ? 'bg-emerald-800 text-white shadow-sm'
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                }`}
-              >
-                <span>{language === 'hi' ? cat.labelHi : cat.labelEn}</span>
-                <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                  activeCategory === cat.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
-                }`}>
-                  {cat.count}
-                </span>
-              </button>
-            ))}
+          {/* Category Filter Pills (Apple Liquid Glass Segmented Controls) */}
+          <div 
+            ref={categoryBarRef}
+            className="relative flex items-center p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 shadow-sm"
+          >
+            {categoryPillPos.ready && (
+              <motion.div
+                className="apple-liquid-glass"
+                initial={false}
+                animate={{
+                  x: categoryPillPos.left,
+                  width: categoryPillPos.width,
+                }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 460,
+                  damping: 32,
+                  mass: 0.75,
+                }}
+                style={{
+                  position: 'absolute',
+                  top: '6px',
+                  bottom: '6px',
+                  left: 0,
+                  pointerEvents: 'none',
+                  zIndex: 0,
+                }}
+              />
+            )}
+
+            {formCategories.map((cat) => {
+              const isSelected = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  ref={(el) => {
+                    categoryBtnRefs.current[cat.id] = el;
+                  }}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`relative z-10 shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs transition-colors duration-200 cursor-pointer select-none active:scale-[0.97] whitespace-nowrap ${
+                    isSelected
+                      ? 'text-slate-950 dark:text-white font-black'
+                      : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white font-bold'
+                  }`}
+                >
+                  <span>{language === 'hi' ? cat.labelHi : cat.labelEn}</span>
+                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                    isSelected
+                      ? 'bg-emerald-500/15 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-500/30'
+                      : 'bg-slate-200/90 dark:bg-[#202127] text-slate-700 dark:text-zinc-400'
+                  }`}>
+                    {cat.count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
