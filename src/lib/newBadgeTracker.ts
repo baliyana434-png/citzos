@@ -7,18 +7,25 @@ interface BadgeSeenStore {
   [opportunityId: string]: number; // first seen timestamp in ms
 }
 
+let memorySeenStore: BadgeSeenStore = {};
+let isStoreLoaded = false;
+
 function getSeenStore(): BadgeSeenStore {
+  if (isStoreLoaded) return memorySeenStore;
   if (typeof window === 'undefined') return {};
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return {};
-    return JSON.parse(raw) || {};
+    memorySeenStore = raw ? JSON.parse(raw) || {} : {};
+    isStoreLoaded = true;
+    return memorySeenStore;
   } catch (e) {
     return {};
   }
 }
 
 function saveSeenStore(store: BadgeSeenStore): void {
+  memorySeenStore = store;
+  isStoreLoaded = true;
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(store));

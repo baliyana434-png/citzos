@@ -101,6 +101,20 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     window.addEventListener('resize', updateThemePill);
     return () => window.removeEventListener('resize', updateThemePill);
   }, [updateThemePill]);
+
+  // Ensure theme pill re-measures accurately when drawer opens
+  useEffect(() => {
+    if (!isOpen) return;
+    updateThemePill();
+    const t1 = setTimeout(updateThemePill, 40);
+    const t2 = setTimeout(updateThemePill, 120);
+    const t3 = setTimeout(updateThemePill, 250);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, [isOpen, updateThemePill]);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState<boolean>(false);
   const [isNotifLoading, setIsNotifLoading] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string | null>(null);
@@ -677,31 +691,29 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 aria-checked={isNotificationsEnabled}
                 disabled={isNotifLoading}
                 onClick={handleToggleNotifications}
-                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full p-0.5 border transition-colors duration-300 ease-in-out focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 ${
+                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full p-0.5 border transition-colors duration-200 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/30 disabled:opacity-60 items-center ${
                   isNotificationsEnabled 
                     ? 'bg-emerald-600 border-emerald-600 shadow-inner' 
-                    : 'bg-slate-200/90 dark:bg-[#202127] border-slate-400/90 dark:border-zinc-700 shadow-inner'
+                    : 'bg-slate-300 dark:bg-[#202127] border-slate-400 dark:border-zinc-700 shadow-inner'
                 }`}
               >
                 <span className="sr-only">Toggle notification alerts</span>
-                <motion.span
-                  layout
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  className={`pointer-events-none inline-block h-5.5 w-5.5 rounded-full flex items-center justify-center transition-transform ${
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 rounded-full flex items-center justify-center transition-transform duration-200 ease-out ${
                     isNotificationsEnabled 
-                      ? 'translate-x-5 bg-white text-emerald-700 shadow-md' 
-                      : 'translate-x-0 bg-white dark:bg-zinc-200 text-slate-500 shadow-sm'
+                      ? 'translate-x-5.5 bg-white text-emerald-700 shadow-md' 
+                      : 'translate-x-0.5 bg-white dark:bg-zinc-200 text-slate-500 shadow-sm'
                   }`}
                   style={{
                     boxShadow: isNotificationsEnabled 
-                      ? '0 2px 6px rgba(0,0,0,0.25), inset 0 1.5px 1px #fff'
-                      : '0 2px 5px rgba(15,23,42,0.22), inset 0 1px 1px #fff, 0 0 0 1px rgba(15,23,42,0.12)',
+                      ? '0 2px 6px rgba(0,0,0,0.3), inset 0 1.5px 1px #fff'
+                      : '0 2px 5px rgba(15,23,42,0.25), inset 0 1px 1px #fff, 0 0 0 1px rgba(15,23,42,0.15)',
                   }}
                 >
                   {isNotifLoading && (
                     <Loader2 className="w-3 h-3 text-emerald-600 animate-spin" />
                   )}
-                </motion.span>
+                </span>
               </button>
             </div>
 
@@ -721,7 +733,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               </div>
               <div>
                 <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
-                  {language === 'hi' ? 'थीम प्राथमिकता (Theme)' : 'Theme Preference'}
+                  {language === 'hi' ? 'थीम (Theme)' : 'Theme'}
                 </span>
                 <span className="text-[11px] text-slate-500 dark:text-zinc-400">
                   {theme === 'dark'
@@ -735,7 +747,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               ref={themeContainerRef}
               className="relative inline-flex p-1 glass-tab-bar rounded-xl shadow-2xs"
             >
-              {themePillPos.ready && (
+              {themePillPos.ready && themePillPos.width > 0 && (
                 <motion.div
                   className="apple-liquid-glass"
                   initial={false}
@@ -768,7 +780,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 onClick={() => handleToggleTheme('light')}
                 className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
                   theme === 'light'
-                    ? 'text-slate-950 dark:text-white font-black'
+                    ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
                     : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
                 }`}
               >
@@ -783,7 +795,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                 onClick={() => handleToggleTheme('dark')}
                 className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
                   theme === 'dark'
-                    ? 'text-slate-950 dark:text-white font-black'
+                    ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
                     : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
                 }`}
               >
