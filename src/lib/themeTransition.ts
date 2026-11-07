@@ -9,16 +9,14 @@ export interface ThemeTransitionOptions {
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
 
-const DURATION = 1000; // ms (1.0s)
-
-let isThemeTransitioning = false;
+const DURATION = 600; // ms (0.6s)
 
 /**
  * Circular View Transition for Theme Switching
+ * Instant switch with zero delay on click, 600ms smooth animation.
  * Dual-Engine:
  * 1. Native View Transitions API with CSS @keyframes circle reveal (Chrome / Edge / Safari 18+)
  * 2. High-performance DOM circular ripple fallback for older Safari, Firefox, and in-app webviews
- * Result: 100% guaranteed visible circular transition on every browser and device!
  */
 export async function executeThemeTransition({
   newTheme,
@@ -31,12 +29,11 @@ export async function executeThemeTransition({
     return;
   }
 
-  // Prevent duplicate concurrent rapid-fire collisions
-  if (isThemeTransitioning) {
-    onThemeApply(newTheme);
-    return;
+  // Clean up any in-flight ripple from a previous rapid click so instant toggling always works
+  const existingRipple = document.getElementById('theme-transition-ripple');
+  if (existingRipple && existingRipple.parentNode) {
+    existingRipple.parentNode.removeChild(existingRipple);
   }
-  isThemeTransitioning = true;
 
   // Synchronously resolve the toggle button element
   const raw = targetElement || (event?.currentTarget as HTMLElement) || (event?.target as HTMLElement);
@@ -120,8 +117,6 @@ export async function executeThemeTransition({
       return;
     } catch (_) {
       // Fall through to Engine 2 fallback
-    } finally {
-      isThemeTransitioning = false;
     }
   }
 
@@ -161,10 +156,8 @@ export async function executeThemeTransition({
       if (ripple.parentNode) {
         ripple.parentNode.removeChild(ripple);
       }
-      isThemeTransitioning = false;
     }, DURATION + 50);
   } catch (err) {
     apply();
-    isThemeTransitioning = false;
   }
 }
