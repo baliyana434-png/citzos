@@ -287,13 +287,17 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-white/10 flex items-center justify-between bg-white/40 dark:bg-black/40 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl overflow-hidden bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-900 dark:text-white font-bold border-2 border-slate-300 dark:border-zinc-700 shadow-sm shrink-0">
+            <div 
+              className="w-11 h-11 rounded-2xl overflow-hidden bg-slate-100 dark:bg-zinc-800 flex items-center justify-center text-slate-900 dark:text-white font-bold border-2 border-slate-300 dark:border-zinc-700 shadow-sm shrink-0"
+              style={{ width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', maxWidth: '44px', maxHeight: '44px' }}
+            >
               {profile.photoURL ? (
                 <img
                   src={profile.photoURL}
                   alt={profile.fullName || 'User'}
                   referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover block"
+                  style={{ width: '100%', height: '100%', maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}
                   onError={(e) => {
                     (e.currentTarget as HTMLElement).style.display = 'none';
                   }}

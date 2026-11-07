@@ -250,7 +250,7 @@ export const Header: React.FC<HeaderProps> = ({
               title={language === 'hi' ? '24x7 हेल्पलाइन' : '24x7 Helplines'}
             >
               <PhoneCall className="w-3.5 h-3.5 text-red-700 shrink-0" />
-              <span className="hidden md:inline ml-1.5">{language === 'hi' ? 'हेल्पलाइन' : 'Helpline'}</span>
+              <span className="hidden md:inline ml-1.5 whitespace-nowrap">{language === 'hi' ? 'हेल्पलाइन' : 'Helpline'}</span>
             </Link>
 
             {/* Favourites / Saved Navigation Button */}
@@ -260,7 +260,7 @@ export const Header: React.FC<HeaderProps> = ({
               title={language === 'hi' ? 'सहेजे गए अवसर' : 'Saved Opportunities'}
             >
               <Star className={`w-3.5 h-3.5 ${liveFavCount > 0 ? 'fill-amber-400 text-amber-600' : 'text-amber-600'} shrink-0`} />
-              <span className="hidden md:inline ml-1.5">{t('subfilters.favorites').split(' ')[0]}</span>
+              <span className="hidden md:inline ml-1.5 whitespace-nowrap">{t('subfilters.favorites').split(' ')[0]}</span>
               {liveFavCount > 0 && (
                 <span className="absolute -top-1 -right-1 sm:static sm:ml-1.5 px-1 sm:px-1.5 py-0.2 rounded-full bg-amber-500 text-white text-[9px] sm:text-[10px] font-black">
                   {liveFavCount}
@@ -268,32 +268,37 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </Link>
 
-            {/* Single Profile Avatar Button (Only Picture) */}
+            {/* Single Profile Avatar Button (Strict Fixed Dimensions: 34px mobile / 36px desktop) */}
             <button
               type="button"
               onClick={onOpenProfile}
-              className="h-8.5 w-8.5 sm:h-9 sm:w-9 p-0.5 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white flex items-center justify-center transition-all focus:ring-2 focus:ring-emerald-500/30 relative cursor-pointer shrink-0 shadow-xs active:scale-[0.96]"
+              className="w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white flex items-center justify-center transition-all focus:ring-2 focus:ring-emerald-500/30 relative cursor-pointer shrink-0 shadow-xs active:scale-[0.96] overflow-hidden"
+              style={{ width: '34px', height: '34px', minWidth: '34px', minHeight: '34px', maxWidth: '34px', maxHeight: '34px' }}
               aria-label={t('profile_btn')}
               title={profile.fullName || t('profile_btn')}
             >
-              <div className="w-full h-full rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white flex items-center justify-center text-[11px] font-bold overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 shadow-2xs">
+              <div 
+                className="w-full h-full rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white flex items-center justify-center text-[11px] font-bold overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 shadow-2xs"
+                style={{ width: '100%', height: '100%', borderRadius: '9999px', overflow: 'hidden' }}
+              >
                 {profile.photoURL ? (
                   <img
                     src={profile.photoURL}
                     alt={profile.fullName || 'User'}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-full block"
+                    style={{ width: '100%', height: '100%', maxWidth: '100%', maxHeight: '100%', objectFit: 'cover', borderRadius: '9999px' }}
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                     }}
                   />
                 ) : (
                   profile.fullName ? (
-                    <span className="text-emerald-700 dark:text-emerald-400 font-extrabold">
+                    <span className="text-emerald-700 dark:text-emerald-400 font-extrabold text-xs">
                       {profile.fullName.charAt(0).toUpperCase()}
                     </span>
                   ) : (
-                    <User className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                    <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
                   )
                 )}
               </div>
