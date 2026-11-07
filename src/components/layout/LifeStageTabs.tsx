@@ -59,7 +59,39 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
         { id: 'high_value', label: t('subfilters.high_value') },
       ];
 
+  const containerRef = React.useRef<HTMLDivElement | null>(null);
   const buttonRefs = React.useRef<Record<string, HTMLButtonElement | null>>({});
+  const [pillPos, setPillPos] = React.useState<{ left: number; width: number; height: number; ready: boolean }>({
+    left: 0,
+    width: 0,
+    height: 0,
+    ready: false,
+  });
+
+  const updatePill = React.useCallback(() => {
+    const activeBtn = buttonRefs.current[activeTab];
+    if (activeBtn) {
+      setPillPos({
+        left: activeBtn.offsetLeft,
+        width: activeBtn.offsetWidth,
+        height: activeBtn.offsetHeight,
+        ready: true,
+      });
+    }
+  }, [activeTab]);
+
+  React.useLayoutEffect(() => {
+    updatePill();
+  }, [updatePill]);
+
+  React.useEffect(() => {
+    updatePill();
+    if (typeof document !== 'undefined' && document.fonts) {
+      document.fonts.ready.then(updatePill).catch(() => {});
+    }
+    window.addEventListener('resize', updatePill);
+    return () => window.removeEventListener('resize', updatePill);
+  }, [updatePill]);
 
   // Auto-scroll the active tab into view horizontally so user instantly sees the selected section
   React.useEffect(() => {
@@ -75,8 +107,37 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
 
   return (
     <div className="w-full space-y-3">
-      {/* 1. Main Life Stage Switch - Apple Liquid Glassmorphism Toggle Controls */}
-      <div className="flex p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 touch-pan-x scroll-smooth shadow-sm transition-all">
+      {/* 1. Main Life Stage Switch - Apple VisionOS Liquid Glass Capsule */}
+      <div 
+        ref={containerRef}
+        className="relative flex p-1.5 glass-tab-bar rounded-2xl overflow-x-auto no-scrollbar gap-1.5 sm:gap-2 touch-pan-x scroll-smooth shadow-sm transition-all"
+      >
+        {/* Continuous Single Apple Liquid Glass Capsule (Zero Glitch / Pure Spring Physics) */}
+        {pillPos.ready && (
+          <motion.div
+            className="apple-liquid-glass"
+            initial={false}
+            animate={{
+              x: pillPos.left,
+              width: pillPos.width,
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 460,
+              damping: 32,
+              mass: 0.75,
+            }}
+            style={{
+              position: 'absolute',
+              top: '6px',
+              bottom: '6px',
+              left: 0,
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+        )}
+
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
           const matchCount = tabMatchCounts ? tabMatchCounts[tab.id] : undefined;
@@ -94,22 +155,13 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
               className={`relative shrink-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm cursor-pointer select-none transition-colors duration-200 z-10 active:scale-[0.97] ${
                 isActive
                   ? 'text-slate-950 dark:text-white font-black'
-                  : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white font-bold'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
               }`}
             >
-              {/* Sliding Liquid Pill via Framer Motion layoutId */}
-              {isActive && (
-                <motion.div
-                  layoutId="activeLifeStageLiquidPill"
-                  className="absolute inset-0 rounded-xl apple-liquid-pill -z-10"
-                  transition={{ type: 'spring', stiffness: 420, damping: 30 }}
-                />
-              )}
-
               <span
                 className={`transition-all duration-200 shrink-0 ${
                   isActive
-                    ? 'text-emerald-700 dark:text-emerald-400 scale-105'
+                    ? 'text-emerald-700 dark:text-emerald-400 scale-110 drop-shadow-2xs'
                     : 'text-slate-500 dark:text-zinc-400'
                 }`}
               >
@@ -122,7 +174,7 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
                 <span
                   className={`ml-1 px-1.5 py-0.2 text-[10px] font-mono font-bold rounded-md transition-all ${
                     isActive
-                      ? 'bg-emerald-500/15 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-500/30'
+                      ? 'bg-emerald-500/15 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-500/30 font-black'
                       : 'bg-slate-200/90 dark:bg-[#202127] text-slate-700 dark:text-zinc-400'
                   }`}
                 >
