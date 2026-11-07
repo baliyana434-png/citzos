@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 import { LifeStage } from '@/types';
 import { useTranslation } from '@/i18n/useTranslation';
 import { REVIEWER_TAB_LABELS } from '@/lib/complianceFilter';
@@ -90,16 +91,33 @@ export const LifeStageTabs: React.FC<LifeStageTabsProps> = ({
                 buttonRefs.current[tab.id] = el;
               }}
               onClick={() => onTabChange(tab.id)}
-              className={`shrink-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] cursor-pointer select-none ${
+              className={`relative shrink-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 px-3.5 sm:px-4 rounded-xl text-xs sm:text-sm cursor-pointer select-none transition-colors duration-200 z-10 active:scale-[0.97] ${
                 isActive
-                  ? 'apple-liquid-active font-black active:scale-[0.97]'
-                  : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/10 font-semibold border border-transparent active:scale-[0.98]'
+                  ? 'text-slate-950 dark:text-white font-black'
+                  : 'text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white font-bold'
               }`}
             >
-              <span className={`transition-colors shrink-0 ${isActive ? 'text-emerald-700 dark:text-emerald-400' : 'text-slate-500 dark:text-zinc-400'}`}>
+              {/* Sliding Liquid Pill via Framer Motion layoutId */}
+              {isActive && (
+                <motion.div
+                  layoutId="activeLifeStageLiquidPill"
+                  className="absolute inset-0 rounded-xl apple-liquid-pill -z-10"
+                  transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                />
+              )}
+
+              <span
+                className={`transition-all duration-200 shrink-0 ${
+                  isActive
+                    ? 'text-emerald-700 dark:text-emerald-400 scale-105'
+                    : 'text-slate-500 dark:text-zinc-400'
+                }`}
+              >
                 {tab.icon}
               </span>
+
               <span className="whitespace-nowrap">{displayLabel}</span>
+
               {matchCount !== undefined && matchCount > 0 && (
                 <span
                   className={`ml-1 px-1.5 py-0.2 text-[10px] font-mono font-bold rounded-md transition-all ${
