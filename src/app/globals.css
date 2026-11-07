@@ -498,7 +498,7 @@ button, a {
 
 /* Circular Clip-Path View Transition for Theme Switch */
 ::view-transition-group(root) {
-  animation-duration: 0.8s;
+  animation-duration: 1s;
 }
 
 ::view-transition-old(root),
@@ -513,7 +513,7 @@ button, a {
 
 ::view-transition-new(root) {
   z-index: 999999;
-  animation: theme-circle-reveal 0.8s ease-out forwards;
+  animation: theme-circle-reveal 1s ease-out forwards;
 }
 
 @keyframes theme-circle-reveal {

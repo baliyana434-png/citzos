@@ -9,7 +9,7 @@ export interface ThemeTransitionOptions {
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
 
-const DURATION = 800; // ms (0.8s)
+const DURATION = 1000; // ms (1.0s)
 
 let isThemeTransitioning = false;
 
