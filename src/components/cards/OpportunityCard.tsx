@@ -248,9 +248,6 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
                 rel="noopener noreferrer"
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (typeof window !== 'undefined') {
-                    window.open(safePortalUrl, '_blank', 'noopener,noreferrer');
-                  }
                 }}
                 className="flex-1 py-2 sm:py-2.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-xs transition-all shadow-md shadow-emerald-600/30 border border-emerald-400/50 ring-1 ring-emerald-400/30 flex items-center justify-center gap-1.5 cursor-pointer active:scale-[0.98] group"
                 title={language === 'hi' ? 'सत्यापित आधिकारिक पोर्टल खोलें' : 'Open Verified Official Portal'}

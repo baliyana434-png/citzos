@@ -163,10 +163,7 @@ export const DetailBottomSheet: React.FC<DetailBottomSheetProps> = ({
   const documentsList = getAccurateRequiredDocuments(opportunity, language);
 
   const handleVisitPortal = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (typeof window !== 'undefined') {
-      window.open(safePortalUrl, '_blank', 'noopener,noreferrer');
-      e.preventDefault();
-    }
+    e.stopPropagation();
   };
 
   const handleOpenGoogleCalendar = () => {
