@@ -11,7 +11,9 @@ export interface ThemeTransitionOptions {
 
 /**
  * Circular View Transition for Theme Switching
- * Expands a clipPath circle from the exact click coordinates across the entire viewport.
+ * Inspired by Blinkit / Apple iOS fluid wave physics.
+ * Expands a clipPath circle from the exact click coordinates across the entire viewport
+ * with a luxurious 850ms duration and natural deceleration curve.
  */
 export async function executeThemeTransition({
   newTheme,
@@ -39,7 +41,12 @@ export async function executeThemeTransition({
   let x = window.innerWidth / 2;
   let y = window.innerHeight / 2;
 
-  if (event && typeof event.clientX === 'number' && typeof event.clientY === 'number' && event.clientX > 0) {
+  if (
+    event &&
+    typeof event.clientX === 'number' &&
+    typeof event.clientY === 'number' &&
+    (event.clientX > 0 || event.clientY > 0)
+  ) {
     x = event.clientX;
     y = event.clientY;
   } else if (targetElement) {
@@ -50,10 +57,13 @@ export async function executeThemeTransition({
 
   const right = window.innerWidth - x;
   const bottom = window.innerHeight - y;
-  const maxRadius = Math.hypot(
-    Math.max(x, right),
-    Math.max(y, bottom)
-  );
+  // Calculate maximum distance to the farthest corner with safety margin
+  const maxRadius = Math.ceil(
+    Math.hypot(
+      Math.max(x, right),
+      Math.max(y, bottom)
+    )
+  ) + 16;
 
   try {
     const transition = doc.startViewTransition(() => {
@@ -64,6 +74,7 @@ export async function executeThemeTransition({
 
     await transition.ready;
 
+    // Blinkit-style fluid deceleration curve with calm 850ms duration
     doc.documentElement.animate(
       {
         clipPath: [
@@ -72,8 +83,8 @@ export async function executeThemeTransition({
         ],
       },
       {
-        duration: 500,
-        easing: 'ease-in-out',
+        duration: 850,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
         pseudoElement: '::view-transition-new(root)',
       }
     );

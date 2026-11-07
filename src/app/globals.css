@@ -496,7 +496,11 @@ button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Circular Clip-Path View Transition for Theme Switch */
+/* Circular Clip-Path View Transition for Theme Switch (Blinkit / Apple Fluid Easing) */
+::view-transition-group(root) {
+  animation-duration: 0.85s;
+}
+
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
