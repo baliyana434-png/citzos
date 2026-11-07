@@ -992,137 +992,115 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Hero Personalized Insight Bar (3D Cyber-Gov Terminal) - Hidden on mobile during search to show opportunities directly */}
-        <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-gradient-to-br from-black/95 via-[#0e0e11]/95 to-[#041a10]/90 backdrop-blur-xl rounded-2xl p-5 sm:p-7 text-white shadow-2xl relative overflow-hidden border border-emerald-500/40`}>
-          {/* Subtle Cyber Grid Texture */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.18),transparent_50%)] pointer-events-none" />
-
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-5">
-            <div>
-              {/* Sovereign Portal Indicator */}
-              <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] sm:text-xs font-bold border border-emerald-500/40 shadow-xs backdrop-blur-xs">
-                  <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 radar-pulse" />
+        {/* Unslopped Sovereign Citizen Hero Section */}
+        <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-[#0c0d10] dark:bg-[#070709] rounded-2xl p-5 sm:p-7 text-white border border-white/10 relative overflow-hidden shadow-xs`}>
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            {/* Left Column: Authoritative Civic Intelligence Overview */}
+            <div className="max-w-2xl">
+              {/* Sovereign State & Registry Badge */}
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/5 text-zinc-300 text-xs font-medium border border-white/10">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
                   <span>{countryMeta.flag} {countryMeta.name}</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-zinc-400 font-mono text-[11px]">{language === 'hi' ? 'राष्ट्रीय नागरिक पोर्टल' : 'National Citizen Portal'}</span>
                 </span>
                 {activeProfile.isAadhaarVerified && (
-                  <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-emerald-300 font-mono font-bold bg-emerald-500/15 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full border border-emerald-500/30 backdrop-blur-xs">
-                    {t('hero.verified_status')}
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] text-emerald-400 font-medium bg-emerald-950/40 border border-emerald-800/40">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>{t('hero.verified_status')}</span>
                   </span>
                 )}
               </div>
 
-              <h1 className="text-base sm:text-2xl lg:text-3xl font-black tracking-tight leading-snug">
+              {/* Headline */}
+              <h1 className="text-lg sm:text-2xl lg:text-[26px] font-bold text-white tracking-tight leading-snug">
                 {t('hero.headline_prefix')}{' '}
-                <span className="text-emerald-400 font-mono underline decoration-emerald-500/40 decoration-wavy underline-offset-4">
-                  {countryMeta.currencySymbol}
-                  {totalBenefitSum.toLocaleString()}
+                <span className="text-emerald-400 font-mono tabular-nums font-extrabold">
+                  {countryMeta.currencySymbol}{totalBenefitSum.toLocaleString('en-IN')}
                 </span>{' '}
                 {t('hero.headline_suffix')}
               </h1>
 
-              <p className="text-xs sm:text-sm text-slate-300 mt-1 sm:mt-2 max-w-2xl leading-relaxed hidden sm:block">
+              {/* Subtitle */}
+              <p className="text-xs sm:text-sm text-zinc-400 mt-2 leading-relaxed">
                 {isReviewer
                   ? 'Direct access to curated career skill learning, practical training modules, and academic guides.'
                   : t('hero.subline')}
               </p>
-            </div>
 
-            {/* Individual Profile Summary Badge - Hidden on mobile to keep 1st view ultra clean */}
-            <div className="hidden md:flex items-center gap-3 bg-black/40 backdrop-blur-md px-4 py-3 rounded-2xl border border-white/10 shrink-0 shadow-lg">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-slate-950 font-black text-sm shadow-md">
-                {activeProfile.isOnboarded && profile?.fullName ? profile.fullName.charAt(0).toUpperCase() : countryMeta.flag}
-              </div>
-              <div className="text-left">
-                <span className="block text-xs sm:text-sm font-extrabold text-white leading-tight">
-                  {activeProfile.isOnboarded ? (profile?.fullName || t('profile.guest_title')) : t('profile.guest_title')}
-                </span>
-                <span className="text-[11px] text-emerald-300 font-medium">
-                  {activeProfile.isOnboarded
-                    ? `${profile?.lifePhase ? t(`roles.${profile.lifePhase}`) : t('roles.college_student')} • ${profile?.casteCategory || 'General'}`
-                    : countryMeta.name}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* 1-Year Citizen Access Pass Status Strip - Hidden on mobile during search */}
-        <div className={searchQuery.trim() ? 'hidden sm:block' : ''}>
-          {isCitizenSubscribed(profile) && profile ? (
-            <div className="bg-emerald-950 text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2 sm:py-2.5 border border-emerald-700/60 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-1.5 sm:gap-2 text-[11px] sm:text-xs">
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                <span className="text-sm sm:text-base">{countryMeta.flag}</span>
-                <span className="font-mono font-bold text-emerald-300 uppercase px-1.5 py-0.5 rounded bg-emerald-900/60 border border-emerald-700 text-[10px]">
-                  {countryMeta.alpha3 || country} CITIZEN PASS
-                </span>
-                <span className="font-semibold text-emerald-100">
-                  {language === 'hi'
-                    ? `1-वर्षीय सक्रिय पास (वैध: ${profile.subscription?.validUntil})`
-                    : `1-Year Pass Active (Valid: ${profile.subscription?.validUntil})`}
-                </span>
-              </div>
-              <span className="text-[10px] font-mono text-emerald-400 bg-black/20 px-2 py-0.5 rounded-md hidden sm:inline">
-                {profile.subscription?.transactionId}
-              </span>
-            </div>
-          ) : (
-            <>
-              {/* Mobile View: Slim 1-Line Banner */}
-              <div className="sm:hidden bg-slate-900 text-white rounded-xl px-3 py-2 border border-slate-800 shadow-sm flex items-center justify-between gap-2 text-xs">
-                <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
-                    <Award className="w-3.5 h-3.5" />
-                  </div>
-                  <div className="truncate text-[11px]">
-                    <span className="font-bold text-white">
-                      {language === 'hi' ? '1-वर्षीय नागरिक पास • ₹1' : '1-Year Citizen Pass • ₹1'}
-                    </span>
-                  </div>
+              {/* Live Count Indicator */}
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-zinc-400">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  <span className="font-semibold text-zinc-200">{portalOpportunities.length}</span>
+                  <span>{language === 'hi' ? 'सत्यापित अवसर सक्रिय' : 'Verified Opportunities Active'}</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleOpenSubscription()}
-                  className="px-2.5 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-[11px] shrink-0 transition-all cursor-pointer flex items-center gap-1"
-                >
-                  <Sparkles className="w-3 h-3" />
-                  <span>{language === 'hi' ? 'सक्रिय ₹1' : 'Activate ₹1'}</span>
-                </button>
+                <span className="text-zinc-600 hidden sm:inline">•</span>
+                <span className="font-mono text-[11px] text-zinc-500">
+                  {language === 'hi' ? 'सरकारी राजपत्र अद्यतन' : 'Bharat Sarkar Gazette Synchronized'}
+                </span>
               </div>
+            </div>
 
-              {/* Tablet / Desktop View: Full Card */}
-              <div className="hidden sm:flex bg-slate-900 text-white rounded-2xl px-4 py-3 border border-slate-800 shadow-md items-center justify-between gap-3 text-xs">
+            {/* Right Column: Tactile Citizen Identity & Pass Ledger Card */}
+            <div className="w-full lg:w-80 bg-[#121318] dark:bg-[#0b0c0f] rounded-xl p-4 border border-white/10 shrink-0">
+              <div className="flex items-center justify-between border-b border-white/[0.08] pb-3 mb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 border border-amber-500/30">
-                    <Award className="w-4 h-4" />
+                  <div className="w-9 h-9 rounded-lg bg-zinc-800 text-zinc-200 border border-white/10 flex items-center justify-center font-bold text-sm">
+                    {activeProfile.isOnboarded && profile?.fullName ? profile.fullName.charAt(0).toUpperCase() : countryMeta.flag}
                   </div>
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="font-bold text-white block">
-                        {language === 'hi' ? '1-वर्षीय राष्ट्रीय नागरिक पास • केवल ₹1 / 1 वर्ष' : '1-Year National Citizen Access Pass • Only ₹1 / 1 Year'}
-                      </span>
-                      <span className="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-600/50 shrink-0">
-                        {language === 'hi' ? `₹${totalBenefitSum.toLocaleString('en-IN')} के लाभ अनलॉक करें` : `Unlock ${countryMeta.currencySymbol}${totalBenefitSum.toLocaleString()} Benefits`}
-                      </span>
-                    </div>
-                    <span className="text-[11px] text-slate-400">
-                      {language === 'hi' 
-                        ? `${countryMeta.name} में अपनी आयु (${activeProfile.age || '18+'}), क्षेत्र एवं श्रेणी अनुसार सभी वास्तविक अवसर 365 दिनों हेतु अनलॉक करें`
-                        : `Unlock all genuine opportunities in ${countryMeta.name} matched to your exact age & area for 365 days`}
+                    <span className="block text-xs font-bold text-zinc-100 leading-tight">
+                      {activeProfile.isOnboarded ? (profile?.fullName || t('profile.guest_title')) : t('profile.guest_title')}
+                    </span>
+                    <span className="text-[11px] text-zinc-400">
+                      {activeProfile.isOnboarded
+                        ? `${profile?.lifePhase ? t(`roles.${profile.lifePhase}`) : t('roles.college_student')} • ${profile?.casteCategory || 'General'}`
+                        : countryMeta.name}
                     </span>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleOpenSubscription()}
-                  className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>{language === 'hi' ? 'पास सक्रिय करें (₹1)' : 'Activate Pass (₹1)'}</span>
-                </button>
+                {activeProfile.isOnboarded ? (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium text-emerald-400 bg-emerald-950/40 border border-emerald-800/40">
+                    VERIFIED
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-mono text-zinc-400 bg-zinc-800 border border-white/10">
+                    GUEST
+                  </span>
+                )}
               </div>
-            </>
-          )}
+
+              {/* Pass Status Row inside the Ledger */}
+              {isCitizenSubscribed(profile) && profile ? (
+                <div className="space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">{language === 'hi' ? 'नागरिक पास स्थिति:' : 'Citizen Pass Status:'}</span>
+                    <span className="text-emerald-400 font-semibold">{language === 'hi' ? 'सक्रिय (1 वर्ष)' : 'Active (1-Year)'}</span>
+                  </div>
+                  <div className="text-[10px] font-mono text-zinc-500 truncate">
+                    {profile.subscription?.transactionId || 'TXN_VERIFIED'}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="text-zinc-400">{language === 'hi' ? 'वार्षिक पास:' : 'Annual Access:'}</span>
+                    <span className="text-emerald-400 font-bold font-mono">₹1 / 1 Year</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenSubscription()}
+                    className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-xs active:scale-[0.99]"
+                  >
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>{language === 'hi' ? 'नागरिक पास सक्रिय करें (₹1)' : 'Activate Citizen Pass (₹1)'}</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* 1B. Skills & Video Learning Hub Highlight Banner - Hidden on mobile, already in header */}
