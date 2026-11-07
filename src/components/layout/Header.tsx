@@ -131,17 +131,17 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-3">
           
           {/* 1. App Identity (Flexible with max-w on narrow screens to prevent pushing right hub off-screen) */}
-          <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
             <Link href="/" className="shrink-0 cursor-pointer block hover:scale-105 transition-transform" aria-label="Citzos Home">
               <BrandIconSvg sizePx={38} className="w-8 h-8 sm:w-10 sm:h-10 shadow-xs" />
             </Link>
-            <div className="min-w-0">
+            <div className="shrink-0">
               <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-                <span className="font-black tracking-tight text-base sm:text-xl font-sans text-slate-900 dark:text-white">
+                <span className="font-black tracking-tight text-base sm:text-xl font-sans text-slate-900 dark:text-white whitespace-nowrap">
                   CIT<span className="text-emerald-600">ZOS</span>
                 </span>
               </Link>
-              <p className="text-[11px] text-slate-500 hidden lg:block">
+              <p className="text-[11px] text-slate-500 hidden lg:block whitespace-nowrap">
                 {t('app_tagline')}
               </p>
             </div>
@@ -268,40 +268,33 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </Link>
 
-            {/* Single Profile Avatar Button (Strict Fixed Dimensions: 34px mobile / 36px desktop) */}
+            {/* Single Profile Button (Zero Overflow on Mobile) */}
             <button
               type="button"
               onClick={onOpenProfile}
-              className="w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white flex items-center justify-center transition-all focus:ring-2 focus:ring-emerald-500/30 relative cursor-pointer shrink-0 shadow-xs active:scale-[0.96] overflow-hidden"
-              style={{ width: '34px', height: '34px', minWidth: '34px', minHeight: '34px', maxWidth: '34px', maxHeight: '34px' }}
+              className="h-8 w-8 sm:h-9 sm:w-auto px-0 sm:px-3 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center sm:gap-2 transition-all focus:ring-2 focus:ring-emerald-500/30 relative overflow-hidden cursor-pointer shrink-0 shadow-2xs active:scale-[0.98]"
               aria-label={t('profile_btn')}
-              title={profile.fullName || t('profile_btn')}
             >
-              <div 
-                className="w-full h-full rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white flex items-center justify-center text-[11px] font-bold overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 shadow-2xs"
-                style={{ width: '100%', height: '100%', borderRadius: '9999px', overflow: 'hidden' }}
-              >
+              <div className="w-5 h-5 rounded-full bg-slate-900 dark:bg-zinc-800 text-white flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0">
                 {profile.photoURL ? (
                   <img
                     src={profile.photoURL}
                     alt={profile.fullName || 'User'}
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover rounded-full block"
-                    style={{ width: '100%', height: '100%', maxWidth: '100%', maxHeight: '100%', objectFit: 'cover', borderRadius: '9999px' }}
+                    className="w-full h-full object-cover rounded-full"
                     onError={(e) => {
                       (e.currentTarget as HTMLElement).style.display = 'none';
                     }}
                   />
+                ) : profile.fullName ? (
+                  profile.fullName.charAt(0).toUpperCase()
                 ) : (
-                  profile.fullName ? (
-                    <span className="text-emerald-700 dark:text-emerald-400 font-extrabold text-xs">
-                      {profile.fullName.charAt(0).toUpperCase()}
-                    </span>
-                  ) : (
-                    <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 shrink-0" />
-                  )
+                  <User className="w-3 h-3 text-slate-300" />
                 )}
               </div>
+              <span className="hidden sm:inline text-xs font-bold max-w-[80px] truncate">
+                {profile.fullName ? profile.fullName.split(' ')[0] : t('profile_btn')}
+              </span>
             </button>
           </div>
         </div>
