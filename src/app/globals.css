@@ -15,6 +15,11 @@
   color-scheme: dark;
 }
 
+html {
+  scroll-behavior: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -23,7 +28,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   letter-spacing: -0.01em;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  text-rendering: optimizeLegibility;
+}
+
+/* Instant 0-delay text rasterization across the viewport */
+h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* GPU-Accelerated Zero-Lag Blur Text for Locked Content */
+.text-blur-locked {
+  filter: blur(5px);
+  -webkit-filter: blur(5px);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  user-select: none;
+  pointer-events: none;
 }
 
 /* True OLED Pitch-Black (Blinkit & Uber Style) Global Dark Theme System */
@@ -239,63 +261,57 @@ body {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
   box-shadow: 
-    0 1px 2px 0 rgba(15, 23, 42, 0.04),
-    0 6px 18px -2px rgba(15, 23, 42, 0.06),
-    inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
-    inset 0 -1px 0 0 rgba(15, 23, 42, 0.03);
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, background-color 0.2s ease;
+    0 1px 3px 0 rgba(15, 23, 42, 0.05),
+    0 6px 18px -2px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 0 rgba(255, 255, 255, 1);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: layout style;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
 }
 
 .glass-card:hover {
-  transform: translateY(-4px) scale(1.004);
-  background: rgba(255, 255, 255, 0.96);
+  transform: translateY(-3px) translateZ(0);
+  background: #ffffff;
   border-color: rgba(16, 185, 129, 0.65);
   box-shadow: 
-    0 2px 4px 0 rgba(16, 185, 129, 0.08),
-    0 20px 38px -4px rgba(16, 185, 129, 0.16),
-    0 8px 16px -2px rgba(15, 23, 42, 0.06),
-    inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
-    inset 0 -1px 0 0 rgba(16, 185, 129, 0.2);
+    0 4px 12px 0 rgba(16, 185, 129, 0.12),
+    0 16px 32px -4px rgba(15, 23, 42, 0.08);
 }
 
 .dark .glass-card {
-  background: rgba(16, 16, 19, 0.92) !important;
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.6) !important;
+  background: #101013 !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.14) !important;
   box-shadow: 
-    0 1px 2px 0 rgba(0, 0, 0, 0.8),
+    0 1px 3px 0 rgba(0, 0, 0, 0.7),
     0 8px 24px -2px rgba(0, 0, 0, 0.75),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-    inset 0 -1px 0 0 rgba(0, 0, 0, 0.5);
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  contain: layout style;
 }
 
 .dark .glass-card:hover {
-  background: rgba(22, 22, 26, 0.98) !important;
+  transform: translateY(-3px) translateZ(0);
+  background: #141418 !important;
   border-color: rgba(16, 185, 129, 0.6) !important;
   box-shadow: 
-    0 20px 42px -4px rgba(16, 185, 129, 0.22),
-    0 8px 24px -2px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 0 rgba(16, 185, 129, 0.3);
+    0 16px 36px -4px rgba(16, 185, 129, 0.22),
+    0 8px 24px -2px rgba(0, 0, 0, 0.8);
 }
 
 .glass-pill {
-  background: rgba(241, 245, 249, 0.78);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid rgba(203, 213, 225, 0.7);
-  box-shadow: 
-    0 1px 2px 0 rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
 }
 
 .dark .glass-pill {

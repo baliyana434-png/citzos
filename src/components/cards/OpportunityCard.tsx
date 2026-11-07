@@ -119,7 +119,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
           onSelect(opportunity);
         }
       }}
-      className="group relative glass-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between cursor-pointer transition-all duration-300 h-full overflow-visible"
+      className="group relative glass-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between cursor-pointer h-full overflow-visible"
     >
       {/* Red Rotating Starburst Badge */}
       {isOpportunityNewActive(opportunity.id, opportunity.isNew) && (
@@ -134,7 +134,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         <div className="flex items-center justify-between gap-3 mb-2.5">
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full glass-pill text-slate-800 dark:text-slate-200 text-[11px] font-bold min-w-0 max-w-[70%]">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-            <span className={`truncate ${!isSubscribed ? 'filter blur-[5px] select-none pointer-events-none opacity-50' : ''}`}>
+            <span className={`truncate ${!isSubscribed ? 'text-blur-locked opacity-50' : ''}`}>
               {sanitizeTextForReviewer((localized.issuingAuthority || 'Official Authority').split('(')[0].trim(), isReviewer)}
             </span>
           </div>
@@ -200,7 +200,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         <div className="mb-2">
           <div className="flex items-start justify-between gap-2">
             <h3 className={`text-sm sm:text-base font-extrabold text-slate-900 leading-snug group-hover:text-emerald-900 transition-colors line-clamp-2 min-h-[2.6rem] ${
-              !isSubscribed ? 'filter blur-[6px] select-none pointer-events-none opacity-40' : ''
+              !isSubscribed ? 'text-blur-locked opacity-40' : ''
             }`}>
               {displayTitle}
             </h3>
@@ -219,7 +219,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
 
         {/* 4. Description */}
         <p className={`text-xs text-slate-600 line-clamp-2 leading-relaxed mb-4 ${
-          !isSubscribed ? 'filter blur-[4px] select-none pointer-events-none opacity-50' : ''
+          !isSubscribed ? 'text-blur-locked opacity-50' : ''
         }`}>
           {displayDescription}
         </p>
