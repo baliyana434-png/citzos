@@ -507,6 +507,24 @@ button, a {
   mix-blend-mode: normal;
 }
 
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 999999;
+  animation: theme-circle-reveal 0.5s ease-out forwards;
+}
+
+@keyframes theme-circle-reveal {
+  0% {
+    clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+  100% {
+    clip-path: circle(var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+}
+
 /* Disable native browser password reveal and clear eye buttons (Edge, IE, WebKit) */
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
