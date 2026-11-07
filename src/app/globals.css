@@ -496,24 +496,11 @@ button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Circular Clip-Path View Transition for Theme Switch (Blinkit / Apple Fluid Easing) */
-::view-transition-group(root) {
-  animation-duration: 1.15s;
-}
-
+/* Circular Clip-Path View Transition for Theme Switch */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-  z-index: 1;
-}
-
-::view-transition-new(root) {
-  z-index: 99999;
-  clip-path: circle(0px at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
 }
 
 /* Disable native browser password reveal and clear eye buttons (Edge, IE, WebKit) */

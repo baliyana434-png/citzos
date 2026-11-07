@@ -73,7 +73,15 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false);
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState<boolean>(false);
   const [googleLoginError, setGoogleLoginError] = useState<string | null>(null);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark') ||
+        localStorage.getItem('citizen_theme') === 'dark'
+        ? 'dark'
+        : 'light';
+    }
+    return 'light';
+  });
   const themeContainerRef = useRef<HTMLDivElement | null>(null);
   const themeButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [themePillPos, setThemePillPos] = useState<{ left: number; width: number; ready: boolean }>({
@@ -215,11 +223,16 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   }, [isOpen, isGoogleLoggingIn]);
 
   const handleToggleTheme = (newTheme: 'light' | 'dark', e?: React.MouseEvent | React.TouchEvent) => {
-    if (newTheme === theme) return;
+    const isCurrentlyDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+    const currentTheme = isCurrentlyDark ? 'dark' : 'light';
+    if (newTheme === currentTheme) return;
+
+    const targetBtn = themeButtonRefs.current[newTheme] || themeContainerRef.current || (e?.currentTarget as HTMLElement);
+
     executeThemeTransition({
       newTheme,
       event: e,
-      targetElement: themeButtonRefs.current[newTheme],
+      targetElement: targetBtn,
       onThemeApply: (appliedTheme) => {
         setTheme(appliedTheme);
         if (typeof window !== 'undefined') {

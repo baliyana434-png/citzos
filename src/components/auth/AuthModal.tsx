@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { CitizenProfile, CountryCode, EducationalQualification, QUALIFICATION_OPTIONS } from '@/types';
 import { useTranslation } from '@/i18n/useTranslation';
@@ -117,7 +117,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successNotice, setSuccessNotice] = useState<string | null>(null);
   const [accountNotFoundNotice, setAccountNotFoundNotice] = useState<boolean>(false);
-  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(false);
+  const [isDarkTheme, setIsDarkTheme] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return (
+        document.documentElement.classList.contains('dark') ||
+        localStorage.getItem('citizen_theme') === 'dark'
+      );
+    }
+    return false;
+  });
+  const authThemeToggleRef = useRef<HTMLButtonElement | null>(null);
 
   // Sync theme with document class / localStorage
   useEffect(() => {
@@ -130,11 +139,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   }, [isOpen]);
 
   const handleToggleTheme = (e?: React.MouseEvent | React.TouchEvent) => {
-    const nextTheme = !isDarkTheme ? 'dark' : 'light';
+    const isCurrentlyDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
+    const nextTheme = isCurrentlyDark ? 'light' : 'dark';
+    const targetBtn = authThemeToggleRef.current || (e?.currentTarget as HTMLElement);
+
     executeThemeTransition({
       newTheme: nextTheme,
       event: e,
-      targetElement: (e?.currentTarget as HTMLElement) || null,
+      targetElement: targetBtn,
       onThemeApply: (appliedTheme) => {
         const isDark = appliedTheme === 'dark';
         setIsDarkTheme(isDark);
@@ -1824,6 +1836,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <div className="flex items-center gap-2 sm:gap-2.5">
             {/* Theme Toggle Button (Light / Dark) */}
             <button
+              ref={authThemeToggleRef}
               type="button"
               onClick={(e) => handleToggleTheme(e)}
               title={
