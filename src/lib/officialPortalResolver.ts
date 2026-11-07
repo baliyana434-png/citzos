@@ -203,7 +203,56 @@ export function resolveOfficialPortalUrl(opportunity?: Partial<Opportunity> | nu
     return 'https://udyamregistration.gov.in';
   }
 
-  // 2. If rawUrl exists and is already a valid specific URL (other than raw PIB text release)
+  // Additional government portals for common PIB categories
+  if (combinedText.includes('coast guard') || combinedText.includes('तटरक्षक')) {
+    return 'https://joinindiancoastguard.cdac.in';
+  }
+  if (combinedText.includes('crpf') || combinedText.includes('केंद्रीय रिज़र्व पुलिस')) {
+    return 'https://crpf.gov.in';
+  }
+  if (combinedText.includes('bsf') || combinedText.includes('सीमा सुरक्षा बल')) {
+    return 'https://rectt.bsf.gov.in';
+  }
+  if (combinedText.includes('cisf') || combinedText.includes('औद्योगिक सुरक्षा बल')) {
+    return 'https://cisfrectt.cisf.gov.in';
+  }
+  if (combinedText.includes('itbp') || combinedText.includes('सशस्त्र सीमा बल')) {
+    return 'https://recruitment.itbpolice.nic.in';
+  }
+  if (combinedText.includes('passport') || combinedText.includes('पासपोर्ट')) {
+    return 'https://www.passportindia.gov.in';
+  }
+  if (combinedText.includes('aadhaar') || combinedText.includes('आधार')) {
+    return 'https://myaadhaar.uidai.gov.in';
+  }
+  if (combinedText.includes('mudra') || combinedText.includes('मुद्रा')) {
+    return 'https://www.mudra.org.in';
+  }
+  if (combinedText.includes('pmay') || combinedText.includes('आवास योजना') || combinedText.includes('pradhan mantri awas')) {
+    return 'https://pmaymis.gov.in';
+  }
+  if (combinedText.includes('apprentice') || combinedText.includes('शिक्षुता')) {
+    return 'https://www.apprenticeshipindia.gov.in';
+  }
+  if (combinedText.includes('nats') || combinedText.includes('national apprenticeship training')) {
+    return 'https://nats.education.gov.in';
+  }
+  if (combinedText.includes('gate') || combinedText.includes('गेट परीक्षा')) {
+    return 'https://gate2025.iitr.ac.in';
+  }
+  if (combinedText.includes('ugc') || combinedText.includes('विश्वविद्यालय अनुदान')) {
+    return 'https://ugcnet.nta.ac.in';
+  }
+  if (combinedText.includes('recruitment') || combinedText.includes('भर्ती') || combinedText.includes('vacancy') || combinedText.includes('रिक्ति')) {
+    // Generic recruitment: direct to NCS portal
+    return 'https://www.ncs.gov.in';
+  }
+  if (combinedText.includes('ministry') || combinedText.includes('मंत्रालय') || combinedText.includes('government of india') || combinedText.includes('भारत सरकार')) {
+    // Generic government announcement: direct to India portal
+    return 'https://www.india.gov.in';
+  }
+
+  // 2. If rawUrl exists, validate it but REJECT non-portal announcement/press-release domains
   if (rawUrl && rawUrl !== '#' && rawUrl !== 'about:blank') {
     let clean = rawUrl;
     if (clean.startsWith('//')) {
@@ -219,15 +268,111 @@ export function resolveOfficialPortalUrl(opportunity?: Partial<Opportunity> | nu
 
     try {
       const parsed = new URL(clean);
-      // If it's a valid host and not a localhost/placeholder
-      if (parsed.protocol === 'https:' && parsed.hostname && !parsed.hostname.includes('example.')) {
+      const host = parsed.hostname.toLowerCase();
+
+      // Blocklist: these are announcement/press pages, NOT interactive portals
+      const NON_PORTAL_HOSTS = [
+        'pib.gov.in',                  // Press Information Bureau press releases
+        'newsonair.gov.in',            // All India Radio news pages
+        'ddnews.gov.in',               // Doordarshan news
+        'static.pib.gov.in',           // PIB static content
+        'transformingindia.mygov.in',  // MyGov articles (not a portal)
+        'blog.mygov.in',               // MyGov blog
+      ];
+
+      const isNonPortal = NON_PORTAL_HOSTS.some(blocked => host === blocked || host.endsWith(`.${blocked}`));
+
+      if (
+        !isNonPortal &&
+        parsed.protocol === 'https:' &&
+        parsed.hostname &&
+        !parsed.hostname.includes('example.')
+      ) {
         return parsed.href;
       }
+      // If blocked, fall through to country fallback below
     } catch (_) {
       // Fallback below
     }
   }
 
-  // 3. Fallback to authoritative national portal for the country
+  // 3. Fallback: try to match broader category keywords
+  if (combinedText.includes('education') || combinedText.includes('shiksha') || combinedText.includes('school')) {
+    return 'https://www.education.gov.in';
+  }
+  if (combinedText.includes('agriculture') || combinedText.includes('krishi') || combinedText.includes('farming')) {
+    return 'https://agricoop.nic.in';
+  }
+  if (combinedText.includes('housing') || combinedText.includes('awas') || combinedText.includes('pmay')) {
+    return 'https://pmaymis.gov.in';
+  }
+  if (combinedText.includes('digital') || combinedText.includes('it ') || combinedText.includes('meity')) {
+    return 'https://www.meity.gov.in';
+  }
+  if (combinedText.includes('labour') || combinedText.includes('labor') || combinedText.includes('worker') || combinedText.includes('shram')) {
+    return 'https://labour.gov.in';
+  }
+  if (combinedText.includes('women') || combinedText.includes('mahila') || combinedText.includes('child')) {
+    return 'https://wcd.nic.in';
+  }
+  if (combinedText.includes('skill') || combinedText.includes('training') || combinedText.includes('kaushal')) {
+    return 'https://www.skillindiadigital.gov.in';
+  }
+  if (combinedText.includes('tribal') || combinedText.includes('adivasi') || combinedText.includes('scheduled tribe')) {
+    return 'https://tribal.nic.in';
+  }
+  if (combinedText.includes('social justice') || combinedText.includes('sc/st') || combinedText.includes('obc') || combinedText.includes('scheduled caste')) {
+    return 'https://socialjustice.gov.in';
+  }
+  if (combinedText.includes('environment') || combinedText.includes('forest') || combinedText.includes('climate') || combinedText.includes('paryavaran')) {
+    return 'https://moef.gov.in';
+  }
+  if (combinedText.includes('power') || combinedText.includes('electricity') || combinedText.includes('energy') || combinedText.includes('urja')) {
+    return 'https://powermin.gov.in';
+  }
+  if (combinedText.includes('rural') || combinedText.includes('panchayat') || combinedText.includes('gramin')) {
+    return 'https://rural.nic.in';
+  }
+  if (combinedText.includes('urban') || combinedText.includes('smart city') || combinedText.includes('municipal')) {
+    return 'https://mohua.gov.in';
+  }
+  if (combinedText.includes('science') || combinedText.includes('research') || combinedText.includes('vigyan')) {
+    return 'https://dst.gov.in';
+  }
+  if (combinedText.includes('commerce') || combinedText.includes('trade') || combinedText.includes('export') || combinedText.includes('import')) {
+    return 'https://commerce.gov.in';
+  }
+  if (combinedText.includes('finance') || combinedText.includes('tax') || combinedText.includes('budget') || combinedText.includes('revenue')) {
+    return 'https://finmin.nic.in';
+  }
+  if (combinedText.includes('transport') || combinedText.includes('road') || combinedText.includes('highway') || combinedText.includes('parivahan')) {
+    return 'https://parivahan.gov.in';
+  }
+  if (combinedText.includes('telecom') || combinedText.includes('dot ') || combinedText.includes('communication')) {
+    return 'https://dot.gov.in';
+  }
+  if (combinedText.includes('food') || combinedText.includes('ration') || combinedText.includes('pds') || combinedText.includes('consumer')) {
+    return 'https://nfsa.gov.in';
+  }
+  if (combinedText.includes('pension') || combinedText.includes('retirement') || combinedText.includes('epf') || combinedText.includes('provident fund')) {
+    return 'https://www.epfindia.gov.in';
+  }
+  if (combinedText.includes('minority') || combinedText.includes('waqf')) {
+    return 'https://minorityaffairs.gov.in';
+  }
+  if (combinedText.includes('home') || combinedText.includes('police') || combinedText.includes('security') || combinedText.includes('mha')) {
+    return 'https://mha.gov.in';
+  }
+  if (combinedText.includes('textile') || combinedText.includes('garment') || combinedText.includes('handloom')) {
+    return 'https://texmin.nic.in';
+  }
+  if (combinedText.includes('tourism') || combinedText.includes('travel') || combinedText.includes('paryatan')) {
+    return 'https://tourism.gov.in';
+  }
+  if (combinedText.includes('water') || combinedText.includes('jal') || combinedText.includes('sanitation') || combinedText.includes('swachh')) {
+    return 'https://jalshakti-ddws.gov.in';
+  }
+
+  // 4. Fallback to authoritative national portal for the country
   return COUNTRY_DEFAULT_PORTALS[country] || 'https://www.india.gov.in';
 }
