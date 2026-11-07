@@ -8,7 +8,7 @@ import { Opportunity } from '@/types';
 const AUTHORITY_PORTAL_MAP: Record<string, string> = {
   // Defence & Armed Forces
   army: 'https://joinindianarmy.nic.in',
-  navy: 'https://joinindiannavy.gov.in',
+  navy: 'https://www.joinindiannavy.gov.in',
   'air force': 'https://agnipathvayu.cdac.in',
   agniveer: 'https://joinindianarmy.nic.in',
   defence: 'https://mod.gov.in',
@@ -103,7 +103,7 @@ export function resolveOfficialPortalUrl(opportunity?: Partial<Opportunity> | nu
     combinedText.includes('navy') ||
     combinedText.includes('naval')
   ) {
-    return 'https://joinindiannavy.gov.in';
+    return 'https://www.joinindiannavy.gov.in';
   }
   if (
     combinedText.includes('वायु सेना') ||
