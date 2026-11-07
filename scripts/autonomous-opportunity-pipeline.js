@@ -120,8 +120,38 @@ async function runPipeline() {
       continue;
     }
 
-    // Keyword & Category Detection
     const titleLower = rawTitle.toLowerCase();
+
+    // 1. Strict Actionability Filter: Must be a real citizen benefit (Job, Exam, Subsidy, Scholarship, Internship)
+    // Exclude routine ministry press releases, speeches, meetings, inspections, campaign progress reports
+    const EXCLUDE_KEYWORDS = [
+      'समापन', 'प्रगति की', 'उद्घाटन', 'संबोधित किया', 'शिरकत की', 'मुलाकात की', 'बधाई दी',
+      'बैठक', 'समीक्षा', 'कार्यशाला', 'तबादले', 'सहमति पत्र', 'एमओयू', 'सम्मानित किया',
+      'अभियान-6', 'अभियान 6', 'निरीक्षण किया', 'जायजा लिया'
+    ];
+
+    const hasExcludedKeyword = EXCLUDE_KEYWORDS.some(kw => rawTitle.includes(kw));
+    if (hasExcludedKeyword) {
+      // Skip routine news that citizens cannot apply to
+      continue;
+    }
+
+    const ACTIONABLE_KEYWORDS = [
+      'भर्ती', 'recruitment', 'रिक्तियां', 'पदों', 'vacancy', 'अग्निवीर', 'agniveer',
+      'नौसेना', 'navy', 'थल सेना', 'army', 'वायु सेना', 'air force', 'रेलवे', 'railway',
+      'इंटरनशिप', 'internship', 'अपरेंटिस', 'apprentice', 'प्रशिक्षु', 'छात्रवृत्ति',
+      'scholarship', 'फेलोशिप', 'fellowship', 'सब्सिडी', 'subsidy', 'योजना', 'scheme',
+      'अनुदान', 'ग्रांट', 'grant', 'प्रवेश', 'admission', 'एडमिट कार्ड', 'admit card',
+      'neet', 'jee', 'upsc', 'ssc', 'rrb', 'ibps', 'nta', 'aicte', 'mudra', 'pmay',
+      'ayushman', 'surya ghar', 'kisan'
+    ];
+
+    const isActionable = ACTIONABLE_KEYWORDS.some(kw => titleLower.includes(kw));
+    if (!isActionable) {
+      // Must have clear citizen actionability
+      continue;
+    }
+
     let category = 'govt_scheme';
     let lifeStage = 'schemes';
     let targetAges = [18, 70];
