@@ -1,4 +1,5 @@
 import { Opportunity } from '@/types';
+import { LIVE_ANNOUNCEMENT_OPPORTUNITIES } from './categories/live_announcements';
 import { EXAM_OPPORTUNITIES } from './categories/exams';
 import { PRIVATE_JOB_OPPORTUNITIES } from './categories/private_jobs';
 import { INTERNSHIP_OPPORTUNITIES } from './categories/internships';
@@ -35,6 +36,9 @@ const tagCountry = (opps: Opportunity[], countryCode: Opportunity['country']): O
 };
 
 export const INITIAL_OPPORTUNITIES: Opportunity[] = [
+  // Live Official Gazette & Government Announcements (Top Priority)
+  ...tagCountry(LIVE_ANNOUNCEMENT_OPPORTUNITIES, 'IN'),
+
   // India Opportunities (Default 'IN')
   ...tagCountry(EXAM_OPPORTUNITIES, 'IN'),
   ...tagCountry(PRIVATE_JOB_OPPORTUNITIES, 'IN'),

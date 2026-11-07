@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "sync:opportunities": "node scripts/autonomous-opportunity-pipeline.js",
     "lint": "next lint"
   },
   "dependencies": {
