@@ -2,12 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, ShieldCheck, LogOut, GraduationCap, X, ArrowLeft } from 'lucide-react';
+import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, LogOut, GraduationCap, X, ArrowLeft } from 'lucide-react';
 import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import { CitizenProfile, SupportedLanguage } from '@/types';
-import { isCitizenSubscribed } from '@/lib/subscriptionValidator';
 
 interface HeaderProps {
   profile: CitizenProfile;
@@ -269,14 +268,15 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </Link>
 
-            {/* Single Profile Button (Zero Overflow on Mobile) */}
+            {/* Single Profile Avatar Button (Only Picture) */}
             <button
               type="button"
               onClick={onOpenProfile}
-              className="h-8.5 w-8.5 sm:h-9 sm:w-auto p-1 sm:px-3 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center sm:gap-2 transition-all focus:ring-2 focus:ring-emerald-500/30 relative cursor-pointer shrink-0 shadow-xs active:scale-[0.98]"
+              className="h-8.5 w-8.5 sm:h-9 sm:w-9 p-0.5 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white flex items-center justify-center transition-all focus:ring-2 focus:ring-emerald-500/30 relative cursor-pointer shrink-0 shadow-xs active:scale-[0.96]"
               aria-label={t('profile_btn')}
+              title={profile.fullName || t('profile_btn')}
             >
-              <div className="w-6 h-6 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white flex items-center justify-center text-[10px] font-bold overflow-hidden shrink-0 border border-slate-300 dark:border-white/20 shadow-2xs">
+              <div className="w-full h-full rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-900 dark:text-white flex items-center justify-center text-[11px] font-bold overflow-hidden shrink-0 border border-slate-200 dark:border-white/10 shadow-2xs">
                 {profile.photoURL ? (
                   <img
                     src={profile.photoURL}
@@ -293,18 +293,10 @@ export const Header: React.FC<HeaderProps> = ({
                       {profile.fullName.charAt(0).toUpperCase()}
                     </span>
                   ) : (
-                    <User className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+                    <User className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                   )
                 )}
               </div>
-              <span className="hidden sm:inline text-xs font-bold max-w-[85px] truncate">
-                {profile.fullName ? profile.fullName.split(' ')[0] : t('profile_btn')}
-              </span>
-              {isCitizenSubscribed(profile) && (
-                <span title="1-Year Active Citizen Pass" className="inline-flex items-center">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400 shrink-0" />
-                </span>
-              )}
             </button>
           </div>
         </div>
