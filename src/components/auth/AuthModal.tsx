@@ -129,12 +129,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   }, [isOpen]);
 
-  const handleToggleTheme = (e?: React.MouseEvent) => {
+  const handleToggleTheme = (e?: React.MouseEvent | React.TouchEvent) => {
     const nextTheme = !isDarkTheme ? 'dark' : 'light';
     executeThemeTransition({
       newTheme: nextTheme,
       event: e,
-      targetElement: e?.currentTarget as HTMLElement,
+      targetElement: (e?.currentTarget as HTMLElement) || null,
       onThemeApply: (appliedTheme) => {
         const isDark = appliedTheme === 'dark';
         setIsDarkTheme(isDark);
@@ -1836,7 +1836,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   : 'Switch to Dark Mode'
               }
               aria-label={isDarkTheme ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              className="h-8 sm:h-9 w-8 sm:w-9 rounded-xl bg-white/90 dark:bg-[#18181b] hover:bg-slate-100 dark:hover:bg-[#222227] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-200 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95"
+              className="h-8 sm:h-9 w-8 sm:w-9 rounded-xl bg-white/90 dark:bg-[#18181b] hover:bg-slate-100 dark:hover:bg-[#222227] border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-200 flex items-center justify-center transition-all cursor-pointer shadow-xs touch-manipulation"
             >
               {isDarkTheme ? (
                 <Sun className="w-4 h-4 text-amber-400" />

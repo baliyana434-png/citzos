@@ -214,7 +214,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     };
   }, [isOpen, isGoogleLoggingIn]);
 
-  const handleToggleTheme = (newTheme: 'light' | 'dark', e?: React.MouseEvent) => {
+  const handleToggleTheme = (newTheme: 'light' | 'dark', e?: React.MouseEvent | React.TouchEvent) => {
     if (newTheme === theme) return;
     executeThemeTransition({
       newTheme,
@@ -754,7 +754,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
 
             <div 
               ref={themeContainerRef}
-              className="relative inline-flex p-1 glass-tab-bar rounded-xl shadow-2xs"
+              className="relative inline-flex p-1 glass-tab-bar rounded-xl shadow-2xs touch-manipulation"
             >
               {themePillPos.ready && themePillPos.width > 0 && (
                 <motion.div
@@ -787,7 +787,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                   themeButtonRefs.current['light'] = el;
                 }}
                 onClick={(e) => handleToggleTheme('light', e)}
-                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
+                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 touch-manipulation ${
                   theme === 'light'
                     ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
                     : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
@@ -802,7 +802,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                   themeButtonRefs.current['dark'] = el;
                 }}
                 onClick={(e) => handleToggleTheme('dark', e)}
-                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 active:scale-[0.97] ${
+                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 touch-manipulation ${
                   theme === 'dark'
                     ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
                     : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'

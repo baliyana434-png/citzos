@@ -4,7 +4,7 @@ import { flushSync } from 'react-dom';
 
 export interface ThemeTransitionOptions {
   newTheme: 'light' | 'dark';
-  event?: React.MouseEvent | MouseEvent;
+  event?: React.MouseEvent | MouseEvent | React.TouchEvent | TouchEvent;
   targetElement?: HTMLElement | null;
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
@@ -12,8 +12,8 @@ export interface ThemeTransitionOptions {
 /**
  * Circular View Transition for Theme Switching
  * Inspired by Blinkit / Apple iOS fluid wave physics.
- * Expands a clipPath circle from the exact click coordinates across the entire viewport
- * with a luxurious 850ms duration and natural deceleration curve.
+ * Expands a clipPath circle from the exact center of the toggle button across the entire viewport
+ * with a luxurious, calm 1100ms duration and smooth natural deceleration curve.
  */
 export async function executeThemeTransition({
   newTheme,
@@ -37,33 +37,42 @@ export async function executeThemeTransition({
     return;
   }
 
-  // Calculate origin coordinates (x, y)
-  let x = window.innerWidth / 2;
-  let y = window.innerHeight / 2;
+  // CRITICAL: Always calculate exact center of the toggle button so circle starts from the button
+  const rawEl = targetElement || (event?.currentTarget as HTMLElement) || (event?.target as HTMLElement);
+  const el = rawEl?.closest ? (rawEl.closest('button') as HTMLElement) || rawEl : rawEl;
+  let x = Math.round(window.innerWidth / 2);
+  let y = Math.round(window.innerHeight / 2);
 
-  if (
+  if (el && typeof el.getBoundingClientRect === 'function') {
+    const rect = el.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      x = Math.round(rect.left + rect.width / 2);
+      y = Math.round(rect.top + rect.height / 2);
+    }
+  } else if (
     event &&
+    'clientX' in event &&
     typeof event.clientX === 'number' &&
     typeof event.clientY === 'number' &&
     (event.clientX > 0 || event.clientY > 0)
   ) {
-    x = event.clientX;
-    y = event.clientY;
-  } else if (targetElement) {
-    const rect = targetElement.getBoundingClientRect();
-    x = rect.left + rect.width / 2;
-    y = rect.top + rect.height / 2;
+    x = Math.round(event.clientX);
+    y = Math.round(event.clientY);
   }
 
   const right = window.innerWidth - x;
   const bottom = window.innerHeight - y;
-  // Calculate maximum distance to the farthest corner with safety margin
+  // Compute radius to the farthest corner with safety margin so corners never get clipped
   const maxRadius = Math.ceil(
     Math.hypot(
       Math.max(x, right),
       Math.max(y, bottom)
     )
-  ) + 16;
+  ) + 24;
+
+  // Set CSS variables so the incoming pseudo-element starts at 0px at the toggle button
+  doc.documentElement.style.setProperty('--theme-toggle-x', `${x}px`);
+  doc.documentElement.style.setProperty('--theme-toggle-y', `${y}px`);
 
   try {
     const transition = doc.startViewTransition(() => {
@@ -74,7 +83,7 @@ export async function executeThemeTransition({
 
     await transition.ready;
 
-    // Blinkit-style fluid deceleration curve with calm 850ms duration
+    // Luxurious, calm 1100ms circular expansion with natural deceleration
     doc.documentElement.animate(
       {
         clipPath: [
@@ -83,13 +92,27 @@ export async function executeThemeTransition({
         ],
       },
       {
-        duration: 850,
-        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        duration: 1100,
+        easing: 'cubic-bezier(0.25, 1, 0.35, 1)',
         pseudoElement: '::view-transition-new(root)',
+        fill: 'forwards',
       }
     );
+
+    try {
+      if (transition.finished) {
+        await transition.finished;
+      }
+    } catch (_) {
+      // Ignore transition cancel / abort errors
+    } finally {
+      doc.documentElement.style.removeProperty('--theme-toggle-x');
+      doc.documentElement.style.removeProperty('--theme-toggle-y');
+    }
   } catch (err) {
     // If transition fails or is aborted, fallback directly
     onThemeApply(newTheme);
+    doc.documentElement.style.removeProperty('--theme-toggle-x');
+    doc.documentElement.style.removeProperty('--theme-toggle-y');
   }
 }

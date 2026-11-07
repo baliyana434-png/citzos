@@ -498,7 +498,7 @@ button, a {
 
 /* Circular Clip-Path View Transition for Theme Switch (Blinkit / Apple Fluid Easing) */
 ::view-transition-group(root) {
-  animation-duration: 0.85s;
+  animation-duration: 1.15s;
 }
 
 ::view-transition-old(root),
@@ -513,6 +513,7 @@ button, a {
 
 ::view-transition-new(root) {
   z-index: 99999;
+  clip-path: circle(0px at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%));
 }
 
 /* Disable native browser password reveal and clear eye buttons (Edge, IE, WebKit) */
