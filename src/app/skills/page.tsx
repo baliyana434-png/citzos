@@ -28,7 +28,6 @@ import {
   Camera,
   Layers,
   ChevronRight,
-  Filter,
   Flame,
   Lock
 } from 'lucide-react';
@@ -46,38 +45,7 @@ export default function SkillsPage() {
   const { country, countryMeta } = useCountry();
   const [selectedSector, setSelectedSector] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [levelFilter, setLevelFilter] = useState<'all' | 'Beginner' | 'Intermediate' | 'Advanced'>('all');
   const [onlyHighDemand, setOnlyHighDemand] = useState<boolean>(false);
-
-  // Level Filter Apple Liquid Pill
-  const levelBarRef = useRef<HTMLDivElement | null>(null);
-  const levelBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [levelPillPos, setLevelPillPos] = useState<{ left: number; width: number; ready: boolean }>({
-    left: 0,
-    width: 0,
-    ready: false,
-  });
-
-  const updateLevelPill = useCallback(() => {
-    const activeBtn = levelBtnRefs.current[levelFilter];
-    if (activeBtn) {
-      setLevelPillPos({
-        left: activeBtn.offsetLeft,
-        width: activeBtn.offsetWidth,
-        ready: true,
-      });
-    }
-  }, [levelFilter]);
-
-  useLayoutEffect(() => {
-    updateLevelPill();
-  }, [updateLevelPill]);
-
-  useEffect(() => {
-    updateLevelPill();
-    window.addEventListener('resize', updateLevelPill);
-    return () => window.removeEventListener('resize', updateLevelPill);
-  }, [updateLevelPill]);
 
   // Sector Filter Apple Liquid Pill
   const sectorBarRef = useRef<HTMLDivElement | null>(null);
@@ -121,18 +89,6 @@ export default function SkillsPage() {
     }
   }, [selectedSector]);
 
-  // Auto-scroll the active level filter into view horizontally
-  useEffect(() => {
-    const activeBtn = levelBtnRefs.current[levelFilter];
-    if (activeBtn) {
-      activeBtn.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest',
-      });
-    }
-  }, [levelFilter]);
-  
   // Citizen Profile & 1-Year Pass Subscription State
   const [profile, setProfile] = useState<CitizenProfile | null>(null);
   const [isSubscriptionOpen, setIsSubscriptionOpen] = useState<boolean>(false);
@@ -361,7 +317,7 @@ export default function SkillsPage() {
     });
   }, [countryTopics]);
 
-  // Filter topics based on country, sector, search, level, and high demand
+  // Filter topics based on country, sector, search, and high demand
   const filteredTopics = useMemo(() => {
     return countryTopics.filter((t) => {
       if (selectedSector !== 'all' && t.sectorId !== selectedSector) return false;
@@ -369,12 +325,6 @@ export default function SkillsPage() {
       // If user filters by high demand only
       if (onlyHighDemand && t.demandLevel !== 'very_high' && t.demandLevel !== 'trending') {
         return false;
-      }
-
-      // If user filters by a specific level, ensure the topic contains that level video
-      if (levelFilter !== 'all') {
-        const hasLevelVideo = t.videos.some((v) => v.level === levelFilter);
-        if (!hasLevelVideo) return false;
       }
 
       if (searchQuery.trim()) {
@@ -391,7 +341,7 @@ export default function SkillsPage() {
       }
       return true;
     });
-  }, [countryTopics, selectedSector, searchQuery, levelFilter, onlyHighDemand]);
+  }, [countryTopics, selectedSector, searchQuery, onlyHighDemand]);
 
   // Active topic object
   const activeTopic = useMemo(() => {
@@ -413,12 +363,11 @@ export default function SkillsPage() {
     }
   }, [availableSectors, selectedSector]);
 
-  // Videos under active topic filtered strictly by level if specified
+  // All verified videos under active topic
   const displayVideos = useMemo(() => {
     if (!activeTopic) return [];
-    if (levelFilter === 'all') return activeTopic.videos;
-    return activeTopic.videos.filter((v) => v.level === levelFilter);
-  }, [activeTopic, levelFilter]);
+    return activeTopic.videos;
+  }, [activeTopic]);
 
   // Helper for sector icons
   const renderSectorIcon = (iconName: string) => {
@@ -535,68 +484,6 @@ export default function SkillsPage() {
                   <X className="w-4 h-4" />
                 </button>
               )}
-            </div>
-
-            {/* Level Filter: Beginner / Intermediate / Advanced (Apple Liquid Glass Segmented Bar) */}
-            <div 
-              ref={levelBarRef}
-              className="relative flex items-center p-1 glass-tab-bar rounded-xl shrink-0 overflow-x-auto no-scrollbar max-w-full shadow-2xs touch-pan-x scroll-smooth"
-            >
-              {levelPillPos.ready && (
-                <motion.div
-                  className="apple-liquid-glass"
-                  initial={false}
-                  animate={{
-                    x: levelPillPos.left,
-                    width: levelPillPos.width,
-                  }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 460,
-                    damping: 32,
-                    mass: 0.75,
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '4px',
-                    bottom: '4px',
-                    left: 0,
-                    pointerEvents: 'none',
-                    zIndex: 0,
-                  }}
-                />
-              )}
-
-              <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-zinc-400 px-2 flex items-center gap-1 shrink-0 z-10">
-                <Filter className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-                <span>Level:</span>
-              </span>
-
-              {(['all', 'Beginner', 'Intermediate', 'Advanced'] as const).map((lvl) => {
-                const isSelected = levelFilter === lvl;
-                return (
-                  <button
-                    key={lvl}
-                    ref={(el) => {
-                      levelBtnRefs.current[lvl] = el;
-                    }}
-                    onClick={() => setLevelFilter(lvl)}
-                    className={`relative z-10 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs transition-colors duration-200 cursor-pointer whitespace-nowrap active:scale-[0.97] select-none ${
-                      isSelected
-                        ? 'text-slate-950 dark:text-white font-black'
-                        : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
-                    }`}
-                  >
-                    {lvl === 'all'
-                      ? (language === 'hi' ? 'सभी' : 'All')
-                      : (lvl === 'Beginner'
-                          ? (language === 'hi' ? 'शुरुआती' : 'Beginner')
-                          : lvl === 'Intermediate'
-                            ? (language === 'hi' ? 'मध्यम' : 'Intermediate')
-                            : (language === 'hi' ? 'उन्नत' : 'Advanced'))}
-                  </button>
-                );
-              })}
             </div>
 
             {/* High Demand Toggle Button */}
@@ -745,13 +632,12 @@ export default function SkillsPage() {
             <p className="text-xs text-slate-500 dark:text-zinc-400">
               {language === 'hi'
                 ? 'कृपया दूसरा कीवर्ड सर्च करें या किसी अन्य सेक्टर का चयन करें।'
-                : 'Try adjusting your search query or reset the level filter.'}
+                : 'Try adjusting your search query or select another sector.'}
             </p>
             <button
               onClick={() => {
                 setSearchQuery('');
                 setSelectedSector('all');
-                setLevelFilter('all');
               }}
               className="px-4 py-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 text-xs font-bold hover:bg-slate-800 transition-all cursor-pointer"
             >
@@ -932,8 +818,8 @@ export default function SkillsPage() {
                   <div className="flex items-center gap-2">
                     <h3 className="text-xs sm:text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">
                       {language === 'hi'
-                        ? `शीर्ष 3 सत्यापित वीडियोज (${levelFilter === 'all' ? 'शुरुआती से एक्सपर्ट स्तर' : levelFilter + ' स्तर'})`
-                        : `Top 3 Verified Masterclasses (${levelFilter === 'all' ? 'Beginner to Advanced' : levelFilter + ' Level'})`}
+                        ? 'शीर्ष 3 सत्यापित वीडियोज (शुरुआती से एक्सपर्ट स्तर)'
+                        : 'Top 3 Verified Masterclasses (Beginner to Advanced)'}
                     </h3>
                   </div>
 
