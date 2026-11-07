@@ -9,8 +9,8 @@ export interface ThemeTransitionOptions {
   onThemeApply: (newTheme: 'light' | 'dark') => void;
 }
 
-// 1.0s duration with ease-out
-const DURATION = 1000;
+// 0.2s duration with ease-out
+const DURATION = 200;
 const EASING = 'ease-out';
 
 let isThemeTransitioning = false;
@@ -60,8 +60,8 @@ export async function executeThemeTransition({
 
   if (button && typeof button.getBoundingClientRect === 'function') {
     const rect = button.getBoundingClientRect();
-    x = rect.left + rect.width / 2;
-    y = rect.top + rect.height / 2;
+    x = Math.round(rect.left + rect.width / 2);
+    y = Math.round(rect.top + rect.height / 2);
   } else if (
     event &&
     'clientX' in event &&
@@ -69,14 +69,16 @@ export async function executeThemeTransition({
     typeof event.clientY === 'number' &&
     (event.clientX > 0 || event.clientY > 0)
   ) {
-    x = event.clientX;
-    y = event.clientY;
+    x = Math.round(event.clientX);
+    y = Math.round(event.clientY);
   }
 
   // Radius of circle that covers the entire screen from (x, y)
-  const maxRadius = Math.hypot(
-    Math.max(x, window.innerWidth - x),
-    Math.max(y, window.innerHeight - y)
+  const maxRadius = Math.ceil(
+    Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y)
+    )
   );
 
   const apply = () => {
