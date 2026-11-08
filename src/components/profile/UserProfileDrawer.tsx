@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CitizenProfile, FamilyMember, QUALIFICATION_OPTIONS } from '@/types';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
@@ -33,6 +32,8 @@ import {
   Sun,
   Moon,
   Bell,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 interface UserProfileDrawerProps {
@@ -82,48 +83,8 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     }
     return 'light';
   });
-  const themeContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isAppearanceOpen, setIsAppearanceOpen] = useState<boolean>(true);
   const themeButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [themePillPos, setThemePillPos] = useState<{ left: number; width: number; ready: boolean }>({
-    left: 0,
-    width: 0,
-    ready: false,
-  });
-
-  const updateThemePill = useCallback(() => {
-    const activeBtn = themeButtonRefs.current[theme];
-    if (activeBtn) {
-      setThemePillPos({
-        left: activeBtn.offsetLeft,
-        width: activeBtn.offsetWidth,
-        ready: true,
-      });
-    }
-  }, [theme]);
-
-  useLayoutEffect(() => {
-    updateThemePill();
-  }, [updateThemePill]);
-
-  useEffect(() => {
-    updateThemePill();
-    window.addEventListener('resize', updateThemePill);
-    return () => window.removeEventListener('resize', updateThemePill);
-  }, [updateThemePill]);
-
-  // Ensure theme pill re-measures accurately when drawer opens
-  useEffect(() => {
-    if (!isOpen) return;
-    updateThemePill();
-    const t1 = setTimeout(updateThemePill, 40);
-    const t2 = setTimeout(updateThemePill, 120);
-    const t3 = setTimeout(updateThemePill, 250);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
-  }, [isOpen, updateThemePill]);
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState<boolean>(false);
   const [isNotifLoading, setIsNotifLoading] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string | null>(null);
@@ -227,7 +188,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     const currentTheme = isCurrentlyDark ? 'dark' : 'light';
     if (newTheme === currentTheme) return;
 
-    const targetBtn = themeButtonRefs.current[newTheme] || themeContainerRef.current || (e?.currentTarget as HTMLElement);
+    const targetBtn = themeButtonRefs.current[newTheme] || (e?.currentTarget as HTMLElement);
 
     executeThemeTransition({
       newTheme,
@@ -625,63 +586,125 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                   </div>
                 )}
               </div>
-
-              {/* Logout Button Section - High Contrast Accessible in Light & Dark Modes */}
-              <div className="pt-2">
-                {!showLogoutConfirm ? (
-                  <button
-                    type="button"
-                    onClick={() => setShowLogoutConfirm(true)}
-                    className="w-full py-3 px-4 rounded-xl border-2 border-red-300 dark:border-red-800 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
-                  >
-                    <LogOut className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
-                    <span>{t('profile.logout_btn')}</span>
-                  </button>
-                ) : (
-                  <div className="p-4 rounded-2xl bg-white dark:bg-[#150a0d] border-2 border-red-400 dark:border-red-800/90 space-y-3 shadow-lg animate-in fade-in">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                        <LogOut className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <h4 className="font-black text-slate-900 dark:text-red-100 text-xs sm:text-sm leading-tight">
-                          {t('profile.logout_confirm_title')}
-                        </h4>
-                        <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
-                          {t('profile.logout_confirm_desc')}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowLogoutConfirm(false);
-                          onClose();
-                          onLogout?.();
-                        }}
-                        className="flex-1 py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-xs font-black text-white cursor-pointer shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-[0.98]"
-                      >
-                        <LogOut className="w-3.5 h-3.5" />
-                        <span>{t('profile.logout_confirm_yes')}</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowLogoutConfirm(false)}
-                        className="py-2.5 px-4 rounded-xl border-2 border-slate-300 dark:border-zinc-700 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-900 dark:text-white text-xs font-extrabold transition-all cursor-pointer shadow-2xs"
-                      >
-                        {t('profile.logout_cancel')}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
             </>
           )}
 
+          {/* Appearance (Theme) Section - Blinkit Inspired Expandable Accordion */}
+          <div className="rounded-2xl border-2 border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] transition-all shadow-xs overflow-hidden">
+            {/* Header Button (Toggles Accordion) */}
+            <button
+              type="button"
+              onClick={() => setIsAppearanceOpen((prev) => !prev)}
+              className="w-full p-3.5 sm:p-4 flex items-center justify-between text-left cursor-pointer hover:bg-slate-50/60 dark:hover:bg-white/[0.03] transition-colors"
+              aria-expanded={isAppearanceOpen}
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-[#202127] flex items-center justify-center text-slate-700 dark:text-amber-400 shrink-0">
+                  {theme === 'dark' ? (
+                    <Moon className="w-4 h-4 text-indigo-400" />
+                  ) : (
+                    <Sun className="w-4 h-4 text-amber-500" />
+                  )}
+                </div>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
+                    {language === 'hi' ? 'दिखावट (Appearance)' : 'Appearance'}
+                  </span>
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-400">
+                    {theme === 'dark'
+                      ? (language === 'hi' ? 'डार्क थीम सक्रिय' : 'Dark theme active')
+                      : (language === 'hi' ? 'लाइट थीम सक्रिय' : 'Light theme active')}
+                  </span>
+                </div>
+              </div>
+
+              {/* Right pill with current value & chevron */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-[#1c1d24] text-xs font-bold text-slate-700 dark:text-zinc-300 border border-slate-200/70 dark:border-white/5">
+                <span>{theme === 'dark' ? (language === 'hi' ? 'डार्क' : 'Dark') : (language === 'hi' ? 'लाइट' : 'Light')}</span>
+                {isAppearanceOpen ? (
+                  <ChevronUp className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
+                )}
+              </div>
+            </button>
+
+            {/* Expanded Options List: ONLY Light and Dark */}
+            {isAppearanceOpen && (
+              <div className="border-t border-slate-100 dark:border-white/10 px-3.5 sm:px-4 py-1.5 space-y-1 bg-slate-50/50 dark:bg-[#16171d]/60 animate-in fade-in duration-150">
+                {/* Light Theme Row */}
+                <button
+                  type="button"
+                  ref={(el) => {
+                    themeButtonRefs.current['light'] = el;
+                  }}
+                  onClick={(e) => handleToggleTheme('light', e)}
+                  className={`w-full flex items-center justify-between py-2.5 px-2 rounded-xl transition-all cursor-pointer text-left ${
+                    theme === 'light'
+                      ? 'bg-emerald-50/70 dark:bg-emerald-950/30'
+                      : 'hover:bg-slate-100/70 dark:hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-amber-100/80 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center shrink-0">
+                      <Sun className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                      {language === 'hi' ? 'लाइट थीम' : 'Light theme'}
+                    </span>
+                  </div>
+                  <div className="shrink-0 pl-2">
+                    {theme === 'light' ? (
+                      <div className="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-2xs">
+                        <Check className="w-3 h-3 stroke-[3]" />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-zinc-600" />
+                    )}
+                  </div>
+                </button>
+
+                {/* Divider */}
+                <div className="border-t border-slate-200/60 dark:border-white/5 my-0.5" />
+
+                {/* Dark Theme Row */}
+                <button
+                  type="button"
+                  ref={(el) => {
+                    themeButtonRefs.current['dark'] = el;
+                  }}
+                  onClick={(e) => handleToggleTheme('dark', e)}
+                  className={`w-full flex items-center justify-between py-2.5 px-2 rounded-xl transition-all cursor-pointer text-left ${
+                    theme === 'dark'
+                      ? 'bg-emerald-50/70 dark:bg-emerald-950/30'
+                      : 'hover:bg-slate-100/70 dark:hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-100/80 dark:bg-indigo-950/60 text-indigo-500 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                      <Moon className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                      {language === 'hi' ? 'डार्क थीम' : 'Dark theme'}
+                    </span>
+                  </div>
+                  <div className="shrink-0 pl-2">
+                    {theme === 'dark' ? (
+                      <div className="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-2xs">
+                        <Check className="w-3 h-3 stroke-[3]" />
+                      </div>
+                    ) : (
+                      <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-zinc-600" />
+                    )}
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
+
           {/* Live Opportunity Push Notifications Toggle */}
           <div className="space-y-2">
-            <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-[#161619] flex items-center justify-between transition-colors shadow-2xs">
+            <div className="p-3.5 sm:p-4 rounded-2xl border-2 border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] flex items-center justify-between transition-colors shadow-xs">
               <div className="flex items-center gap-2.5 min-w-0 pr-2">
                 <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
                   isNotificationsEnabled 
@@ -721,12 +744,9 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
               >
                 <span className="sr-only">Toggle notification alerts</span>
                 <span
-                  className={`pointer-events-none inline-block h-5 w-5 rounded-full flex items-center justify-center transition-transform duration-200 ease-out ${
-                    isNotificationsEnabled 
-                      ? 'translate-x-5.5 bg-white text-emerald-700 shadow-md' 
-                      : 'translate-x-0.5 bg-white dark:bg-zinc-200 text-slate-500 shadow-sm'
-                  }`}
+                  className="pointer-events-none inline-block h-5 w-5 rounded-full flex items-center justify-center transition-all duration-200 ease-out bg-white shadow-sm"
                   style={{
+                    transform: isNotificationsEnabled ? 'translateX(22px)' : 'translateX(1px)',
                     boxShadow: isNotificationsEnabled 
                       ? '0 2px 6px rgba(0,0,0,0.3), inset 0 1.5px 1px #fff'
                       : '0 2px 5px rgba(15,23,42,0.25), inset 0 1px 1px #fff, 0 0 0 1px rgba(15,23,42,0.15)',
@@ -747,85 +767,58 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
             )}
           </div>
 
-          {/* Theme Switcher Section (Light / Dark) */}
-          <div className="p-3.5 sm:p-4 rounded-2xl border-2 border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] flex items-center justify-between transition-colors shadow-xs mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-slate-200 dark:bg-[#222227] flex items-center justify-center text-slate-700 dark:text-amber-400">
-                {theme === 'dark' ? <Moon className="w-4 h-4 text-indigo-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
-              </div>
-              <div>
-                <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
-                  {language === 'hi' ? 'थीम (Theme)' : 'Theme'}
-                </span>
-                <span className="text-[11px] text-slate-500 dark:text-zinc-400">
-                  {theme === 'dark'
-                    ? (language === 'hi' ? 'डार्क मोड सक्रिय' : 'Dark Mode Active')
-                    : (language === 'hi' ? 'लाइट मोड सक्रिय' : 'Light Mode Active')}
-                </span>
-              </div>
-            </div>
-
-            <div 
-              ref={themeContainerRef}
-              className="relative inline-flex p-1 glass-tab-bar rounded-xl shadow-2xs touch-manipulation"
-            >
-              {themePillPos.ready && themePillPos.width > 0 && (
-                <motion.div
-                  className="apple-liquid-glass"
-                  initial={false}
-                  animate={{
-                    x: themePillPos.left,
-                    width: themePillPos.width,
-                  }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 460,
-                    damping: 32,
-                    mass: 0.75,
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '4px',
-                    bottom: '4px',
-                    left: 0,
-                    pointerEvents: 'none',
-                    zIndex: 0,
-                  }}
-                />
+          {/* Logout Button Section - Cleanly positioned after Opportunity Alerts */}
+          {isVerified && (
+            <div className="pt-2 mb-6">
+              {!showLogoutConfirm ? (
+                <button
+                  type="button"
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="w-full py-3 px-4 rounded-xl border-2 border-red-300 dark:border-red-800 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 text-xs sm:text-sm font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
+                >
+                  <LogOut className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
+                  <span>{t('profile.logout_btn')}</span>
+                </button>
+              ) : (
+                <div className="p-4 rounded-2xl bg-white dark:bg-[#150a0d] border-2 border-red-400 dark:border-red-800/90 space-y-3 shadow-lg animate-in fade-in">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                      <LogOut className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-black text-slate-900 dark:text-red-100 text-xs sm:text-sm leading-tight">
+                        {t('profile.logout_confirm_title')}
+                      </h4>
+                      <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5 leading-snug">
+                        {t('profile.logout_confirm_desc')}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowLogoutConfirm(false);
+                        onClose();
+                        onLogout?.();
+                      }}
+                      className="flex-1 py-2.5 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-xs font-black text-white cursor-pointer shadow-sm transition-all flex items-center justify-center gap-1.5 active:scale-[0.98]"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>{t('profile.logout_confirm_yes')}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowLogoutConfirm(false)}
+                      className="py-2.5 px-4 rounded-xl border-2 border-slate-300 dark:border-zinc-700 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-900 dark:text-white text-xs font-extrabold transition-all cursor-pointer shadow-2xs"
+                    >
+                      {t('profile.logout_cancel')}
+                    </button>
+                  </div>
+                </div>
               )}
-
-              <button
-                type="button"
-                ref={(el) => {
-                  themeButtonRefs.current['light'] = el;
-                }}
-                onClick={(e) => handleToggleTheme('light', e)}
-                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 touch-manipulation ${
-                  theme === 'light'
-                    ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
-                }`}
-              >
-                <Sun className={`w-3.5 h-3.5 transition-transform ${theme === 'light' ? 'text-amber-500 scale-110' : 'text-slate-400'}`} />
-                <span>{language === 'hi' ? 'लाइट' : 'Light'}</span>
-              </button>
-              <button
-                type="button"
-                ref={(el) => {
-                  themeButtonRefs.current['dark'] = el;
-                }}
-                onClick={(e) => handleToggleTheme('dark', e)}
-                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer select-none transition-colors duration-200 touch-manipulation ${
-                  theme === 'dark'
-                    ? 'text-slate-950 dark:text-white font-black ' + (!themePillPos.ready || themePillPos.width === 0 ? 'apple-liquid-glass' : '')
-                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white font-bold'
-                }`}
-              >
-                <Moon className={`w-3.5 h-3.5 transition-transform ${theme === 'dark' ? 'text-indigo-400 scale-110' : 'text-slate-400'}`} />
-                <span>{language === 'hi' ? 'डार्क' : 'Dark'}</span>
-              </button>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
