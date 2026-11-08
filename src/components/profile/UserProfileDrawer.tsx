@@ -85,6 +85,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   });
   const [isAppearanceOpen, setIsAppearanceOpen] = useState<boolean>(true);
   const themeButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const radioCircleRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState<boolean>(false);
   const [isNotifLoading, setIsNotifLoading] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string | null>(null);
@@ -184,11 +185,14 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   }, [isOpen, isGoogleLoggingIn]);
 
   const handleToggleTheme = (newTheme: 'light' | 'dark', e?: React.MouseEvent | React.TouchEvent) => {
-    const isCurrentlyDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
-    const currentTheme = isCurrentlyDark ? 'dark' : 'light';
-    if (newTheme === currentTheme) return;
+    if (newTheme === theme) return;
 
-    const targetBtn = themeButtonRefs.current[newTheme] || (e?.currentTarget as HTMLElement);
+    // 1. INSTANTLY update state so radio button turns green/checked with 0ms delay!
+    setTheme(newTheme);
+
+    // 2. Resolve target element: prioritize the exact radio circle on the right edge
+    const radioBtn = radioCircleRefs.current[newTheme] || themeButtonRefs.current[newTheme];
+    const targetBtn = radioBtn || (e?.currentTarget as HTMLElement);
 
     executeThemeTransition({
       newTheme,
@@ -653,7 +657,12 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       {language === 'hi' ? 'लाइट थीम' : 'Light theme'}
                     </span>
                   </div>
-                  <div className="shrink-0 pl-2">
+                  <div 
+                    ref={(el) => {
+                      radioCircleRefs.current['light'] = el;
+                    }}
+                    className="shrink-0 pl-2"
+                  >
                     {theme === 'light' ? (
                       <div className="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-2xs">
                         <Check className="w-3 h-3 stroke-[3]" />
@@ -688,7 +697,12 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                       {language === 'hi' ? 'डार्क थीम' : 'Dark theme'}
                     </span>
                   </div>
-                  <div className="shrink-0 pl-2">
+                  <div 
+                    ref={(el) => {
+                      radioCircleRefs.current['dark'] = el;
+                    }}
+                    className="shrink-0 pl-2"
+                  >
                     {theme === 'dark' ? (
                       <div className="w-5 h-5 rounded-full bg-emerald-600 flex items-center justify-center text-white shadow-2xs">
                         <Check className="w-3 h-3 stroke-[3]" />

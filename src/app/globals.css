@@ -500,7 +500,9 @@ button, a {
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
+  -webkit-animation: none;
   mix-blend-mode: normal;
+  isolation: isolate;
 }
 
 ::view-transition-old(root) {
@@ -509,18 +511,28 @@ button, a {
 
 ::view-transition-new(root) {
   z-index: 999999;
-}
-
-/* Fallback CSS animation for Safari 18 / non-WebAnimations environments */
-html.vt-active-theme::view-transition-new(root) {
-  animation: theme-circle-reveal 450ms cubic-bezier(0.2, 0, 0, 1) forwards;
+  -webkit-animation: theme-circle-reveal 380ms cubic-bezier(0.2, 0, 0, 1) forwards;
+  animation: theme-circle-reveal 380ms cubic-bezier(0.2, 0, 0, 1) forwards;
 }
 
 @keyframes theme-circle-reveal {
   0% {
+    -webkit-clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
     clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
   }
   100% {
+    -webkit-clip-path: circle(var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
+    clip-path: circle(var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+}
+
+@-webkit-keyframes theme-circle-reveal {
+  0% {
+    -webkit-clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+    clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%));
+  }
+  100% {
+    -webkit-clip-path: circle(var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
     clip-path: circle(var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%));
   }
 }

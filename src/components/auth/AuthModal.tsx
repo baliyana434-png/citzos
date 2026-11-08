@@ -141,6 +141,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleToggleTheme = (e?: React.MouseEvent | React.TouchEvent) => {
     const isCurrentlyDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
     const nextTheme = isCurrentlyDark ? 'light' : 'dark';
+    setIsDarkTheme(nextTheme === 'dark');
     const targetBtn = authThemeToggleRef.current || (e?.currentTarget as HTMLElement);
 
     executeThemeTransition({
