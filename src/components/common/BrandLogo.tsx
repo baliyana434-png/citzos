@@ -18,10 +18,9 @@ export const BrandIconSvg: React.FC<{ sizePx?: number; className?: string }> = (
 }) => {
   return (
     <img
-      src="/logo-shield-transparent.png"
-      alt="Citzos Emblem"
-      width={sizePx}
-      height={sizePx}
+      src="/logo-citzos.png"
+      alt="CITZOS"
+      style={{ height: `${sizePx}px`, width: 'auto' }}
       className={`shrink-0 object-contain transition-transform duration-200 hover:scale-105 ${className}`}
       loading="eager"
     />

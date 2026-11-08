@@ -58,6 +58,19 @@ const nextConfig = {
           },
         ],
       },
+      {
+        source: "/:path*.(png|jpg|jpeg|svg|webp|ico)",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, OPTIONS",
+          },
+        ],
+      },
     ];
   },
 };

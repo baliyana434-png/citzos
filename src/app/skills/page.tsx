@@ -473,6 +473,11 @@ export default function SkillsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.currentTarget.blur();
+                  }
+                }}
                 placeholder={language === 'hi' ? 'हुनर या विषय खोजें (German, Python, Video Editing, AI)...' : 'Search any skill or course (German, Python, Video Editing, AI)...'}
                 className="w-full pl-10 pr-9 py-2.5 bg-slate-50 dark:bg-[#141417] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 rounded-xl border border-slate-300 dark:border-white/10 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 outline-none text-xs sm:text-sm transition-all"
               />

@@ -550,6 +550,11 @@ export default function FormsPage() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.currentTarget.blur();
+                  }
+                }}
                 placeholder={
                   language === 'hi'
                     ? 'सक्रिय फॉर्म का नाम या विभाग खोजें...'

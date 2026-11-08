@@ -55,7 +55,6 @@ import {
 } from 'lucide-react';
 import { RegisteredCitizen } from '@/app/api/admin/citizens/route';
 import { CitizenAadhaarModal } from '@/components/admin/CitizenAadhaarModal';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 
 interface SystemStatusData {
   timestamp: string;
@@ -705,17 +704,17 @@ export default function AdminPage() {
             theme === 'dark' ? 'border-slate-800' : 'border-slate-100'
           }`}>
             <div className="flex items-center gap-3">
-              <BrandIconSvg sizePx={44} className="shadow-xs shrink-0" />
+              <img src="/logo-citzos.png" alt="CITZOS" className="h-8 w-auto object-contain shrink-0" />
               <div>
                 <h1 className={`text-base font-black tracking-tight leading-none ${
                   theme === 'dark' ? 'text-white' : 'text-slate-900'
                 }`}>
-                  Citizen Life <span className="text-emerald-500">OS</span>
+                  Citzos Master Administration
                 </h1>
                 <span className={`text-[11px] block mt-1 font-medium ${
                   theme === 'dark' ? 'text-slate-400' : 'text-slate-500'
                 }`}>
-                  Master Administration Console
+                  Console Oversight
                 </span>
               </div>
             </div>
@@ -843,7 +842,7 @@ export default function AdminPage() {
       }`}>
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <BrandIconSvg sizePx={38} className="shadow-xs shrink-0" />
+            <img src="/logo-citzos.png" alt="CITZOS" className="h-7 w-auto object-contain shrink-0" />
             <div>
               <div className="flex items-center gap-2">
                 <span className={`font-extrabold text-sm tracking-tight ${

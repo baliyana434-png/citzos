@@ -22,7 +22,6 @@ import {
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import { CitizenSubscription } from '@/types';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -116,7 +115,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           currency: orderData.order.currency || 'INR',
           name: 'Citzos',
           description: '1-Year Citzos Universal Platform Access Pass (365 Days)',
-          image: 'https://www.citzos.in/logo-shield-transparent.png',
+          image: typeof window !== 'undefined' && window.location.origin ? `${window.location.origin}/logo-razorpay.png` : 'https://www.citzos.in/logo-razorpay.png',
           order_id: orderData.order.orderId,
           prefill: {
             name: citizenName,
@@ -223,7 +222,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden z-10 animate-in zoom-in-95 duration-200 my-auto p-5 sm:p-6 space-y-4">
           <div className="p-5 rounded-2xl bg-emerald-50 border border-emerald-200 text-center space-y-2">
             <div className="flex justify-center mb-1">
-              <BrandIconSvg sizePx={44} className="mx-auto drop-shadow-xs" />
+              <img src="/logo-citzos.png" alt="CITZOS" className="h-8 w-auto object-contain mx-auto drop-shadow-xs" />
             </div>
             <div className="w-10 h-10 rounded-full bg-emerald-600 text-white mx-auto flex items-center justify-center shadow-md">
               <Check className="w-5 h-5 stroke-[3]" />
@@ -305,7 +304,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </button>
 
           <div className="flex justify-center pt-1">
-            <BrandIconSvg sizePx={44} className="mx-auto drop-shadow-md" />
+            <img src="/logo-citzos.png" alt="CITZOS" className="h-8 w-auto object-contain mx-auto drop-shadow-md" />
           </div>
 
           <div className="space-y-1.5">
@@ -365,7 +364,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
         {/* Brand Shield Logo */}
         <div className="flex justify-center pt-1">
-          <BrandIconSvg sizePx={44} className="mx-auto drop-shadow-md" />
+          <img src="/logo-citzos.png" alt="CITZOS" className="h-8 w-auto object-contain mx-auto drop-shadow-md" />
         </div>
 
         <div className="w-9 h-9 rounded-full border-3 border-emerald-500 border-t-transparent animate-spin mx-auto" />

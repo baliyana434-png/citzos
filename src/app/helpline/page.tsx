@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { 
   PhoneCall, 
   ShieldCheck, 
-  Search, 
   ArrowLeft, 
   Clock, 
   ExternalLink, 
@@ -31,7 +30,6 @@ export default function HelplinePage() {
   const { language, setLanguage } = useTranslation();
   const { country, countryMeta } = useCountry();
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedNumber, setCopiedNumber] = useState<string | null>(null);
 
   const categoryBtnRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -81,20 +79,9 @@ export default function HelplinePage() {
       if (activeCategory !== 'all' && h.category !== activeCategory) {
         return false;
       }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchNumber = h.number.toLowerCase().includes(q);
-        const matchName = h.name.toLowerCase().includes(q) || (h.nameHi && h.nameHi.includes(q));
-        const matchAuth = h.authority.toLowerCase().includes(q) || (h.authorityHi && h.authorityHi.includes(q));
-        const matchPurpose = h.purpose.toLowerCase().includes(q) || (h.purposeHi && h.purposeHi.includes(q));
-        const matchTags = h.tags.some((t) => t.toLowerCase().includes(q));
-        if (!matchNumber && !matchName && !matchAuth && !matchPurpose && !matchTags) {
-          return false;
-        }
-      }
       return true;
     });
-  }, [country, activeCategory, searchQuery]);
+  }, [country, activeCategory]);
 
   const handleCopyNumber = (num: string) => {
     navigator.clipboard.writeText(num);
@@ -214,24 +201,8 @@ export default function HelplinePage() {
           );
         })()}
 
-        {/* Search & Category Filter Section */}
-        <div className="bg-white rounded-3xl p-4 sm:p-6 border border-slate-200 shadow-sm space-y-4">
-          {/* Search Bar */}
-          <div className="relative max-w-xl">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={
-                language === 'hi'
-                  ? 'नंबर (1930, 112, 181), विभाग अथवा समस्या से खोजें...'
-                  : 'Search by number (1930, 112, 181), department or problem...'
-              }
-              className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 hover:bg-slate-100 focus:bg-white text-slate-900 placeholder-slate-400 rounded-2xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
-            />
-          </div>
-
+        {/* Category Filter Section */}
+        <div className="bg-white rounded-3xl p-3 sm:p-5 border border-slate-200 shadow-sm">
           {/* Category Filter Pills */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar pr-4 touch-pan-x scroll-smooth">
             {categories.map((cat) => (
