@@ -643,11 +643,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                     themeButtonRefs.current['light'] = el;
                   }}
                   onClick={(e) => handleToggleTheme('light', e)}
-                  className={`w-full flex items-center justify-between py-2.5 px-2 rounded-xl transition-all cursor-pointer text-left ${
-                    theme === 'light'
-                      ? 'bg-emerald-50/70 dark:bg-emerald-950/30'
-                      : 'hover:bg-slate-100/70 dark:hover:bg-white/[0.04]'
-                  }`}
+                  className="w-full flex items-center justify-between py-2.5 px-2 rounded-xl transition-colors cursor-pointer text-left hover:bg-slate-100/70 dark:hover:bg-white/[0.04] active:bg-slate-200/50 dark:active:bg-white/[0.08]"
                 >
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-amber-100/80 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center shrink-0">
@@ -683,11 +679,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                     themeButtonRefs.current['dark'] = el;
                   }}
                   onClick={(e) => handleToggleTheme('dark', e)}
-                  className={`w-full flex items-center justify-between py-2.5 px-2 rounded-xl transition-all cursor-pointer text-left ${
-                    theme === 'dark'
-                      ? 'bg-emerald-50/70 dark:bg-emerald-950/30'
-                      : 'hover:bg-slate-100/70 dark:hover:bg-white/[0.04]'
-                  }`}
+                  className="w-full flex items-center justify-between py-2.5 px-2 rounded-xl transition-colors cursor-pointer text-left hover:bg-slate-100/70 dark:hover:bg-white/[0.04] active:bg-slate-200/50 dark:active:bg-white/[0.08]"
                 >
                   <div className="flex items-center gap-2.5">
                     <div className="w-8 h-8 rounded-xl bg-indigo-100/80 dark:bg-indigo-950/60 text-indigo-500 dark:text-indigo-400 flex items-center justify-center shrink-0">
