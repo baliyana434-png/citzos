@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { verifySessionTokenEdge, SESSION_COOKIE_NAME } from '@/lib/sessionEdge';
 
-// Protected routes requiring citizen authentication
-const PROTECTED_PREFIXES = ['/saved', '/forms', '/skills'];
+// Protected routes requiring citizen authentication (personal bookmarks)
+const PROTECTED_PREFIXES = ['/saved'];
 
 // Auth routes where authenticated users should not land
 const AUTH_ROUTES = ['/login', '/register'];
@@ -58,13 +58,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(safeTarget, req.url));
   }
 
-  // 4. Check protected routes: / (home page), /saved, /forms, /skills
-  const isHomeRoute = pathname === '/';
+  // 4. Check protected routes: /saved (personal saved items)
   const isProtectedSubRoute = PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(prefix + '/')
   );
 
-  if (!isAuthenticated && (isHomeRoute || isProtectedSubRoute)) {
+  if (!isAuthenticated && isProtectedSubRoute) {
     const nextPath = encodeURIComponent(pathname + search);
     const loginUrl = new URL(`/login?next=${nextPath}`, req.url);
     return NextResponse.redirect(loginUrl);
