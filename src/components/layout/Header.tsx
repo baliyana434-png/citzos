@@ -1,13 +1,12 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, LogOut, GraduationCap, X, ArrowLeft, Sun, Moon } from 'lucide-react';
+import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, LogOut, GraduationCap, X, ArrowLeft } from 'lucide-react';
 import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import { CitizenProfile, SupportedLanguage } from '@/types';
-import { executeThemeTransition } from '@/lib/themeTransition';
 
 interface HeaderProps {
   profile: CitizenProfile;
@@ -37,49 +36,6 @@ export const Header: React.FC<HeaderProps> = ({
   const [liveFavCount, setLiveFavCount] = useState<number>(favoriteCount);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark'>('light');
-  const themeBtnRef = useRef<HTMLButtonElement | null>(null);
-
-  useEffect(() => {
-    const syncTheme = () => {
-      const isDark =
-        document.documentElement.classList.contains('dark') ||
-        localStorage.getItem('citizen_theme') === 'dark';
-      setCurrentTheme(isDark ? 'dark' : 'light');
-    };
-    syncTheme();
-    window.addEventListener('citizen_theme_changed', syncTheme);
-    window.addEventListener('storage', syncTheme);
-    return () => {
-      window.removeEventListener('citizen_theme_changed', syncTheme);
-      window.removeEventListener('storage', syncTheme);
-    };
-  }, []);
-
-  const handleHeaderThemeToggle = (e: React.MouseEvent | React.TouchEvent) => {
-    const isCurrentlyDark =
-      typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
-    const nextTheme = isCurrentlyDark ? 'light' : 'dark';
-
-    executeThemeTransition({
-      newTheme: nextTheme,
-      event: e,
-      targetElement: themeBtnRef.current,
-      onThemeApply: (appliedTheme) => {
-        setCurrentTheme(appliedTheme);
-        if (typeof window !== 'undefined') {
-          if (appliedTheme === 'dark') {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('citizen_theme', 'dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('citizen_theme', 'light');
-          }
-          window.dispatchEvent(new Event('citizen_theme_changed'));
-        }
-      },
-    });
-  };
 
   useEffect(() => {
     const updateCount = () => {
@@ -311,30 +267,6 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               )}
             </Link>
-
-            {/* Quick Theme Switcher Button with Circular View Transition */}
-            <button
-              type="button"
-              ref={themeBtnRef}
-              onClick={handleHeaderThemeToggle}
-              className="h-8 w-8 sm:h-9 sm:w-9 inline-flex items-center justify-center rounded-xl bg-slate-100 dark:bg-[#15161c] hover:bg-slate-200 dark:hover:bg-[#202129] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-amber-400 transition-all active:scale-95 cursor-pointer shrink-0 shadow-2xs touch-manipulation"
-              title={
-                currentTheme === 'dark'
-                  ? language === 'hi'
-                    ? 'लाइट मोड चालू करें'
-                    : 'Switch to Light Mode'
-                  : language === 'hi'
-                  ? 'डार्क मोड चालू करें'
-                  : 'Switch to Dark Mode'
-              }
-              aria-label={currentTheme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-            >
-              {currentTheme === 'dark' ? (
-                <Sun className="w-4 h-4 text-amber-400 hover:rotate-45 transition-transform" />
-              ) : (
-                <Moon className="w-4 h-4 text-indigo-600 dark:text-indigo-400 hover:-rotate-12 transition-transform" />
-              )}
-            </button>
 
             {/* Single Profile Button (Zero Overflow on Mobile) */}
             <button
