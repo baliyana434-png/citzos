@@ -30,7 +30,7 @@ const AUTHORITY_PORTAL_MAP: Record<string, string> = {
   neet: 'https://exams.nta.ac.in/NEET',
   jee: 'https://jeemain.nta.ac.in',
   cuet: 'https://exams.nta.ac.in/CUET-UG',
-  gate: 'https://gate2025.iitr.ac.in',
+  gate: 'https://gate2026.iitg.ac.in',
   ugc: 'https://ugcnet.nta.ac.in',
 
   // Employment & Internships
@@ -238,7 +238,7 @@ export function resolveOfficialPortalUrl(opportunity?: Partial<Opportunity> | nu
     return 'https://nats.education.gov.in';
   }
   if (combinedText.includes('gate') || combinedText.includes('गेट परीक्षा')) {
-    return 'https://gate2025.iitr.ac.in';
+    return 'https://gate2026.iitg.ac.in';
   }
   if (combinedText.includes('ugc') || combinedText.includes('विश्वविद्यालय अनुदान')) {
     return 'https://ugcnet.nta.ac.in';

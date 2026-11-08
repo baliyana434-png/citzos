@@ -6,13 +6,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '',
     '/helpline',
     '/skills',
-    '/saved',
     '/forms',
+    '/saved',
     '/login',
+    '/register',
+    '/contact',
     '/privacy',
     '/terms',
     '/refund',
-    '/contact',
     '/disclaimer',
   ];
 

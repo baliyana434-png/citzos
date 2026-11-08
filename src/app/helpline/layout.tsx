@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     'election voter helpline 1950',
     'toll free emergency numbers india',
     'government official helpline directory',
+    '#helpline1930',
+    '#emergency112',
+    '#womenhelpline181',
+    '#cybercrimeindia',
+    '#citzoshelpline',
   ],
   alternates: {
     canonical: `${siteUrl}/helpline`,

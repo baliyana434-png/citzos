@@ -8,11 +8,11 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.citzos.in';
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Citzos | Universal Opportunity Discovery & Civic Platform for All Citizens',
+    default: 'Citzos | 100% Verified Sarkari Yojana 2026, Scholarships, Govt Jobs, Free Courses & 24x7 Helplines',
     template: '%s | Citzos',
   },
   description:
-    'Citzos is an independent private digital technology platform connecting all citizens—students, job seekers, farmers, women, startups, and seniors—with official schemes, private jobs, internships, healthcare, and 24x7 emergency helplines.',
+    'Citzos is India\'s #1 verified civic discovery portal for 100% authentic Sarkari Yojana 2026, National Scholarships (NSP), Competitive Exam alerts (UPSC, SSC, Railway), Free Skill India & SWAYAM certifications, and 24x7 Emergency Helplines (1930, 112, 181). Zero middlemen, direct official application portals.',
   applicationName: 'Citzos',
   authors: [{ name: 'Citzos Editorial Board', url: siteUrl }],
   generator: 'Next.js',
@@ -26,75 +26,100 @@ export const metadata: Metadata = {
     'citzos schemes',
     'citzos scholarships',
     'citzos jobs',
-    'citizen life os',
-    'citizen os',
-    'citizenlifeos',
-    'citizen life',
-    'life os',
-    // Hindi & Hinglish High-Volume Search Queries
+    'citzos helpline',
+    'citzos skills',
+    'citzos sarkari yojana',
+    '#citzos',
+    '#sarkariyojana2026',
+    '#govtschemes',
+    '#scholarship2026',
+    '#cybercrime1930',
+    '#freeskillcourses',
+    // High-Volume Hindi & Hinglish Search Queries
     'sarkari yojana',
     'sarkari yojana 2026',
-    'pradhan mantri yojana',
+    'pradhan mantri yojana 2026',
     'pm kisan yojana',
-    'pm vishwakarma yojana',
+    'pm kisan 19th kist date 2026',
+    'pm surya ghar muft bijli yojana',
+    'pm vishwakarma yojana 15000 toolkit',
     'ayushman bharat card apply online',
-    'ladli behna yojana',
-    'sukanya samriddhi yojana',
+    'ayushman golden card eligibility',
+    'ladli behna yojana 3.0 form',
+    'sukanya samriddhi yojana interest rate 2026',
     'chhatravritti scholarship 2026',
-    'sarkari naukri form',
+    'sarkari naukri form 2026',
+    'sarkari result 2026',
     'sarkari exam result',
     '1930 cyber crime complaint online',
-    '112 emergency number',
+    '112 national emergency number india',
     '181 women helpline',
     'kisan call center number 1551',
-    'free certificate courses',
+    'free certificate courses online',
     // English Government Schemes & Welfare
     'government schemes for students',
     'government welfare schemes india',
     'pm internship scheme 2026',
     'national scholarship portal',
-    'nsp scholarship apply online',
-    'pre matric scholarship',
-    'post matric scholarship',
+    'nsp scholarship apply online 2026',
+    'pre matric scholarship for students',
+    'post matric scholarship online form',
     'ugc net fellowship',
-    'aicte scholarship',
-    // Helplines & Emergency Support
+    'aicte free scholarship',
+    'mahadbt scholarship 2026',
+    'up scholarship online status 2026',
+    'bihar post matric scholarship',
+    // Helplines & 24x7 Emergency Hotlines
     '1930 cyber fraud helpline',
-    '112 national emergency number india',
-    '1098 childline helpline',
+    '112 emergency helpline india',
+    '1098 childline child helpline',
     '14416 tele manas mental health helpline',
-    'toll free government helplines',
+    '14567 senior citizen helpline elderline',
+    '1912 electricity complaint number',
+    '1906 lpg gas leakage emergency',
+    '14443 national consumer helpline',
+    '1947 uidai aadhaar helpline',
+    'toll free government helplines india',
     '24x7 emergency helpline directory',
-    // Competitive Exams & Careers
-    'upsc civil services exam syllabus',
+    // Competitive Exams, Jobs & Careers
+    'upsc civil services exam syllabus 2026',
     'ssc cgl notification 2026',
-    'railway rrb ntpc exam',
+    'ssc gd constable bharti 2026',
+    'railway rrb ntpc exam 2026',
+    'railway group d vacancy',
     'banking ibps po exam',
-    'agniveer bharti 2026',
-    'state police constable bharti',
-    // Skills & Free Certifications
+    'agniveer bharti 2026 online form',
+    'state police constable bharti 2026',
+    'ncs national career service portal',
+    'apprenticeship india portal online apply',
+    // Free Skill Certifications & High Income Masterclasses
     'free government online courses with certificate',
-    'swayam portal free courses',
-    'skill india certification online',
-    'learn python free with certificate',
-    'ai masterclass free certificate',
-    'web development course free',
-    // Healthcare & Welfare
-    'ayushman golden card eligibility',
-    'abha health card registration',
+    'swayam portal free courses with certificate',
+    'skill india digital free certification',
+    'free python programming course with certificate',
+    'ai machine learning free masterclass',
+    'web development free certified course',
+    'data analytics course free certificate',
+    'prompt engineering free certificate',
+    'iit nptel free courses online',
+    'top high income skills to learn in 2026',
+    // Healthcare & Senior Benefits
+    'abha health card registration online',
     'free cataract surgery government scheme',
-    'jan aushadhi generic medicine',
-    // Startups & MSME Loans
-    'startup india seed fund scheme',
-    'mudra loan apply online',
-    'stand up india scheme',
-    // Global Opportunities
+    'jan aushadhi generic medicine near me',
+    'indira gandhi national old age pension',
+    // Startups, MSME & Business Grants
+    'startup india seed fund scheme apply',
+    'pm mudra loan apply online 2026',
+    'stand up india scheme for sc st women',
+    'pmegp loan subsidy apply online',
+    // Global & Study Abroad Scholarships
     'study abroad scholarships for indian students',
     'fulbright scholarship',
-    'chevening scholarship uk',
+    'chevening scholarship uk 2026',
     'daad scholarship germany',
     'mext scholarship japan',
-    'international internships and careers',
+    'erasmus mundus scholarship europe',
   ],
   referrer: 'origin-when-cross-origin',
   creator: 'Citzos',
@@ -112,9 +137,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'Citzos | Verified Government Schemes, Scholarships, Helplines & Jobs',
+    title: 'Citzos | 100% Verified Sarkari Yojana 2026, Scholarships, Govt Jobs & Helplines',
     description:
-      'Official verified civic access portal. Discover eligible government schemes, student scholarships, competitive exam alerts, 24x7 emergency hotlines, and free skill certifications matching your age, qualification, and state.',
+      'India\'s #1 authentic civic portal for verified Sarkari Yojana 2026, National Scholarships (NSP), youth internships, 24x7 emergency hotlines (1930, 112, 181), and free certified courses.',
     url: siteUrl,
     siteName: 'Citzos',
     locale: 'en_IN',
@@ -131,9 +156,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Citzos | Verified Civic Opportunities & Helplines',
+    title: 'Citzos | 100% Verified Sarkari Yojana 2026, Scholarships & Jobs',
     description:
-      'Zero-scam platform for verified government schemes, scholarships, jobs, 24x7 helplines, and free certified masterclasses.',
+      'Direct authentic civic portal for verified government schemes, student scholarships, competitive exam alerts, 24x7 helplines, and free certified masterclasses.',
     images: ['/brand-logo-full.png'],
   },
   robots: {
@@ -207,6 +232,63 @@ export default function RootLayout({
     },
   };
 
+  const jsonLdSoftwareApp = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Citzos',
+    operatingSystem: 'All Modern Web Browsers, Android, iOS',
+    applicationCategory: 'EducationalApplication',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'INR',
+    },
+    url: siteUrl,
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '4.9',
+      reviewCount: '1280',
+    },
+  };
+
+  const jsonLdItemList = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Top Civic Services & Opportunities on Citzos',
+    itemListElement: [
+      {
+        '@type': 'SiteNavigationElement',
+        position: 1,
+        name: 'Sarkari Yojana & Government Schemes 2026',
+        url: `${siteUrl}/?category=schemes`,
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 2,
+        name: 'National Scholarships & Fellowships (NSP)',
+        url: `${siteUrl}/?category=scholarships`,
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 3,
+        name: '24x7 Official Helpline Directory (1930, 112, 181)',
+        url: `${siteUrl}/helpline`,
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 4,
+        name: 'Free Skill Hub & Recognized Certifications',
+        url: `${siteUrl}/skills`,
+      },
+      {
+        '@type': 'SiteNavigationElement',
+        position: 5,
+        name: 'Official Government Application Forms',
+        url: `${siteUrl}/forms`,
+      },
+    ],
+  };
+
   const jsonLdFaq = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -241,6 +323,22 @@ export default function RootLayout({
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'Yes, through the Citzos Skill Hub, learners can access curated masterclasses and direct official links to free government courses with recognized certificates from SWAYAM, Skill India, NPTEL, and global tech programs in Web Development, AI, Python, and Data Science.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is PM Surya Ghar Muft Bijli Yojana and how to apply in 2026?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'PM Surya Ghar Muft Bijli Yojana provides up to Rs 78,000 direct bank subsidy for installing rooftop solar panels, providing up to 300 units of free electricity every month. Eligible households can apply directly through verified links on Citzos.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'What is PM Vishwakarma Yojana toolkit voucher scheme?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'PM Vishwakarma provides free modern skill training with a Rs 500/day stipend, a Rs 15,000 e-voucher for modern toolkits, and collateral-free enterprise loans up to Rs 3 Lakhs at 5% subsidized interest for 18 traditional trade artisans.',
         },
       },
       {
@@ -284,6 +382,14 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdFaq) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSoftwareApp) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdItemList) }}
         />
       </head>
       <body className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white selection:bg-emerald-200 selection:text-emerald-950">

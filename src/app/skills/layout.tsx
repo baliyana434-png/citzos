@@ -7,11 +7,11 @@ export const metadata: Metadata = {
   description:
     'Master in-demand high-earning skills with top curated masterclasses and official government free certificates. Full-Stack Web Development, AI & Machine Learning, Python, Data Analytics, Cloud Computing, Prompt Engineering, and Digital Marketing.',
   keywords: [
-    'free government courses with certificate',
+    'free government courses with certificate 2026',
     'swayam free online courses with certificate',
-    'skill india certification free',
+    'skill india digital certification free',
     'learn web development free with certificate',
-    'python free course with certificate',
+    'python free course with certificate 2026',
     'ai machine learning masterclass free',
     'data analytics course free certificate',
     'prompt engineering courses free',
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
     'iit free online courses nptel',
     'top high income skills to learn in 2026',
     'online masterclass youtube free',
+    '#freecourses',
+    '#skillindia',
+    '#swayam',
+    '#freecertificate',
+    '#aimasterclass',
   ],
   alternates: {
     canonical: `${siteUrl}/skills`,
