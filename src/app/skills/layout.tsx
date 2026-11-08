@@ -3,35 +3,46 @@ import type { Metadata } from 'next';
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.citzos.in';
 
 export const metadata: Metadata = {
-  title: 'Free Skill Hub & Certifications | YouTube Masterclasses & Govt Recognized Courses',
+  title: 'Free Skill Hub & Certifications | AI Tools, Drone Pilot, Languages, Coding & Hardware',
   description:
-    'Master in-demand high-earning skills with top curated masterclasses and official government free certificates. Full-Stack Web Development, AI & Machine Learning, Python, Data Analytics, Cloud Computing, Prompt Engineering, and Digital Marketing.',
+    'Master in-demand high-earning skills with 100% free masterclasses and official government recognized certificates. Generative AI Tools, DGCA Drone Piloting, Foreign Languages (German, Japanese, French), Full-Stack Coding, Hardware Robotics, and Healthcare First Aid.',
   keywords: [
     'free government courses with certificate 2026',
     'swayam free online courses with certificate',
     'skill india digital certification free',
+    'free ai tools with certificate 2026',
+    'learn chatgpt prompt engineering generative ai free',
+    'drone pilot training certification dgca free',
+    'kisan drone pilot license course online',
+    'learn german language free a1 b2 with certificate',
+    'learn japanese free jlpt n5 preparation course',
+    'learn french language free for beginners',
+    'hardware electronics robotics course free with certificate',
+    'ev electric vehicle technician training course',
+    'healthcare first aid cpr certification free',
     'learn web development free with certificate',
     'python free course with certificate 2026',
     'ai machine learning masterclass free',
     'data analytics course free certificate',
-    'prompt engineering courses free',
     'digital marketing free certification course',
     'iit free online courses nptel',
     'top high income skills to learn in 2026',
-    'online masterclass youtube free',
     '#freecourses',
     '#skillindia',
-    '#swayam',
+    '#aitools2026',
+    '#dronepilot',
+    '#learngerman',
+    '#learnjapanese',
+    '#roboticscourse',
     '#freecertificate',
-    '#aimasterclass',
   ],
   alternates: {
     canonical: `${siteUrl}/skills`,
   },
   openGraph: {
-    title: 'Free Skill Hub & Certifications | Citzos',
+    title: 'Free Skill Hub & Certifications | AI, Drones, Languages & Coding',
     description:
-      'Learn high-income skills through top YouTube masterclasses and earn verified official government certificates from SWAYAM, Skill India, and tech leaders.',
+      'Learn high-income skills through curated free masterclasses: Generative AI, Drone Piloting, German, Japanese, Web Dev, and Hardware with official certificates.',
     url: `${siteUrl}/skills`,
     type: 'website',
   },
@@ -39,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Skill Hub & Certifications | Citzos',
     description:
-      'Master Web Dev, AI, Python, and Data Science with free masterclasses and official certificates.',
+      'Master AI Tools, Drone Piloting, Foreign Languages, Web Dev, and Robotics with free masterclasses and official certificates.',
   },
 };
 
@@ -74,6 +85,22 @@ export default function SkillsLayout({
         acceptedAnswer: {
           '@type': 'Answer',
           text: 'The top in-demand skills in 2026 include Full-Stack Web Development, Generative AI & Prompt Engineering, Data Analytics with Python & SQL, Cloud Architecture (AWS/GCP), and Digital Performance Marketing.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Can I learn DGCA Drone Piloting, Hardware Robotics, and EV Technology for free?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, Citzos provides complete video masterclass roadmaps and official government enrollment portals for Commercial Drone Piloting (DGCA syllabus), EV Technician Training, and IoT Robotics hardware.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are foreign language courses (German, French, Japanese) available with certificates?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes, the Skill Hub features structured free courses for German (A1-B2), Japanese (JLPT), French, and Spanish, linking directly to official language institutes and proficiency exam guidelines.',
         },
       },
     ],
