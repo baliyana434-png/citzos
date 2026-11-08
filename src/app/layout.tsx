@@ -3,7 +3,7 @@ import './globals.css';
 import { TranslationProvider } from '@/i18n/useTranslation';
 import { CountryProvider } from '@/context/CountryContext';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://citizenlifeos.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.citzos.in';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -195,7 +195,7 @@ export default function RootLayout({
 
   const jsonLdOrganization = {
     '@context': 'https://schema.org',
-    '@type': 'GovernmentOrganization',
+    '@type': 'Organization',
     name: 'Citzos',
     alternateName: ['Citizen Life OS', 'Citizen OS', 'CitizenLifeOS'],
     url: siteUrl,

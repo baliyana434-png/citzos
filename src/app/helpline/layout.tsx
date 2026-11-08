@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://citizenlifeos.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.citzos.in';
 
 export const metadata: Metadata = {
   title: '24x7 Official Helpline Directory | 1930 Cyber Fraud, 112 Emergency, 181 Women, 1551 Kisan',
