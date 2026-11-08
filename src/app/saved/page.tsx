@@ -622,7 +622,7 @@ export default function SavedPage() {
                               <span className="text-[10px] uppercase font-bold text-emerald-700 block truncate">
                                 {language === 'hi' ? video.topicNameHi || video.topicName : video.topicName}
                               </span>
-                              <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 leading-snug line-clamp-2 mt-0.5 group-hover:text-emerald-700 transition-colors">
+                              <h4 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2 mt-0.5">
                                 {language === 'hi' ? video.titleHi || video.title : video.title}
                               </h4>
                             </div>

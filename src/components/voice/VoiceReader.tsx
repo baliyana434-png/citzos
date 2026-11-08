@@ -46,24 +46,25 @@ export const VoiceReader: React.FC<VoiceReaderProps> = ({ textToSpeak, lang = 'h
 
   return (
     <button
+      type="button"
       onClick={handleTogglePlay}
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium transition-all ${
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
         isPlaying
-          ? 'bg-emerald-600 text-white shadow-sm'
-          : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
+          ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs border border-emerald-500'
+          : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-300/80 dark:bg-emerald-950/70 dark:hover:bg-emerald-900/80 dark:border-emerald-500/40 dark:!text-emerald-200 shadow-2xs'
       }`}
       title={isPlaying ? t('voice_stop') : t('voice_listen')}
       aria-label={t('voice_listen')}
     >
       {isPlaying ? (
         <>
-          <VolumeX className="w-3.5 h-3.5" />
-          <span>{t('voice_stop')}</span>
+          <VolumeX className="w-3.5 h-3.5 text-white shrink-0" />
+          <span className="font-bold text-white">{t('voice_stop')}</span>
         </>
       ) : (
         <>
-          <Volume2 className="w-3.5 h-3.5 text-emerald-600" />
-          <span>{t('voice_listen')}</span>
+          <Volume2 className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-300 shrink-0" />
+          <span className="font-bold">{t('voice_listen')}</span>
         </>
       )}
     </button>

@@ -199,7 +199,7 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
         {/* 2. Title & Speech Reader */}
         <div className="mb-2">
           <div className="flex items-start justify-between gap-2">
-            <h3 className={`text-sm sm:text-base font-extrabold text-slate-900 leading-snug group-hover:text-emerald-900 transition-colors line-clamp-2 min-h-[2.6rem] ${
+            <h3 className={`text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-snug line-clamp-2 min-h-[2.6rem] ${
               !isSubscribed ? 'text-blur-locked opacity-40' : ''
             }`}>
               {displayTitle}

@@ -871,7 +871,7 @@ export default function SkillsPage() {
                               </div>
 
                               <div className="relative">
-                                <h4 className={`text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-snug group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors ${
+                                <h4 className={`text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-snug ${
                                   !isSubscribed ? 'text-blur-locked opacity-40' : ''
                                 }`}>
                                   {language === 'hi' ? video.titleHi : video.title}
