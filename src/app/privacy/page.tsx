@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { useTranslation } from '@/i18n/useTranslation';
 import { PRIVACY_LOCALES } from '@/data/localization/legalPoliciesData';
 import { LanguageSwitcher } from '@/components/layout/LanguageSwitcher';
@@ -26,9 +25,8 @@ export default function PrivacyPolicyPage() {
           </Link>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
-            <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-              <BrandIconSvg sizePx={32} />
-              <span className="font-extrabold text-sm text-slate-900">Citzos</span>
+            <Link href="/" className="flex items-center hover:opacity-90 transition-opacity" aria-label="Citzos Home">
+              <img src="/logo-citzos.png" alt="CITZOS" className="h-7 w-auto object-contain" />
             </Link>
           </div>
         </div>

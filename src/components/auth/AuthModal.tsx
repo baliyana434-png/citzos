@@ -10,7 +10,6 @@ import {
   getGoogleAuthErrorMessage,
   getGoogleRedirectResultSafe,
 } from '@/services/googleAuth';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { GlowingPendulumBell } from './GlowingPendulumBell';
 import { executeThemeTransition } from '@/lib/themeTransition';
 import {
@@ -872,8 +871,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       </div>
 
         {/* Brand Emblem Logo */}
-        <div className="flex justify-center -mt-1 mb-1">
-          <BrandIconSvg sizePx={44} className="drop-shadow-xs" />
+        <div className="flex justify-center -mt-1 mb-1.5">
+          <img
+            src="/logo-citzos.png"
+            alt="CITZOS"
+            width={130}
+            height={34}
+            className="h-8 sm:h-9 w-auto object-contain drop-shadow-xs"
+          />
         </div>
 
         {/* Header Title & Subtitle */}
@@ -1815,23 +1820,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="absolute top-0 right-1/4 w-96 h-96 bg-emerald-100/70 dark:bg-emerald-950/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 left-1/4 w-96 h-96 bg-teal-100/70 dark:bg-teal-950/20 rounded-full blur-3xl pointer-events-none" />
 
-        {/* Top Floating Sovereign Bar (Bina Box / No Rectangular Container) */}
+        {/* Top Floating Sovereign Bar */}
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-8 pt-4 pb-2 sm:pt-6 sm:pb-3 flex items-center justify-between relative z-30 bg-transparent border-0 shadow-none">
           <div className="flex items-center gap-2.5">
-            <div className="shrink-0 flex items-center">
-              <BrandIconSvg sizePx={38} className="shrink-0 drop-shadow-xs" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-black text-sm sm:text-base tracking-tight text-slate-900 dark:text-white">CIT<span className="text-emerald-600">ZOS</span></span>
-                <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-[10px] font-mono font-bold">
-                  GLOBAL CIVIC PORTAL
-                </span>
-              </div>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 hidden sm:block">
-                {language === 'hi' ? 'सत्यापित राष्ट्रीय व वैश्विक अवसर पोर्टल' : 'Verified Civic & Opportunity Platform'}
-              </p>
-            </div>
+            <img
+              src="/logo-citzos.png"
+              alt="CITZOS"
+              width={125}
+              height={32}
+              className="h-7 sm:h-8 w-auto object-contain drop-shadow-xs"
+            />
+            <span className="hidden sm:inline-block px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-[10px] font-mono font-bold">
+              GLOBAL CIVIC PORTAL
+            </span>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-2.5">

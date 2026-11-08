@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Landmark, Search, PhoneCall, Star, User, Globe, LogIn, UserPlus, LogOut, GraduationCap, X, ArrowLeft } from 'lucide-react';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import { CitizenProfile, SupportedLanguage } from '@/types';
@@ -130,21 +129,21 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-3">
           
-          {/* 1. App Identity (Flexible with max-w on narrow screens to prevent pushing right hub off-screen) */}
-          <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-            <Link href="/" className="shrink-0 cursor-pointer block hover:scale-105 transition-transform" aria-label="Citzos Home">
-              <BrandIconSvg sizePx={38} className="w-8 h-8 sm:w-10 sm:h-10 shadow-xs" />
+          {/* 1. App Identity - Official CITZ [OS] Brand Logo */}
+          <div className="flex items-center gap-2 shrink-0">
+            <Link href="/" className="flex items-center group cursor-pointer block hover:opacity-95 transition-opacity" aria-label="Citzos Home">
+              <img
+                src="/logo-citzos.png"
+                alt="CITZOS"
+                width={130}
+                height={34}
+                className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform group-hover:scale-102"
+                loading="eager"
+              />
             </Link>
-            <div className="shrink-0">
-              <Link href="/" className="flex items-center hover:opacity-90 transition-opacity">
-                <span className="font-black tracking-tight text-base sm:text-xl font-sans text-slate-900 dark:text-white whitespace-nowrap">
-                  CIT<span className="text-emerald-600">ZOS</span>
-                </span>
-              </Link>
-              <p className="text-[11px] text-slate-500 hidden lg:block whitespace-nowrap">
-                {t('app_tagline')}
-              </p>
-            </div>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden xl:block whitespace-nowrap border-l border-slate-200 dark:border-white/10 pl-2 ml-0.5">
+              {t('app_tagline')}
+            </p>
           </div>
 
           {/* 2. Instant Search Bar (Desktop: inline full search) */}

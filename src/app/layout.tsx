@@ -120,12 +120,21 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     alternateLocale: ['hi_IN'],
     type: 'website',
+    images: [
+      {
+        url: '/brand-logo-full.png',
+        width: 1004,
+        height: 342,
+        alt: 'Citzos - Global Civic & Opportunities Portal',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Citzos | Verified Civic Opportunities & Helplines',
     description:
       'Zero-scam platform for verified government schemes, scholarships, jobs, 24x7 helplines, and free certified masterclasses.',
+    images: ['/brand-logo-full.png'],
   },
   robots: {
     index: true,
@@ -144,11 +153,13 @@ export const metadata: Metadata = {
   classification: 'Government Schemes, Education, Scholarships, Helplines, Jobs & Skills',
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png' },
       { url: '/icon.svg', type: 'image/svg+xml' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
-    shortcut: '/icon.svg',
-    apple: '/icon.svg',
+    shortcut: '/favicon.ico',
+    apple: '/apple-icon.png',
   },
 };
 

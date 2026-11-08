@@ -3,7 +3,6 @@
 import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { BrandSplashScreen } from '@/components/common/BrandSplashScreen';
 import { useTranslation } from '@/i18n/useTranslation';
 import { Mail, KeyRound, Lock, Eye, EyeOff, CheckCircle2, AlertCircle, Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
@@ -106,8 +105,10 @@ function ResetPasswordContent() {
     <div className="min-h-screen w-full bg-slate-50 text-slate-900 flex flex-col justify-center items-center p-4 selection:bg-emerald-500 selection:text-white">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 space-y-6">
         <div className="text-center space-y-2">
-          <div className="flex justify-center mb-1">
-            <BrandIconSvg sizePx={48} className="drop-shadow-xs" />
+          <div className="flex justify-center mb-2">
+            <Link href="/" className="hover:opacity-90 transition-opacity" aria-label="Citzos Home">
+              <img src="/logo-citzos.png" alt="CITZOS" className="h-8 w-auto object-contain" />
+            </Link>
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
             {language === 'hi' ? 'नया पासवर्ड बनाएं' : 'Set New Password'}

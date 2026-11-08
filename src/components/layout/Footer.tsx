@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { Landmark, ShieldCheck, PhoneCall, Star, FileText, FileCheck } from 'lucide-react';
-import { BrandIconSvg } from '@/components/common/BrandLogo';
 import { useTranslation } from '@/i18n/useTranslation';
 
 export const Footer: React.FC = () => {
@@ -19,13 +18,15 @@ export const Footer: React.FC = () => {
           {/* Col 1: Identity & Mission */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
-              <Link href="/" className="shrink-0 cursor-pointer block hover:scale-105 transition-transform" aria-label="Citzos Home">
-                <BrandIconSvg sizePx={36} className="w-9 h-9 shadow-sm" />
-              </Link>
-              <Link href="/" className="hover:opacity-90 transition-opacity">
-                <span className="font-extrabold text-white text-base tracking-tight">
-                  {t('app_name')}
-                </span>
+              <Link href="/" className="cursor-pointer block hover:opacity-90 transition-opacity" aria-label="Citzos Home">
+                <img
+                  src="/logo-citzos.png"
+                  alt="CITZOS"
+                  width={140}
+                  height={36}
+                  className="h-8 sm:h-9 w-auto object-contain"
+                  loading="lazy"
+                />
               </Link>
             </div>
             <p className="text-slate-400 text-xs leading-relaxed max-w-md">
