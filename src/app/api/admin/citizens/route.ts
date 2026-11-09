@@ -13,26 +13,8 @@ import {
   validateRealIncome,
 } from '@/utils/antiFraudValidation';
 
-// SECURITY: Sovereign Admin Authorization (Signed token or server-only key)
-function verifyAdminAuth(req: NextRequest): boolean {
-  // 1. Check signed cryptographic admin session token
-  const adminToken = req.headers.get('x-admin-token');
-  if (adminToken && AdminSecurityService.verifyAdminToken(adminToken)) {
-    return true;
-  }
-
-  // 2. Server-to-server API key (Only if ADMIN_API_KEY is configured in env)
-  const adminKey = req.headers.get('x-admin-key');
-  const serverAdminKey = process.env.ADMIN_API_KEY;
-  if (serverAdminKey && adminKey && adminKey === serverAdminKey) {
-    return true;
-  }
-
-  return false;
-}
-
 export async function GET(req: NextRequest) {
-  if (!verifyAdminAuth(req)) {
+  if (!AdminSecurityService.verifyAdminRequest(req)) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized. Admin authorization required.' },
       { status: 401 }
@@ -63,7 +45,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const isAdmin = verifyAdminAuth(req);
+  const isAdmin = AdminSecurityService.verifyAdminRequest(req);
   if (!isAdmin) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized. Admin authorization required.' },

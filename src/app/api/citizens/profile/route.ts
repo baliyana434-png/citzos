@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, CitizenRecord } from '@/lib/db';
-import { SessionSecurityService } from '@/lib/security';
+import { SessionSecurityService, AdminSecurityService } from '@/lib/security';
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const phone = searchParams.get('phone')?.replace(/\D/g, '').slice(-10);
     const email = searchParams.get('email')?.trim().toLowerCase();
+    const checkOnly = searchParams.get('checkOnly') === 'true';
 
     if (!phone && !email) {
       return NextResponse.json(
@@ -17,11 +18,39 @@ export async function GET(req: NextRequest) {
 
     const matchingCitizen = await DatabaseService.findCitizen({ email, phone });
 
+    // Privacy Safe Check: If client only needs to check registration existence
+    if (checkOnly) {
+      return NextResponse.json({
+        success: true,
+        exists: !!matchingCitizen,
+      });
+    }
+
     if (!matchingCitizen) {
       return NextResponse.json(
-        { success: false, message: 'नागरिक प्रोफाइल नहीं मिला।' },
+        { success: false, exists: false, message: 'नागरिक प्रोफाइल नहीं मिला।' },
         { status: 404 }
       );
+    }
+
+    // PRIVACY & ANTI-THEFT GUARD:
+    // Only the authenticated account owner or authorized admin can view personal details.
+    const isAdmin = AdminSecurityService.verifyAdminRequest(req);
+    const session = SessionSecurityService.extractAndVerifySession(req);
+
+    const isOwner =
+      session.valid &&
+      ((session.citizenId && session.citizenId === matchingCitizen.id) ||
+        (session.email && session.email.toLowerCase() === (matchingCitizen.email || '').toLowerCase()));
+
+    // If unauthenticated caller attempts to query another citizen's profile:
+    // Return existence status ONLY without leaking private address, income, or personal data.
+    if (!isAdmin && !isOwner) {
+      return NextResponse.json({
+        success: true,
+        exists: true,
+        // Zero personal data leaked to unauthorized callers
+      });
     }
 
     // Read saved favorites for this citizen
@@ -33,13 +62,14 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      exists: true,
       citizen: safeCitizen,
       favorites: citizenFavorites,
     });
   } catch (error: any) {
     console.error('Citizen profile fetch error:', error);
     return NextResponse.json(
-      { success: false, message: error.message || 'प्रोफाइल लोड करने में त्रुटि।' },
+      { success: false, message: 'प्रोफाइल लोड करने में आंतरिक त्रुटि।' },
       { status: 500 }
     );
   }
@@ -61,15 +91,24 @@ export async function POST(req: NextRequest) {
     // Check if citizen already exists
     const existing = await DatabaseService.findCitizen({ email, phone, id: body.id });
 
-    // Optional Session verification: if token provided in Authorization header, ensure it matches
-    const authHeader = req.headers.get('authorization');
-    if (authHeader && authHeader.startsWith('Bearer ')) {
-      const token = authHeader.slice(7);
-      const session = SessionSecurityService.verifySessionToken(token);
-      if (!session.valid) {
+    // PRIVACY GUARD: If modifying an existing citizen account, verify ownership
+    const isAdmin = AdminSecurityService.verifyAdminRequest(req);
+    const session = SessionSecurityService.extractAndVerifySession(req);
+
+    if (existing) {
+      const isOwner =
+        session.valid &&
+        ((session.citizenId && session.citizenId === existing.id) ||
+          (session.email && session.email.toLowerCase() === (existing.email || '').toLowerCase()));
+
+      // If existing user account and caller is neither owner nor admin, forbid tampering
+      if (!isOwner && !isAdmin) {
         return NextResponse.json(
-          { success: false, message: 'सत्र समाप्त या अमान्य है। कृपया पुनः लॉगिन करें।' },
-          { status: 401 }
+          {
+            success: false,
+            message: 'सुरक्षा चेतावनी: आप केवल अपनी स्वयं की नागरिक प्रोफाइल संशोधित कर सकते हैं।',
+          },
+          { status: 403 }
         );
       }
     }
