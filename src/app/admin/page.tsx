@@ -837,8 +837,8 @@ export default function AdminPage() {
       theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
     }`}>
       {/* Top Header Bar */}
-      <header className={`sticky top-0 z-30 backdrop-blur-md border-b px-4 sm:px-6 lg:px-8 py-3 transition-colors ${
-        theme === 'dark' ? 'bg-slate-950/95 border-slate-800' : 'bg-white/95 border-slate-200 shadow-xs'
+      <header className={`sticky top-0 z-30 border-b px-4 sm:px-6 lg:px-8 py-3 transition-colors ${
+        theme === 'dark' ? 'bg-slate-950/98 border-slate-800' : 'bg-white/98 border-slate-200 shadow-xs'
       }`}>
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">

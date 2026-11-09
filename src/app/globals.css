@@ -19,9 +19,9 @@ html {
   background-color: #f8fafc;
   color-scheme: light dark;
   scroll-behavior: auto !important;
-  -webkit-overflow-scrolling: touch;
   touch-action: pan-y pinch-zoom;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 
 .dark html,
@@ -50,7 +50,6 @@ body {
   font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: clip;
   touch-action: pan-y pinch-zoom;
   letter-spacing: -0.01em;
   text-rendering: optimizeSpeed;
@@ -64,13 +63,10 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
   -webkit-font-smoothing: antialiased;
 }
 
-/* GPU-Accelerated Zero-Lag Blur Text for Locked Content */
+/* Zero-Lag Blur Text for Locked Content without GPU layer thrashing */
 .text-blur-locked {
-  filter: blur(5px);
-  -webkit-filter: blur(5px);
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
-  backface-visibility: hidden;
+  filter: blur(4px);
+  -webkit-filter: blur(4px);
   user-select: none;
   pointer-events: none;
 }
@@ -291,8 +287,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
 .glass-card {
   background: #ffffff;
   border: 1.5px solid #e2e8f0;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   box-shadow: 
     0 1px 3px 0 rgba(15, 23, 42, 0.05),
     0 4px 12px -2px rgba(15, 23, 42, 0.04),
@@ -347,9 +341,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
 }
 
 .glass-header {
-  background: rgba(255, 255, 255, 0.96) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.98) !important;
   border-bottom: 1px solid rgba(226, 232, 240, 0.85) !important;
   box-shadow: 
     0 1px 3px 0 rgba(15, 23, 42, 0.03),
@@ -357,51 +349,38 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
 }
 
 .dark .glass-header {
-  background: rgba(0, 0, 0, 0.96) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(10, 10, 12, 0.98) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.8);
 }
 
 /* Apple Liquid Glassmorphism Segmented Controls */
 .glass-tab-bar {
-  background: rgba(241, 245, 249, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(241, 245, 249, 0.98);
   border: 1.5px solid rgba(71, 85, 105, 0.28) !important;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   box-shadow: 
     0 2px 8px -1px rgba(15, 23, 42, 0.06),
     inset 0 1px 2px 0 rgba(15, 23, 42, 0.04);
 }
 
 .dark .glass-tab-bar {
-  background: rgba(14, 15, 20, 0.96) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(14, 15, 20, 0.98) !important;
   border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   box-shadow: 
     0 4px 16px -2px rgba(0, 0, 0, 0.6),
     inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
 }
+
 /* Apple Liquid Glass 3D Pill (Ref: VisionOS Specular Glass Capsule) */
 .apple-liquid-glass {
   border-radius: 12px;
   background: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.98) 0%,
-    rgba(248, 250, 252, 0.9) 45%,
-    rgba(241, 245, 249, 0.95) 100%
+    rgba(248, 250, 252, 0.92) 45%,
+    rgba(241, 245, 249, 0.96) 100%
   );
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   border: 1.5px solid rgba(30, 41, 59, 0.24) !important;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   box-shadow:
     inset 0 1.5px 1px 0 #ffffff,
     inset 1px 0 1.5px 0 rgba(255, 255, 255, 0.9),
@@ -418,13 +397,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
     180deg,
     rgba(255, 255, 255, 0.22) 0%,
     rgba(255, 255, 255, 0.08) 45%,
-    rgba(22, 24, 32, 0.88) 100%
+    rgba(22, 24, 32, 0.92) 100%
   ) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.32) !important;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   box-shadow:
     inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.65),
     inset 1px 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -461,11 +436,9 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Crisp, High-Contrast Card Styles with Smooth Hardware Rasterization */
+/* Crisp, High-Contrast Card Styles with Direct Document Rasterization */
 .card-clean {
   background: #ffffff;
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
   box-shadow: 
     0 1px 3px 0 rgba(15, 23, 42, 0.05),
     0 4px 12px -2px rgba(15, 23, 42, 0.04);
@@ -525,7 +498,6 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
 .animate-badge-spin {
   animation: badge-spin-smooth 10s linear infinite;
   transform-origin: 50% 50%;
-  will-change: transform;
 }
 
 /* Ensure no element layout collapses */

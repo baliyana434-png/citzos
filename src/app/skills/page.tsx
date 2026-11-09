@@ -396,8 +396,8 @@ export default function SkillsPage() {
         </div>
       )}
 
-      {/* 1. Header Navigation Bar (Clean White Background Matching Home Page) */}
-      <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0c0d12]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-xs">
+      {/* 1. Header Navigation Bar (Clean High-Performance Background Matching Home Page) */}
+      <header className="sticky top-0 z-30 w-full bg-white/98 dark:bg-[#0c0d12]/98 border-b border-slate-200 dark:border-white/10 shadow-xs">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 sm:gap-3">
             <Link
@@ -1029,7 +1029,7 @@ export default function SkillsPage() {
         <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#08090c] flex flex-col lg:hidden overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-200">
           
           {/* Sticky Top Bar with Back Button */}
-          <div className="sticky top-0 z-30 bg-white/95 dark:bg-[#0c0d12]/95 backdrop-blur-md border-b border-slate-200 dark:border-zinc-800 px-3 py-2.5 flex items-center justify-between gap-2 shadow-xs">
+          <div className="sticky top-0 z-30 bg-white/98 dark:bg-[#0c0d12]/98 border-b border-slate-200 dark:border-zinc-800 px-3 py-2.5 flex items-center justify-between gap-2 shadow-xs">
             <button
               type="button"
               onClick={() => setIsMobileDetailOpen(false)}
