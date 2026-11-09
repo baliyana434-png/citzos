@@ -385,15 +385,47 @@ export function validateRealIncome(income: number, lang: SupportedLanguage = 'en
   return { valid: true };
 }
 
-// 9. Exact Age Calculation from Date of Birth
+// 9. Exact Age Calculation from Date of Birth (100% Timezone-Resilient)
 export function calculateExactAge(dobString: string): number {
-  if (!dobString) return 0;
-  const birth = new Date(dobString);
-  if (isNaN(birth.getTime())) return 0;
+  if (!dobString || typeof dobString !== 'string') return 0;
+  const trimmed = dobString.trim();
+  let birthYear = 0;
+  let birthMonth = 0;
+  let birthDay = 0;
+
+  // Match YYYY-MM-DD or YYYY/MM/DD
+  const isoMatch = trimmed.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+  if (isoMatch) {
+    birthYear = parseInt(isoMatch[1], 10);
+    birthMonth = parseInt(isoMatch[2], 10);
+    birthDay = parseInt(isoMatch[3], 10);
+  } else {
+    // Match DD-MM-YYYY or DD/MM/YYYY
+    const dmyMatch = trimmed.match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})/);
+    if (dmyMatch) {
+      birthDay = parseInt(dmyMatch[1], 10);
+      birthMonth = parseInt(dmyMatch[2], 10);
+      birthYear = parseInt(dmyMatch[3], 10);
+    } else {
+      const birth = new Date(trimmed);
+      if (isNaN(birth.getTime())) return 0;
+      birthYear = birth.getFullYear();
+      birthMonth = birth.getMonth() + 1;
+      birthDay = birth.getDate();
+    }
+  }
+
+  if (birthYear <= 1900 || birthMonth < 1 || birthMonth > 12 || birthDay < 1 || birthDay > 31) {
+    return 0;
+  }
+
   const now = new Date();
-  let age = now.getFullYear() - birth.getFullYear();
-  const m = now.getMonth() - birth.getMonth();
-  if (m < 0 || (m === 0 && now.getDate() < birth.getDate())) {
+  const currentYear = now.getFullYear();
+  const currentMonth = now.getMonth() + 1;
+  const currentDay = now.getDate();
+
+  let age = currentYear - birthYear;
+  if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
     age--;
   }
   return Math.max(0, age);

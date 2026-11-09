@@ -19,7 +19,29 @@ export async function POST(req: NextRequest) {
 
     // 1. Authoritative check from MongoDB Atlas Database
     const citizen = await DatabaseService.findCitizen({ id: citizenId, email });
-    const effectiveSub = citizen?.subscription || clientSubscription;
+    let effectiveSub: CitizenSubscription | undefined = citizen?.subscription;
+
+    // If not found in DB or DB subscription not set, verify cryptographic HMAC signature of client subscription
+    if (!effectiveSub && clientSubscription) {
+      const isSignatureAuthentic = PaymentSecurityService.verifySignature(clientSubscription, citizenId);
+      if (isSignatureAuthentic) {
+        effectiveSub = clientSubscription;
+        // Securely persist verified subscription to MongoDB so citizen record is always in sync
+        if (citizen) {
+          citizen.subscription = clientSubscription;
+          await DatabaseService.saveCitizen(citizen);
+        }
+      } else {
+        return NextResponse.json(
+          {
+            valid: false,
+            reason: 'INVALID_SIGNATURE',
+            message: 'सुरक्षा त्रुटि: सदस्यता डिजिटल हस्ताक्षर अमान्य या जाली है।',
+          },
+          { status: 403 }
+        );
+      }
+    }
 
     if (effectiveSub && effectiveSub.status === 'active' && effectiveSub.validUntil) {
       const now = Date.now();

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, hashCitizenPassword } from '@/lib/db';
 import { SessionSecurityService } from '@/lib/security';
+import { SESSION_COOKIE_NAME, SESSION_MAX_AGE_SECONDS } from '@/lib/sessionEdge';
 import { validateRealEmail, validateRealPassword } from '@/utils/antiFraudValidation';
 import { otpStore } from '@/lib/otpStore';
 
@@ -126,7 +127,7 @@ export async function POST(req: NextRequest) {
     // 8. Sanitize profile to return to client
     const { passwordHash: _ph, passwordSalt: _ps, ...safeCitizen } = citizen;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message:
         lang === 'hi'
@@ -135,6 +136,19 @@ export async function POST(req: NextRequest) {
       citizen: safeCitizen,
       sessionToken,
     });
+
+    // Set httpOnly session cookie so user stays authenticated across page reloads
+    response.cookies.set({
+      name: SESSION_COOKIE_NAME,
+      value: sessionToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: SESSION_MAX_AGE_SECONDS,
+    });
+
+    return response;
   } catch (error: any) {
     console.error('Reset Password API Error:', error);
     return NextResponse.json(

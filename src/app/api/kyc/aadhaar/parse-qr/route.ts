@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import zlib from 'zlib';
 import { parseAadhaarQrText, ParsedAadhaarData } from '@/utils/aadhaarQrParser';
+import { calculateExactAge } from '@/utils/antiFraudValidation';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,7 +75,7 @@ export async function POST(req: Request) {
             const parsedYear = parseInt(dobParts[2], 10);
             if (!isNaN(parsedYear)) {
               formattedDob = `${dobParts[2]}-${dobParts[1].padStart(2, '0')}-${dobParts[0].padStart(2, '0')}`;
-              age = Math.max(1, new Date().getFullYear() - parsedYear);
+              age = calculateExactAge(formattedDob);
             }
           }
 

@@ -8,6 +8,16 @@ export function isSubscriptionStructurallyValid(sub?: CitizenSubscription | null
   if (!sub || typeof sub !== 'object') return false;
   if (sub.status !== 'active') return false;
 
+  // Amount must be genuine (1 INR or legacy 19 INR)
+  if ((sub.amount !== 1 && sub.amount !== 19) || sub.currency !== 'INR') {
+    return false;
+  }
+
+  // Must have a genuine transaction identifier
+  if (!sub.transactionId || typeof sub.transactionId !== 'string' || sub.transactionId.trim().length < 4) {
+    return false;
+  }
+
   // Expiry timestamp must exist and be in the future
   if (!sub.validUntil) return false;
   const expiry = new Date(sub.validUntil);

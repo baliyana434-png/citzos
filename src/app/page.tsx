@@ -975,14 +975,14 @@ export default function HomePage() {
         if (userDivision && !opp.stateEligibility.includes(userDivision)) return false;
       }
 
-      // 3. Search Query Match
+      // 3. Search Query Match (Safe Multi-Language & Null-Guarded Search)
       if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchTitle = opp.title.toLowerCase().includes(q) || opp.titleHi.includes(q);
-        const matchDesc = opp.description.toLowerCase().includes(q) || opp.descriptionHi.includes(q);
-        const matchTags = opp.tags.some((t) => t.toLowerCase().includes(q));
-        const matchAuthority = opp.gazette?.issuingAuthority?.toLowerCase().includes(q);
-        const matchBenefit = (opp.benefitHeadline?.toLowerCase().includes(q) || opp.benefitHeadlineHi?.includes(q));
+        const q = searchQuery.toLowerCase().trim();
+        const matchTitle = (opp.title || '').toLowerCase().includes(q) || (opp.titleHi || '').toLowerCase().includes(q);
+        const matchDesc = (opp.description || '').toLowerCase().includes(q) || (opp.descriptionHi || '').toLowerCase().includes(q);
+        const matchTags = Array.isArray(opp.tags) && opp.tags.some((t) => typeof t === 'string' && t.toLowerCase().includes(q));
+        const matchAuthority = (opp.gazette?.issuingAuthority || '').toLowerCase().includes(q);
+        const matchBenefit = (opp.benefitHeadline || '').toLowerCase().includes(q) || (opp.benefitHeadlineHi || '').toLowerCase().includes(q);
         if (!matchTitle && !matchDesc && !matchTags && !matchAuthority && !matchBenefit) return false;
       }
 
