@@ -23,9 +23,25 @@ function getSafeNextUrl(nextParam: string | null | undefined): string {
 }
 
 export async function middleware(req: NextRequest) {
-  const { pathname, search } = req.nextUrl;
+  const { pathname, search, hostname } = req.nextUrl;
 
-  // 1. Skip static assets, Next.js internal files, Firebase auth proxy, admin portal, and API routes
+  // 1. CANONICAL PRODUCTION DOMAIN ENFORCEMENT:
+  // If traffic or crawler visits via *.vercel.app staging domains, 301 Permanent Redirect to https://www.citzos.in
+  // and send X-Robots-Tag: noindex to force search engines (Bing, Google) to replace vercel.app with www.citzos.in
+  if (hostname.includes('vercel.app')) {
+    const canonicalTarget = new URL(pathname + search, 'https://www.citzos.in');
+    const redirectResponse = NextResponse.redirect(canonicalTarget, 301);
+    redirectResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return redirectResponse;
+  }
+
+  // Redirect apex domain (citzos.in) to primary canonical domain (www.citzos.in)
+  if (hostname === 'citzos.in') {
+    const canonicalTarget = new URL(pathname + search, 'https://www.citzos.in');
+    return NextResponse.redirect(canonicalTarget, 301);
+  }
+
+  // 2. Skip static assets, Next.js internal files, Firebase auth proxy, admin portal, and API routes
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/__') ||
@@ -36,7 +52,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Read session token from httpOnly cookie
+  // 3. Read session token from httpOnly cookie
   const sessionCookie = req.cookies.get(SESSION_COOKIE_NAME)?.value;
   let isAuthenticated = false;
 
@@ -51,14 +67,14 @@ export async function middleware(req: NextRequest) {
     (route) => pathname === route || pathname.startsWith(route + '/')
   );
 
-  // 3. Logged-in user visiting /login or /register -> redirect to / (or ?next=) before HTML is sent
+  // 4. Logged-in user visiting /login or /register -> redirect to / (or ?next=) before HTML is sent
   if (isAuthenticated && isAuthRoute) {
     const rawNext = req.nextUrl.searchParams.get('next');
     const safeTarget = getSafeNextUrl(rawNext);
     return NextResponse.redirect(new URL(safeTarget, req.url));
   }
 
-  // 4. Check protected routes: /saved (personal saved items)
+  // 5. Check protected routes: /saved (personal saved items)
   const isProtectedSubRoute = PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(prefix + '/')
   );
