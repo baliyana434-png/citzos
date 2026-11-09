@@ -124,7 +124,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={handleCloseMobileSearch}
             className="px-3 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl shrink-0 transition-all cursor-pointer"
           >
-            {language === 'hi' ? 'ठीक है' : 'Done'}
+            {language === 'hi' ? 'ठीक है' : language === 'es' ? 'Listo' : language === 'fr' ? 'Terminé' : language === 'de' ? 'Fertig' : language === 'ar' ? 'تم' : 'Done'}
           </button>
         </div>
       )}
@@ -214,7 +214,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <Search className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400 shrink-0" />
               <span className="text-[11px] font-black text-slate-800 dark:text-white whitespace-nowrap tracking-tight">
-                {language === 'hi' ? 'खोजें' : 'Search'}
+                {language === 'hi' ? 'खोजें' : language === 'es' ? 'Buscar' : language === 'fr' ? 'Chercher' : language === 'de' ? 'Suche' : language === 'ar' ? 'بحث' : 'Search'}
               </span>
             </button>
 
@@ -222,11 +222,11 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/skills"
               className="h-8 sm:h-9 px-1.5 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
-              title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
+              title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : language === 'es' ? 'Cursos y Habilidades' : language === 'fr' ? 'Formations et Compétences' : language === 'de' ? 'Kurse und Weiterbildung' : language === 'ar' ? 'المهارات والدورات التدريبية' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
             >
               <GraduationCap className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
               <span className="whitespace-nowrap tracking-tight font-black">
-                {language === 'hi' ? 'कौशल' : 'Skill Hub'}
+                {language === 'hi' ? 'कौशल' : language === 'es' ? 'Cursos' : language === 'fr' ? 'Formations' : language === 'de' ? 'Kurse' : language === 'ar' ? 'مهارات' : 'Skill Hub'}
               </span>
             </Link>
 
@@ -279,10 +279,12 @@ export const Header: React.FC<HeaderProps> = ({
             <Link
               href="/helpline"
               className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-900 text-xs font-bold border border-red-200 transition-all shrink-0 shadow-2xs"
-              title={language === 'hi' ? '24x7 हेल्पलाइन' : '24x7 Helplines'}
+              title={language === 'hi' ? '24x7 हेल्पलाइन' : language === 'es' ? 'Líneas 24x7' : language === 'fr' ? 'Urgences 24x7' : language === 'de' ? '24x7 Notruf' : language === 'ar' ? 'طوارئ 24/7' : '24x7 Helplines'}
             >
               <PhoneCall className="w-3.5 h-3.5 text-red-700 shrink-0" />
-              <span className="hidden md:inline ml-1.5 whitespace-nowrap">{language === 'hi' ? 'हेल्पलाइन' : 'Helpline'}</span>
+              <span className="hidden md:inline ml-1.5 whitespace-nowrap">
+                {language === 'hi' ? 'हेल्पलाइन' : language === 'es' ? 'Líneas' : language === 'fr' ? 'Urgences' : language === 'de' ? 'Notruf' : language === 'ar' ? 'طوارئ' : 'Helpline'}
+              </span>
             </Link>
 
             {/* Favourites / Saved Navigation Button */}

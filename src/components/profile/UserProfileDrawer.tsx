@@ -34,6 +34,7 @@ import {
   Bell,
   ChevronDown,
   ChevronUp,
+  Globe,
 } from 'lucide-react';
 
 interface UserProfileDrawerProps {
@@ -69,11 +70,20 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   onGoogleSuccess,
   totalBenefitsUnlocked,
 }) => {
-  const { t, language } = useTranslation();
+  const { t, language, setLanguage } = useTranslation();
   const { country, countryMeta } = useCountry();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false);
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState<boolean>(false);
   const [googleLoginError, setGoogleLoginError] = useState<string | null>(null);
+  const [isLanguageOpen, setIsLanguageOpen] = useState<boolean>(true);
+  const SUPPORTED_LANGUAGES: { code: 'en' | 'hi' | 'es' | 'fr' | 'de' | 'ar'; label: string }[] = [
+    { code: 'en', label: 'English' },
+    { code: 'hi', label: 'हिन्दी' },
+    { code: 'es', label: 'Español' },
+    { code: 'fr', label: 'Français' },
+    { code: 'de', label: 'Deutsch' },
+    { code: 'ar', label: 'العربية' },
+  ];
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     if (typeof window !== 'undefined') {
       return document.documentElement.classList.contains('dark') ||
@@ -704,6 +714,63 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
                     )}
                   </div>
                 </button>
+              </div>
+            )}
+          </div>
+
+          {/* Language Switcher Section */}
+          <div className="rounded-2xl border-2 border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] overflow-hidden transition-colors shadow-xs">
+            <button
+              type="button"
+              onClick={() => setIsLanguageOpen((prev) => !prev)}
+              className="w-full p-3.5 sm:p-4 flex items-center justify-between text-left cursor-pointer hover:bg-slate-50/60 dark:hover:bg-white/[0.03] transition-colors"
+              aria-expanded={isLanguageOpen}
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-[#202127] flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                  <Globe className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="text-xs font-extrabold text-slate-900 dark:text-white block">
+                    {language === 'hi' ? 'भाषा (Language)' : language === 'es' ? 'Idioma (Language)' : language === 'fr' ? 'Langue (Language)' : language === 'de' ? 'Sprache (Language)' : language === 'ar' ? 'اللغة (Language)' : 'Language / भाषा'}
+                  </span>
+                  <span className="text-[11px] text-slate-500 dark:text-zinc-400">
+                    {language === 'hi' ? 'हिन्दी सक्रिय' : language === 'es' ? 'Español activo' : language === 'fr' ? 'Français actif' : language === 'de' ? 'Deutsch aktiv' : language === 'ar' ? 'العربية نشط' : 'English active'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-xs font-bold text-emerald-900 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                <span className="uppercase font-mono">{language}</span>
+                {isLanguageOpen ? (
+                  <ChevronUp className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                ) : (
+                  <ChevronDown className="w-3.5 h-3.5 text-emerald-700 dark:text-emerald-400" />
+                )}
+              </div>
+            </button>
+
+            {isLanguageOpen && (
+              <div className="border-t border-slate-100 dark:border-white/10 p-3 bg-slate-50/50 dark:bg-[#16171d]/60 grid grid-cols-2 gap-2 animate-in fade-in duration-150">
+                {SUPPORTED_LANGUAGES.map((l) => (
+                  <button
+                    key={l.code}
+                    type="button"
+                    onClick={() => {
+                      setLanguage(l.code);
+                    }}
+                    className={`flex items-center justify-between p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                      language === l.code
+                        ? 'bg-emerald-600 text-white border-emerald-600 font-bold shadow-xs'
+                        : 'bg-white dark:bg-[#121318] text-slate-800 dark:text-zinc-200 border-slate-200 dark:border-white/10 hover:border-emerald-500 font-semibold'
+                    }`}
+                  >
+                    <span className="text-xs">{l.label}</span>
+                    <span className={`text-[10px] uppercase font-mono px-1 py-0.5 rounded ${language === l.code ? 'bg-emerald-700 text-white' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-zinc-400'}`}>
+                      {l.code}
+                    </span>
+                  </button>
+                ))}
               </div>
             )}
           </div>

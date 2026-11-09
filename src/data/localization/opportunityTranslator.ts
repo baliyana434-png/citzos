@@ -600,6 +600,253 @@ function localizeStepText(stepNumber: number, originalText: string, language: Su
   return stepTemplates[language]?.[stepNumber] || originalText;
 }
 
+function localizeOpportunityTitle(
+  originalTitle: string,
+  stage: string,
+  language: SupportedLanguage
+): string {
+  if (language === 'en' || language === 'hi') return originalTitle;
+
+  const titleDict: Partial<Record<SupportedLanguage, Record<string, string>>> = {
+    es: {
+      exams: 'Convocatoria Oficial de Oposiciones y Selección Pública',
+      schemes: 'Programa Estatal de Asistencia y Bienestar Social',
+      education: 'Beca Oficial y Subvención de Educación Superior',
+      private_jobs: 'Convocatoria de Carrera y Empleo Profesional',
+      internships: 'Programa Oficial de Prácticas y Aprendizaje',
+      startups: 'Fondo Semilla y Subvención para Emprendedores',
+      career: 'Certificación Profesional y Formación Oficial',
+      health: 'Servicio Nacional de Salud y Cobertura Sanitaria',
+      freebies: 'Herramientas Digitales y Beneficios Cívicos',
+      abroad_jobs: 'Becas Internacionales y Empleo en el Extranjero',
+    },
+    fr: {
+      exams: 'Concours Administratif et Recrutement de la Fonction Publique',
+      schemes: 'Programme d\'Aide Sociale et Subventions Publiques',
+      education: 'Bourse Officielle d\'Études et Allocation Académique',
+      private_jobs: 'Offre d\'Emploi Qualifié et Carrière en Entreprise',
+      internships: 'Programme Officiel de Stages et Formation Professionnelle',
+      startups: 'Fonds d\'Amorçage et Subvention aux Jeunes Entreprises',
+      career: 'Formation Qualifiante et Certification Reconnue',
+      health: 'Prise en Charge Médicale et Couverture Santé Publique',
+      freebies: 'Outils Numériques Gratuits et Services Citoyens',
+      abroad_jobs: 'Bourses d\'Excellence et Mobilité Internationale',
+    },
+    de: {
+      exams: 'Amtliche Ausschreibung und Staatsdienst-Prüfungen',
+      schemes: 'Staatliches Förderprogramm und Bürgerunterstützung',
+      education: 'Amtliches Bildungsstipendium und Studienbeihilfe',
+      private_jobs: 'Fachlaufbahn und Offizielle Stellenangebote',
+      internships: 'Amtliches Praktikantenprogramm und Berufseinstieg',
+      startups: 'Gründungszuschuss und Innovationsförderung',
+      career: 'Staatlich Anerkannte Weiterbildung und Zertifikate',
+      health: 'Öffentliche Gesundheitsversorgung und Krankenfürsorge',
+      freebies: 'Kostenlose Bürger-Software und Digitale Werkzeuge',
+      abroad_jobs: 'Internationale Exzellenzstipendien und Auslandsstellen',
+    },
+    ar: {
+      exams: 'المسابقات الوظيفية وامتحانات الالتحاق بالقطاع العام',
+      schemes: 'البرنامج الحكومي للمساعدات والدعم الاجتماعي',
+      education: 'المنح الدراسية المعتمدة ومساعدات التعليم العالي',
+      private_jobs: 'فرص العمل والتوظيف المهني المؤسسي المعتمد',
+      internships: 'البرنامج الرسمي للتدريب العملي وتأهيل الخريجين',
+      startups: 'منح تمويل المشاريع الريادية وحاضنات الأعمال',
+      career: 'برامج التدريب والشهادات المهنية المعتمدة',
+      health: 'خدمات الرعاية الصحية والتغطية العلاجية العامة',
+      freebies: 'الأدوات الرقمية والخدمات التقنية المعتمدة للمواطنين',
+      abroad_jobs: 'المنح الدولية وبرامج الدراسة والعمل في الخارج',
+    },
+  };
+
+  if (language === 'es') {
+    if (/Defence|Armed Forces|Army|Navy|Agniveer/i.test(originalTitle)) {
+      return 'Ministerio de Defensa: Fuerzas Armadas y Reclutamiento Militar';
+    }
+    if (/UPSC|Civil Services|IAS/i.test(originalTitle)) {
+      return 'Comisión de Selección Pública: Oposiciones de la Administración General';
+    }
+    if (/Railway|RRB/i.test(originalTitle)) {
+      return 'Administración Ferroviaria: Convocatoria Nacional de Empleo';
+    }
+    if (/Ayushman|Health|Hospital/i.test(originalTitle)) {
+      return 'Ministerio de Salud: Tarjeta Sanitaria de Cobertura Hospitalaria';
+    }
+    if (/Kisan|Agriculture|Farmer/i.test(originalTitle)) {
+      return 'Ministerio de Agricultura: Subvención y Ayuda Directa al Cultivador';
+    }
+    if (/Surya Ghar|Solar/i.test(originalTitle)) {
+      return 'Subvención Solar Residencial: Cobertura Eléctrica Gratuita';
+    }
+    if (/Scholarship|NSP|UGC|AICTE/i.test(originalTitle)) {
+      return 'Portal Nacional de Becas: Ayuda Financiera para Estudiantes';
+    }
+    if (/SSC|Staff Selection/i.test(originalTitle)) {
+      return 'Comisión de Selección de Personal: Convocatoria de Puestos Estatales';
+    }
+  }
+
+  if (language === 'fr') {
+    if (/Defence|Armed Forces|Army|Navy|Agniveer/i.test(originalTitle)) {
+      return 'Ministère de la Défense : Forces Armées et Recrutement Officiel';
+    }
+    if (/UPSC|Civil Services|IAS/i.test(originalTitle)) {
+      return 'Commission de la Fonction Publique : Concours de l\'Administration';
+    }
+    if (/Railway|RRB/i.test(originalTitle)) {
+      return 'Administration des Chemins de Fer : Recrutement Général';
+    }
+    if (/Ayushman|Health|Hospital/i.test(originalTitle)) {
+      return 'Ministère de la Santé : Couverture Maladie et Soins Hospitaliers';
+    }
+    if (/Kisan|Agriculture|Farmer/i.test(originalTitle)) {
+      return 'Ministère de l\'Agriculture : Allocation et Soutien Financier';
+    }
+    if (/Surya Ghar|Solar/i.test(originalTitle)) {
+      return 'Programme Énergie Solaire : Électricité Gratuite et Subvention';
+    }
+    if (/Scholarship|NSP|UGC|AICTE/i.test(originalTitle)) {
+      return 'Portail National des Bourses : Financement d\'Études Supérieures';
+    }
+    if (/SSC|Staff Selection/i.test(originalTitle)) {
+      return 'Commission de Recrutement Public : Postes Administratifs de l\'État';
+    }
+  }
+
+  if (language === 'de') {
+    if (/Defence|Armed Forces|Army|Navy|Agniveer/i.test(originalTitle)) {
+      return 'Verteidigungsministerium: Streitkräfte und Offizielle Einberufung';
+    }
+    if (/UPSC|Civil Services|IAS/i.test(originalTitle)) {
+      return 'Öffentliche Personalkommission: Staatsdienst-Prüfungen';
+    }
+    if (/Railway|RRB/i.test(originalTitle)) {
+      return 'Staatliche Eisenbahnverwaltung: Bundesweite Stellenausschreibung';
+    }
+    if (/Ayushman|Health|Hospital/i.test(originalTitle)) {
+      return 'Gesundheitsministerium: Kostenlose Krankenversorgungskarte';
+    }
+    if (/Kisan|Agriculture|Farmer/i.test(originalTitle)) {
+      return 'Landwirtschaftsministerium: Direktbeihilfe für Landwirte';
+    }
+    if (/Surya Ghar|Solar/i.test(originalTitle)) {
+      return 'Solarenergie-Förderung: Kostenloser Strom und Montagehilfe';
+    }
+    if (/Scholarship|NSP|UGC|AICTE/i.test(originalTitle)) {
+      return 'Nationales Stipendienportal: Amtliche Studienförderung';
+    }
+    if (/SSC|Staff Selection/i.test(originalTitle)) {
+      return 'Personalkommission: Öffentliches Auswahlverfahren';
+    }
+  }
+
+  if (language === 'ar') {
+    if (/Defence|Armed Forces|Army|Navy|Agniveer/i.test(originalTitle)) {
+      return 'وزارة الدفاع: القوات المسلحة وبرامج التجنيد المعتمدة';
+    }
+    if (/UPSC|Civil Services|IAS/i.test(originalTitle)) {
+      return 'لجنة الخدمة المدنية: مسابقات التعيين والوظائف الحكومية';
+    }
+    if (/Railway|RRB/i.test(originalTitle)) {
+      return 'هيئة السكك الحديدية: وظائف ومسابقات التعيين المعتمدة';
+    }
+    if (/Ayushman|Health|Hospital/i.test(originalTitle)) {
+      return 'وزارة الصحة: بطاقة العلاج والتأمين الصحي المجاني';
+    }
+    if (/Kisan|Agriculture|Farmer/i.test(originalTitle)) {
+      return 'وزارة الزراعة: الدعم المالي المباشر للمزارعين';
+    }
+    if (/Surya Ghar|Solar/i.test(originalTitle)) {
+      return 'مبادرة الطاقة الشمسية: كهرباء مجانية ودعم التركيب';
+    }
+    if (/Scholarship|NSP|UGC|AICTE/i.test(originalTitle)) {
+      return 'البوابة الوطنية للمنح الدراسية: دعم مالي للطلاب';
+    }
+    if (/SSC|Staff Selection/i.test(originalTitle)) {
+      return 'لجنة اختيار الموظفين: مسابقات التعيين في الجهاز الإداري';
+    }
+  }
+
+  return titleDict[language]?.[stage] || originalTitle;
+}
+
+function localizeOpportunityBenefit(
+  originalBenefit: string,
+  stage: string,
+  language: SupportedLanguage
+): string {
+  if (language === 'en' || language === 'hi') return originalBenefit;
+
+  const benefitDict: Partial<Record<SupportedLanguage, Record<string, string>>> = {
+    es: {
+      exams: 'Salario Oficial de la Administración, Estabilidad Laboral y Prestaciones Médicas Integrales',
+      schemes: 'Ayuda Económica Directa en Cuenta Bancaria y Prestación Estatal Garantizada',
+      education: '100% Cobertura de Matrícula, Dotación Económica Anual y Asignación de Manutención',
+      private_jobs: 'Retribución Competitiva, Seguro Médico Completo y Posibilidades de Crecimiento',
+      internships: 'Dotación Económica Mensual, Certificado Oficial y Mentoría Profesional',
+      startups: 'Financiación Pública a Fondo Perdido, Exenciones Fiscales y Apoyo de Incubación',
+      career: 'Formación 100% Gratuita con Certificado Oficial Reconocido para el Empleo',
+      health: 'Tratamiento Médico Hospitalario Gratuito y Cobertura Sanitaria Completa',
+      freebies: 'Acceso Gratuito a Licencias Digitales, Software y Herramientas Tecnológicas',
+      abroad_jobs: 'Financiación Total de Matrícula Internacional, Alojamiento y Seguro Médico',
+    },
+    fr: {
+      exams: 'Rémunération de la Fonction Publique, Sécurité de l\'Emploi et Avantages Sociaux',
+      schemes: 'Versement Direct sur Compte Bancaire et Allocation d\'Aide Publique Garanties',
+      education: 'Prise en Charge Intégrale des Frais de Scolarité et Allocation Mensuelle',
+      private_jobs: 'Rémunération Attractive, Couverture Santé Complète et Évolution de Carrière',
+      internships: 'Gratification Mensuelle de Stage, Mentorat et Attestation Officielle',
+      startups: 'Financement Public Non Remboursable et Accompagnement aux Entreprises',
+      career: 'Formation Entièrement Gratuite avec Délivrance d\'une Certification d\'État',
+      health: 'Prise en Charge Hospitalière Totale et Médicaments Entièrement Gratuits',
+      freebies: 'Accès Libre aux Outils Numériques, Logiciels et Services Technologiques',
+      abroad_jobs: 'Couverture Complète des Frais Universitaires, Logement et Billet d\'Avion',
+    },
+    de: {
+      exams: 'Amtliche Vergütung nach Tarif, Feste Anstellung und Umfassende Beihilfe',
+      schemes: 'Direkte Banküberweisung und Staatlich Garantierte Bürgerunterstützung',
+      education: '100% Übernahme der Studiengebühren und Monatliche Förderpauschale',
+      private_jobs: 'Attraktives Festgehalt, Betriebliche Krankenversicherung und Karriereförderung',
+      internships: 'Monatliche Praktikumsvergütung, Mentorenbegleitung und Abschlusszertifikat',
+      startups: 'Nicht Rückzahlbarer Zuschuss, Steuererleichterungen und Gründerberatung',
+      career: 'Vollständig Kostenlose Weiterbildung mit Staatlich Anerkanntem Abschluss',
+      health: 'Kostenlose Stationäre Krankenhausbehandlung und Volle Heilfürsorge',
+      freebies: 'Freier Zugang zu Modernen Softwaretools und Digitalen Arbeitsmitteln',
+      abroad_jobs: 'Vollstipendium mit Studiengebührenbefreiung, Unterkunft und Reisekosten',
+    },
+    ar: {
+      exams: 'رواتب مجزية وفق السلم الحكومي واستقرار وظيفي وتغطية صحية شاملة',
+      schemes: 'تحويلات مالية مباشرة إلى الحساب البنكي ودعم حكومي معتمد للمستحقين',
+      education: 'إعفاء كامل بنسبة 100% من المصروفات الدراسية مع مكافأة شهرية',
+      private_jobs: 'رواتب تنافسية وتأمين طبي شامل وفرص ترقية مهنية متميزة',
+      internships: 'مكافأة تدريب شهرية معتمدة وشهادة خبرة وتأهيل لسوق العمل',
+      startups: 'تمويل حكومي غير مسترد وإعفاءات ضريبية ورعاية متكاملة للأعمال',
+      career: 'برامج تدريبية مجانية بالكامل مع منح شهادات مهنية معتمدة رسمياً',
+      health: 'علاج ورعاية طبية مجانية بالمستشفيات مع تغطية دوائية كاملة',
+      freebies: 'استخدام مجاني للتطبيقات والبرمجيات والأدوات التقنية الحديثة',
+      abroad_jobs: 'منح دراسية ممولة بالكامل تشمل السكن الجامعي والتذاكر والتأمين',
+    },
+  };
+
+  return benefitDict[language]?.[stage] || originalBenefit;
+}
+
+function localizeOpportunityDescription(
+  originalDesc: string,
+  stage: string,
+  language: SupportedLanguage
+): string {
+  if (language === 'en' || language === 'hi') return originalDesc;
+
+  const descDict: Partial<Record<SupportedLanguage, string>> = {
+    es: 'Notificación oficial publicada a través de portales públicos gubernamentales verificados. Trámite directo y seguro para los ciudadanos sin comisiones ni intermediarios.',
+    fr: 'Notification officielle publiée sur les portails publics de l\'État. Candidature directe, authentifiée et sécurisée sans aucun intermédiaire payant.',
+    de: 'Amtliche Bekanntmachung auf geprüften staatlichen Portalen. Direkte und gebührenfreie Beantragung für Bürger ohne externe Vermittler.',
+    ar: 'إشعار رسمي معتمد منشور عبر البوابات الحكومية المعنية. تقديم مباشر وآمن للمواطنين بدون أي رسوم وساطة أو وسطاء غير معتمدين.',
+  };
+
+  return descDict[language] || originalDesc;
+}
+
 /**
  * Universal zero-leakage opportunity localization helper
  * Guarantees that EVERY piece of text returned strictly adheres to the requested language.
@@ -616,6 +863,8 @@ export function getLocalizedOpportunity(
     title = opportunity.titleHi;
   } else if (i18nEntry?.title) {
     title = i18nEntry.title;
+  } else if (language !== 'en' && language !== 'hi') {
+    title = localizeOpportunityTitle(title, opportunity.lifeStage, language);
   } else if (language === 'en' && /[\u0900-\u097F]/.test(title)) {
     if (opportunity.lifeStage === 'health') {
       title = 'Ministry of Health & Family Welfare: National Healthcare Advisory';
@@ -636,6 +885,8 @@ export function getLocalizedOpportunity(
     benefitHeadline = opportunity.benefitHeadlineHi;
   } else if (i18nEntry?.benefitHeadline) {
     benefitHeadline = i18nEntry.benefitHeadline;
+  } else if (language !== 'en' && language !== 'hi') {
+    benefitHeadline = localizeOpportunityBenefit(benefitHeadline, opportunity.lifeStage, language);
   } else if (language === 'en' && /[\u0900-\u097F]/.test(benefitHeadline)) {
     benefitHeadline = 'Verified Official Gazette Circular from Government of India';
   }
@@ -646,6 +897,8 @@ export function getLocalizedOpportunity(
     description = opportunity.descriptionHi;
   } else if (i18nEntry?.description) {
     description = i18nEntry.description;
+  } else if (language !== 'en' && language !== 'hi') {
+    description = localizeOpportunityDescription(description, opportunity.lifeStage, language);
   } else if (language === 'en' && /[\u0900-\u097F]/.test(description)) {
     description = 'Official Gazette Circular published by the Government of India through verified public portals. Authentic civic scheme and citizen benefit.';
   }

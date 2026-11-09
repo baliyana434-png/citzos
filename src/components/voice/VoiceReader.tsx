@@ -32,7 +32,15 @@ export const VoiceReader: React.FC<VoiceReaderProps> = ({ textToSpeak, lang = 'h
 
     window.speechSynthesis.cancel(); // clear previous
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
-    utterance.lang = language === 'hi' ? 'hi-IN' : 'en-US';
+    const voiceLangs: Record<string, string> = {
+      hi: 'hi-IN',
+      en: 'en-US',
+      es: 'es-ES',
+      fr: 'fr-FR',
+      de: 'de-DE',
+      ar: 'ar-SA',
+    };
+    utterance.lang = voiceLangs[language] || 'en-US';
     utterance.rate = 0.95; // Clear and understandable speed
 
     utterance.onend = () => setIsPlaying(false);

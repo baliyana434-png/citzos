@@ -53,12 +53,9 @@ export const getAccurateRequiredDocuments = (
   opportunity: Opportunity,
   language: string
 ): { name: string; isMandatory: boolean; notes?: string }[] => {
-  if (opportunity.documents && opportunity.documents.length > 0) {
-    return opportunity.documents.map((doc) => ({
-      name: language === 'hi' ? (doc.nameHi || doc.name) : doc.name,
-      isMandatory: doc.isMandatory !== false,
-      notes: doc.notes,
-    }));
+  const localized = getLocalizedOpportunity(opportunity, language as any);
+  if (localized.documents && localized.documents.length > 0) {
+    return localized.documents;
   }
 
   const isHi = language === 'hi';
@@ -532,11 +529,11 @@ export const DetailBottomSheet: React.FC<DetailBottomSheetProps> = ({
             rel="noopener noreferrer"
             onClick={handleVisitPortal}
             className="flex-1 min-w-[150px] py-2.5 sm:py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-black tracking-wide transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-500/50 border border-emerald-400/50 ring-2 ring-emerald-500/20 active:scale-[0.98] cursor-pointer group"
-            title={language === 'hi' ? 'सत्यापित आधिकारिक पोर्टल खोलें' : 'Open Verified Official Portal'}
+            title={t('drawer.official_portal_btn')}
           >
             <ShieldCheck className="w-4 h-4 shrink-0 text-white" />
             <span className="hidden sm:inline truncate">{t('drawer.official_portal_btn')}</span>
-            <span className="sm:hidden whitespace-nowrap">{language === 'hi' ? 'पोर्टल देखें' : 'View Portal'}</span>
+            <span className="sm:hidden whitespace-nowrap">{language === 'hi' ? 'पोर्टल देखें' : language === 'es' ? 'Ver Portal' : language === 'fr' ? 'Voir Portail' : language === 'de' ? 'Portal Öffnen' : language === 'ar' ? 'البوابة الرسمية' : 'View Portal'}</span>
             <ExternalLink className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
 
@@ -550,7 +547,7 @@ export const DetailBottomSheet: React.FC<DetailBottomSheetProps> = ({
           >
             <Calendar className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span className="hidden sm:inline">{t('drawer.add_google_calendar')}</span>
-            <span className="sm:hidden text-xs">{language === 'hi' ? 'कैलेंडर' : 'Calendar'}</span>
+            <span className="sm:hidden text-xs">{language === 'hi' ? 'कैलेंडर' : language === 'es' ? 'Calendario' : language === 'fr' ? 'Calendrier' : language === 'de' ? 'Kalender' : language === 'ar' ? 'التقويم' : 'Calendar'}</span>
           </button>
 
           <button

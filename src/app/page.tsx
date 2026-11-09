@@ -21,7 +21,7 @@ import { isOpportunityNewActive, recordOpportunitiesSeen } from '@/lib/newBadgeT
 import { isOpportunityDeadlinePassed } from '@/lib/dateUtils';
 import { isCitizenSubscribed, verifySubscriptionWithServer } from '@/lib/subscriptionValidator';
 import { isComplianceReviewer, sanitizeTextForReviewer, REVIEWER_TAB_LABELS } from '@/lib/complianceFilter';
-import { CitizenProfile, FamilyMember, LifeStage, Opportunity, CountryCode, CitizenSubscription } from '@/types';
+import { CitizenProfile, FamilyMember, LifeStage, Opportunity, CountryCode, CitizenSubscription, SupportedLanguage } from '@/types';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import {
@@ -91,6 +91,103 @@ const GUEST_PROFILE: CitizenProfile = {
 };
 
 
+const getPageText = (key: string, lang: SupportedLanguage): string => {
+  const table: Record<string, Record<SupportedLanguage, string>> = {
+    national_portal: {
+      en: 'National Citizen Portal',
+      hi: 'राष्ट्रीय नागरिक पोर्टल',
+      es: 'Portal Nacional Ciudadano',
+      fr: 'Portail National Citoyen',
+      de: 'Nationales Bürgerportal',
+      ar: 'البوابة الوطنية للمواطنين',
+    },
+    skills_banner_title: {
+      en: 'Skills Learning Hub: Learn from Top 3 YouTube Masterclasses',
+      hi: 'कौशल सीख केंद्र: शीर्ष 3 यूट्यूब वीडियोज से सीखें',
+      es: 'Centro de Aprendizaje: Aprenda de las 3 Mejores Masterclasses',
+      fr: 'Pôle d\'Apprentissage : Formez-vous avec les 3 Meilleures Masterclasses',
+      de: 'Kompetenzzentrum: Lernen mit den 3 Besten YouTube-Masterclasses',
+      ar: 'مركز تنمية المهارات: تعلم من أفضل 3 دورات تدريبية',
+    },
+    skills_banner_desc: {
+      en: 'Free curated tutorials & roadmaps for Coding, Govt Maths, Video Editing, Tally, Solar & EV repairs',
+      hi: 'कोडिंग, सरकारी परीक्षा गणित, वीडियो एडिटिंग, टैली GST, सोलर व EV रिपेयरिंग के 100% फ्री वीडियोज व सर्टिफिकेट',
+      es: 'Tutoriales y rutas de aprendizaje gratuitas en Programación, Edición de Video, Contabilidad y Reparaciones',
+      fr: 'Tutoriels et parcours gratuits en Programmation, Montage Vidéo, Comptabilité et Réparations',
+      de: 'Kostenlose Lernpfade für Programmierung, Videoschnitt, Buchhaltung sowie Reparaturtechnik',
+      ar: 'مسارات تدريبية مجانية في البرمجة والمونتاج والمحاسبة والتقنيات الحديثة مع شهادات معتمدة',
+    },
+    explore_skills: {
+      en: 'Explore Skills',
+      hi: 'सीखना शुरू करें',
+      es: 'Explorar Cursos',
+      fr: 'Découvrir les Cours',
+      de: 'Kurse Entdecken',
+      ar: 'استكشاف المهارات',
+    },
+    last_sync: {
+      en: 'Last Feed Sync:',
+      hi: 'नवीनतम पोर्टल सिंक:',
+      es: 'Última Sincronización:',
+      fr: 'Dernière Mise à Jour :',
+      de: 'Letzte Aktualisierung:',
+      ar: 'آخر تحديث للموجز:',
+    },
+    opps_live: {
+      en: 'Opportunities Live',
+      hi: 'सत्यापित अवसर लाइव',
+      es: 'Oportunidades Activas',
+      fr: 'Opportunités en Ligne',
+      de: 'Aktive Angebote',
+      ar: 'فرصة متاحة حالياً',
+    },
+    syncing: {
+      en: 'Syncing...',
+      hi: 'जांच जारी है...',
+      es: 'Sincronizando...',
+      fr: 'Mise à jour...',
+      de: 'Wird synchronisiert...',
+      ar: 'جاري التحديث...',
+    },
+    sync_feed: {
+      en: 'Sync Feed',
+      hi: 'अद्यतन करें',
+      es: 'Actualizar',
+      fr: 'Actualiser',
+      de: 'Aktualisieren',
+      ar: 'تحديث',
+    },
+    clear_search: {
+      en: 'Clear search',
+      hi: 'खोज हटाएं',
+      es: 'Borrar búsqueda',
+      fr: 'Effacer la recherche',
+      de: 'Suche löschen',
+      ar: 'مسح البحث',
+    },
+    also_in_sections: {
+      en: 'Also in other sections:',
+      hi: 'अन्य अनुभागों में भी मिले:',
+      es: 'También en otras secciones:',
+      fr: 'Également dans d\'autres sections :',
+      de: 'Auch in anderen Bereichen:',
+      ar: 'متوفر أيضاً في أقسام أخرى:',
+    },
+  };
+  return table[key]?.[lang] || table[key]?.['en'] || key;
+};
+
+const getSubscriptionNotice = (lang: SupportedLanguage): string => {
+  switch (lang) {
+    case 'hi': return 'आधिकारिक पोर्टल पर सीधे आवेदन करने हेतु 1-वर्षीय नागरिक पास (केवल ₹1) सक्रिय करें।';
+    case 'es': return 'Active el Pase Ciudadano de 1 Año (solo 1 € / $1) para solicitar directamente en el portal oficial.';
+    case 'fr': return 'Activez le Pass Citoyen 1 An (seulement 1 €) pour postuler directement sur le portail officiel.';
+    case 'de': return 'Aktivieren Sie den 1-Jahres-Bürgerpass (nur 1 €) für die direkte Bewerbung im amtlichen Portal.';
+    case 'ar': return 'قم بتفعيل تصريح المواطن السنوي للتقديم المباشر عبر البوابة الرسمية المعتمدة.';
+    default: return 'Activate 1-Year Citizen Pass to apply directly on official portal.';
+  }
+};
+
 const GOVT_CATEGORIES = new Set([
   'govt_scheme',
   'govt_job',
@@ -112,8 +209,8 @@ export default function HomePage() {
       const saved = localStorage.getItem('citizen_profile');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default' && parsed.isOnboarded) {
-          return parsed;
+        if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default') {
+          return { ...parsed, isOnboarded: true };
         }
       }
     } catch (_) {}
@@ -123,12 +220,16 @@ export default function HomePage() {
   const [isHydratingAuth, setIsHydratingAuth] = useState<boolean>(() => {
     if (typeof window === 'undefined') return true;
     try {
+      // If already shown once during this browser session or navigated back from another page, never block page render with splash!
+      if (sessionStorage.getItem('citzos_splash_shown') === 'true') {
+        return false;
+      }
       const isLoggedOut = localStorage.getItem('citizen_logged_out');
       if (isLoggedOut === 'true') return false;
       const saved = localStorage.getItem('citizen_profile');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default' && parsed.isOnboarded) {
+        if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default') {
           return false; // Already hydrated! Zero flicker on navigating back to home!
         }
       }
@@ -204,6 +305,9 @@ export default function HomePage() {
 
   // Safe client mount hydration for master profile, Google redirect result & favorite IDs
   useEffect(() => {
+    try {
+      sessionStorage.setItem('citzos_splash_shown', 'true');
+    } catch (_) {}
     let cancelled = false;
 
     async function initAuth() {
@@ -971,7 +1075,7 @@ export default function HomePage() {
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
-  if (isHydratingAuth || !isAuthenticated) {
+  if (isHydratingAuth) {
     return <BrandSplashScreen />;
   }
 
@@ -1024,7 +1128,7 @@ export default function HomePage() {
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-300 text-xs font-medium border border-slate-300 dark:border-white/10">
                 <span className="font-semibold text-slate-900 dark:text-zinc-100">{countryMeta.flag} {countryMeta.name}</span>
                 <span className="text-slate-400 dark:text-zinc-600">•</span>
-                <span className="font-mono text-[11px] text-slate-600 dark:text-zinc-400">{language === 'hi' ? 'राष्ट्रीय नागरिक पोर्टल' : 'National Citizen Portal'}</span>
+                <span className="font-mono text-[11px] text-slate-600 dark:text-zinc-400">{getPageText('national_portal', language)}</span>
               </span>
               {activeProfile.isAadhaarVerified && (
                 <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] text-emerald-700 dark:text-emerald-400 font-medium bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800/40">
@@ -1061,16 +1165,14 @@ export default function HomePage() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-extrabold text-slate-900 dark:text-white text-xs sm:text-sm">
-                  {language === 'hi' ? 'कौशल सीख केंद्र: टॉप 3 यूट्यूब वीडियोज से सीखें' : 'Skills Learning Hub: Learn from Top 3 YouTube Masterclasses'}
+                  {getPageText('skills_banner_title', language)}
                 </span>
                 <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
                   New Hub
                 </span>
               </div>
               <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-0.5">
-                {language === 'hi' 
-                  ? 'कोडिंग, सरकारी परीक्षा गणित, वीडियो एडिटिंग, टैली GST, सोलर व EV रिपेयरिंग के 100% फ्री वीडियोज व सर्टिफिकेट'
-                  : 'Free curated tutorials & roadmaps for Coding, Govt Maths, Video Editing, Tally, Solar & EV repairs'}
+                {getPageText('skills_banner_desc', language)}
               </p>
             </div>
           </div>
@@ -1078,7 +1180,7 @@ export default function HomePage() {
             href="/skills"
             className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
           >
-            <span>{language === 'hi' ? 'सीखना शुरू करें' : 'Explore Skills'}</span>
+            <span>{getPageText('explore_skills', language)}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -1088,7 +1190,7 @@ export default function HomePage() {
           <div className="flex items-center gap-2.5 text-slate-700 dark:text-slate-300">
             <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
             <span className="font-semibold text-slate-800 dark:text-slate-200">
-              {language === 'hi' ? 'नवीनतम पोर्टल सिंक:' : 'Last Feed Sync:'}
+              {getPageText('last_sync', language)}
             </span>
             <span className="font-mono font-bold text-emerald-700 dark:text-emerald-400 bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded-md border border-slate-300 dark:border-zinc-700">
               {formattedSyncTime}
@@ -1097,7 +1199,7 @@ export default function HomePage() {
 
           <div className="flex items-center gap-2">
             <span className="text-[11px] text-slate-600 dark:text-slate-400 hidden md:inline">
-              {portalOpportunities.length} {language === 'hi' ? 'सत्यापित अवसर लाइव' : 'Opportunities Live'}
+              {portalOpportunities.length} {getPageText('opps_live', language)}
             </span>
             <button
               onClick={() => fetchLiveSync(country)}
@@ -1108,8 +1210,8 @@ export default function HomePage() {
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
               <span>
                 {isSyncing
-                  ? (language === 'hi' ? 'जांच जारी है...' : 'Syncing...')
-                  : (language === 'hi' ? 'अद्यतन करें' : 'Sync Feed')}
+                  ? getPageText('syncing', language)
+                  : getPageText('sync_feed', language)}
               </span>
             </button>
           </div>
@@ -1126,6 +1228,14 @@ export default function HomePage() {
                   <span>
                     {language === 'hi'
                       ? `खोज: "${searchQuery}" • अनुभाग: ${t(`tabs.${activeTab}`)} (${filteredOpportunities.length} उपलब्ध)`
+                      : language === 'es'
+                      ? `Búsqueda: "${searchQuery}" • Sección: ${t(`tabs.${activeTab}`)} (${filteredOpportunities.length} disponibles)`
+                      : language === 'fr'
+                      ? `Recherche : "${searchQuery}" • Section : ${t(`tabs.${activeTab}`)} (${filteredOpportunities.length} disponibles)`
+                      : language === 'de'
+                      ? `Suche: "${searchQuery}" • Bereich: ${t(`tabs.${activeTab}`)} (${filteredOpportunities.length} verfügbar)`
+                      : language === 'ar'
+                      ? `البحث: "${searchQuery}" • القسم: ${t(`tabs.${activeTab}`)} (${filteredOpportunities.length} متاح)`
                       : `Search: "${searchQuery}" • Section: ${t(`tabs.${activeTab}`)} (${filteredOpportunities.length} found)`}
                   </span>
                 </div>
@@ -1134,14 +1244,14 @@ export default function HomePage() {
                   onClick={() => setSearchQuery('')}
                   className="px-2.5 py-1 rounded-xl bg-white border border-emerald-300 text-emerald-800 hover:bg-emerald-100 text-[11px] font-extrabold transition-all cursor-pointer shrink-0"
                 >
-                  {language === 'hi' ? 'खोज हटाएं' : 'Clear search'}
+                  {getPageText('clear_search', language)}
                 </button>
               </div>
 
               {otherMatchingTabs.length > 0 && (
                 <div className="flex flex-wrap items-center gap-1.5 pt-1.5 border-t border-emerald-200/60 mt-0.5 text-[11px]">
                   <span className="font-semibold text-emerald-800">
-                    {language === 'hi' ? 'अन्य अनुभागों में भी मिले:' : 'Also in other sections:'}
+                    {getPageText('also_in_sections', language)}
                   </span>
                   {otherMatchingTabs.map(([stage, count]) => (
                     <button
@@ -1189,11 +1299,7 @@ export default function HomePage() {
                   isFavorite={favoriteIds.has(opp.id)}
                   onToggleFavorite={handleToggleFavorite}
                   onRequireSubscription={() => {
-                    handleOpenSubscription(
-                      language === 'hi'
-                        ? 'आधिकारिक पोर्टल पर सीधे आवेदन करने हेतु 1-वर्षीय नागरिक पास (केवल ₹1) सक्रिय करें।'
-                        : 'Activate 1-Year Citizen Pass (only ₹1) to apply directly on official portal.'
-                    );
+                    handleOpenSubscription(getSubscriptionNotice(language));
                   }}
                 />
               ))}
@@ -1214,11 +1320,7 @@ export default function HomePage() {
         onToggleFavorite={handleToggleFavorite}
         onRequireSubscription={() => {
           setSelectedOpp(null);
-          handleOpenSubscription(
-            language === 'hi'
-              ? 'आधिकारिक पोर्टल पर सीधे आवेदन करने हेतु 1-वर्षीय नागरिक पास (केवल ₹1) सक्रिय करें।'
-              : 'Activate 1-Year Citizen Pass (only ₹1) to apply directly on official portal.'
-          );
+          handleOpenSubscription(getSubscriptionNotice(language));
         }}
       />
 

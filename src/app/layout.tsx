@@ -445,16 +445,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <link rel="preload" as="image" href="/logo-citzos.png" type="image/png" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 try {
-                  var saved = localStorage.getItem('citizen_theme');
-                  if (saved === 'dark') {
+                  var savedTheme = localStorage.getItem('citizen_theme');
+                  if (savedTheme === 'dark') {
                     document.documentElement.classList.add('dark');
                   } else {
                     document.documentElement.classList.remove('dark');
+                  }
+                  var savedLang = localStorage.getItem('citizen_language');
+                  if (savedLang) {
+                    document.documentElement.lang = savedLang;
+                    if (savedLang === 'ar') {
+                      document.documentElement.dir = 'rtl';
+                    }
                   }
                 } catch(e) {}
               })();

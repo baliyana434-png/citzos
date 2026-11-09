@@ -32,15 +32,26 @@ export function toMathDigits(str: string): string {
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined);
 
 export function TranslationProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<SupportedLanguage>('en');
+  const [language, setLanguageState] = useState<SupportedLanguage>(() => {
+    if (typeof window === 'undefined') return 'en';
+    try {
+      const saved = localStorage.getItem('citizen_language') as SupportedLanguage;
+      if (saved && dictionaries[saved]) {
+        return saved;
+      }
+    } catch (_) {}
+    return 'en';
+  });
 
   useEffect(() => {
     const handleSync = (e?: any) => {
       const saved = (e?.detail || (typeof window !== 'undefined' ? localStorage.getItem('citizen_language') : null)) as SupportedLanguage;
       if (saved && dictionaries[saved]) {
         setLanguageState(saved);
-        document.documentElement.dir = saved === 'ar' ? 'rtl' : 'ltr';
-        document.documentElement.lang = saved;
+        if (typeof document !== 'undefined') {
+          document.documentElement.dir = saved === 'ar' ? 'rtl' : 'ltr';
+          document.documentElement.lang = saved;
+        }
       }
     };
     handleSync();
@@ -55,10 +66,16 @@ export function TranslationProvider({ children }: { children: React.ReactNode })
   const setLanguage = (lang: SupportedLanguage) => {
     if (dictionaries[lang]) {
       setLanguageState(lang);
-      localStorage.setItem('citizen_language', lang);
-      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-      document.documentElement.lang = lang;
-      window.dispatchEvent(new CustomEvent('language_changed', { detail: lang }));
+      try {
+        localStorage.setItem('citizen_language', lang);
+      } catch (_) {}
+      if (typeof document !== 'undefined') {
+        document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+        document.documentElement.lang = lang;
+      }
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('language_changed', { detail: lang }));
+      }
     }
   };
 
