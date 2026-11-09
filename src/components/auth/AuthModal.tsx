@@ -870,17 +870,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
       </div>
 
-        {/* Brand Emblem Logo */}
-        <div className="flex justify-center -mt-1 mb-1.5">
-          <img
-            src="/logo-citzos.png"
-            alt="CITZOS"
-            width={130}
-            height={34}
-            className="h-8 sm:h-9 w-auto object-contain drop-shadow-xs"
-          />
-        </div>
-
         {/* Header Title & Subtitle */}
         <div className="text-center mt-0.5">
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">

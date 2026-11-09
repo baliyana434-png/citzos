@@ -75,7 +75,7 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
   const [showLogoutConfirm, setShowLogoutConfirm] = useState<boolean>(false);
   const [isGoogleLoggingIn, setIsGoogleLoggingIn] = useState<boolean>(false);
   const [googleLoginError, setGoogleLoginError] = useState<string | null>(null);
-  const [isLanguageOpen, setIsLanguageOpen] = useState<boolean>(true);
+  const [isLanguageOpen, setIsLanguageOpen] = useState<boolean>(false);
   const SUPPORTED_LANGUAGES: {
     code: 'en' | 'hi' | 'es' | 'fr' | 'de' | 'ar';
     label: string;
@@ -98,12 +98,22 @@ export const UserProfileDrawer: React.FC<UserProfileDrawerProps> = ({
     }
     return 'light';
   });
-  const [isAppearanceOpen, setIsAppearanceOpen] = useState<boolean>(true);
+  const [isAppearanceOpen, setIsAppearanceOpen] = useState<boolean>(false);
   const themeButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const radioCircleRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState<boolean>(false);
   const [isNotifLoading, setIsNotifLoading] = useState<boolean>(false);
   const [notifMessage, setNotifMessage] = useState<string | null>(null);
+
+  // Reset accordions to collapsed whenever drawer closes or user backs out
+  useEffect(() => {
+    if (!isOpen) {
+      setIsAppearanceOpen(false);
+      setIsLanguageOpen(false);
+      setShowLogoutConfirm(false);
+      setGoogleLoginError(null);
+    }
+  }, [isOpen]);
 
   // Sync notification status when drawer opens
   useEffect(() => {
