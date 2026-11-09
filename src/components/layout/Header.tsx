@@ -35,6 +35,8 @@ export const Header: React.FC<HeaderProps> = ({
   const [liveFavCount, setLiveFavCount] = useState<number>(favoriteCount);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [headerLogoSrc, setHeaderLogoSrc] = useState<string>('/logo-citzos.png');
+  const [headerLogoFailed, setHeaderLogoFailed] = useState<boolean>(false);
 
   useEffect(() => {
     const updateCount = () => {
@@ -78,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full glass-header transition-colors duration-150 relative transform translate-z-0">
+    <header className="sticky top-0 z-30 w-full glass-header transition-colors duration-150 relative">
       {/* Mobile Full-Width Search Bar Overlay (Covers Header completely for effortless typing) */}
       {isMobileSearchOpen && (
         <div className="absolute inset-0 bg-white dark:bg-black px-3 flex items-center gap-2 z-50 sm:hidden animate-in fade-in duration-100">
@@ -131,16 +133,41 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between h-16 gap-2 sm:gap-3">
           
           {/* 1. App Identity - Official CITZ [OS] Brand Logo */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Link href="/" className="flex items-center group cursor-pointer block hover:opacity-95 transition-opacity" aria-label="Citzos Home">
-              <img
-                src="/logo-citzos.png"
-                alt="CITZOS"
-                width={130}
-                height={34}
-                className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform group-hover:scale-102"
-                loading="eager"
-              />
+          <div className="flex items-center gap-2 shrink-0 min-w-[105px] sm:min-w-[130px]">
+            <Link
+              href="/"
+              className="flex items-center group cursor-pointer block hover:opacity-95 transition-opacity"
+              aria-label="Citzos Home"
+            >
+              {!headerLogoFailed ? (
+                <img
+                  src={headerLogoSrc}
+                  alt="CITZOS"
+                  width={130}
+                  height={34}
+                  className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform group-hover:scale-102 select-none"
+                  loading="eager"
+                  decoding="sync"
+                  onError={() => {
+                    if (headerLogoSrc === '/logo-citzos.png') {
+                      setHeaderLogoSrc('/logo-transparent.png');
+                    } else if (headerLogoSrc === '/logo-transparent.png') {
+                      setHeaderLogoSrc('/brand-logo-full.png');
+                    } else {
+                      setHeaderLogoFailed(true);
+                    }
+                  }}
+                />
+              ) : (
+                <div className="flex items-center gap-1.5 select-none py-1">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-black text-xs shadow-xs">
+                    C
+                  </div>
+                  <span className="text-base font-black tracking-tight text-slate-900 dark:text-white font-mono leading-none">
+                    CITZ<span className="text-emerald-600 dark:text-emerald-400">[OS]</span>
+                  </span>
+                </div>
+              )}
             </Link>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden xl:block whitespace-nowrap border-l border-slate-200 dark:border-white/10 pl-2 ml-0.5">
               {t('app_tagline')}
@@ -176,12 +203,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* 3. Action Hub (Compact targets on mobile, 0 overflow, clean ordered pills) */}
-          <div className="flex items-center gap-1 sm:gap-2 flex-1 sm:flex-initial justify-end">
-            {/* Mobile Search Button (Stretched Pill) */}
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0 justify-end ml-auto">
+            {/* Mobile Search Button */}
             <button
               type="button"
               onClick={() => setIsMobileSearchOpen(true)}
-              className="sm:hidden flex-1 min-w-[58px] max-w-[88px] h-8 px-2 rounded-xl bg-slate-100 dark:bg-[#141417] hover:bg-slate-200 dark:hover:bg-[#1c1c20] border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1 text-slate-700 dark:text-zinc-200 transition-all cursor-pointer shrink shadow-2xs"
+              className="sm:hidden h-8 px-2.5 rounded-xl bg-slate-100 dark:bg-[#141417] hover:bg-slate-200 dark:hover:bg-[#1c1c20] border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1 text-slate-700 dark:text-zinc-200 transition-all cursor-pointer shrink-0 shadow-2xs"
               title={t('search_placeholder')}
               aria-label={t('search_placeholder')}
             >
@@ -191,10 +218,10 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             </button>
 
-            {/* Skills & Video Learning Navigation Link (Stretched Pill on Mobile, Pill on Desktop) */}
+            {/* Skills & Video Learning Navigation Link */}
             <Link
               href="/skills"
-              className="flex-1 sm:flex-initial min-w-[70px] sm:min-w-0 max-w-[98px] sm:max-w-none h-8 sm:h-9 px-1.5 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
+              className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
               title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
             >
               <GraduationCap className="w-3.5 h-3.5 text-emerald-700 shrink-0" />

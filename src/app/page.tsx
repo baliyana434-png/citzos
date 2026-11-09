@@ -103,9 +103,38 @@ export default function HomePage() {
   const { t, language } = useTranslation();
   const { country, setCountry, countryMeta } = useCountry();
 
-  // Master Citizen Account Profile (Individual citizen)
-  const [profile, setProfile] = useState<CitizenProfile | null>(null);
-  const [isHydratingAuth, setIsHydratingAuth] = useState<boolean>(true);
+  // Master Citizen Account Profile (Individual citizen) - Synchronous hydration prevents splash flicker on page return
+  const [profile, setProfile] = useState<CitizenProfile | null>(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const isLoggedOut = localStorage.getItem('citizen_logged_out');
+      if (isLoggedOut === 'true') return null;
+      const saved = localStorage.getItem('citizen_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default' && parsed.isOnboarded) {
+          return parsed;
+        }
+      }
+    } catch (_) {}
+    return null;
+  });
+
+  const [isHydratingAuth, setIsHydratingAuth] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      const isLoggedOut = localStorage.getItem('citizen_logged_out');
+      if (isLoggedOut === 'true') return false;
+      const saved = localStorage.getItem('citizen_profile');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default' && parsed.isOnboarded) {
+          return false; // Already hydrated! Zero flicker on navigating back to home!
+        }
+      }
+    } catch (_) {}
+    return true;
+  });
 
   // Internal dynamic age calculation based on Date of Birth (Auto-increments by 1 on every birthday)
   const activeProfile = useMemo(() => {
