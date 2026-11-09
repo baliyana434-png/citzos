@@ -119,24 +119,24 @@ export const OpportunityCard: React.FC<OpportunityCardProps> = ({
           onSelect(opportunity);
         }
       }}
-      className="group relative glass-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between cursor-pointer h-full"
+      className="group relative glass-card rounded-2xl p-4 sm:p-5 flex flex-col justify-between cursor-pointer h-full overflow-visible"
     >
+      {/* Red Rotating Starburst Badge at Top-Left Corner (Pixel-Perfect Match with User Reference Screenshot) */}
+      {isOpportunityNewActive(opportunity.id, opportunity.isNew) && (
+        <div className="absolute -top-2.5 -left-2.5 z-20 pointer-events-none">
+          <RotatingNewBadge size="md" />
+        </div>
+      )}
+
       {/* Top Content Block */}
       <div>
-        {/* 1. Header: Issuing Authority Badge, Rotating NEW Starburst & Star Favorite Button */}
-        <div className="flex items-center justify-between gap-2.5 mb-2.5">
-          <div className="flex items-center gap-2 min-w-0 max-w-[78%]">
-            {isOpportunityNewActive(opportunity.id, opportunity.isNew) && (
-              <div className="shrink-0 flex items-center justify-center" title="New Opportunity">
-                <RotatingNewBadge size="sm" />
-              </div>
-            )}
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full glass-pill text-slate-800 dark:text-slate-200 text-[11px] font-bold min-w-0 truncate">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-              <span className={`truncate ${!isSubscribed ? 'text-blur-locked opacity-50' : ''}`}>
-                {sanitizeTextForReviewer((localized.issuingAuthority || 'Official Authority').split('(')[0].trim(), isReviewer)}
-              </span>
-            </div>
+        {/* 1. Header: Issuing Authority Badge & Star Favorite Button */}
+        <div className="flex items-center justify-between gap-3 mb-2.5">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full glass-pill text-slate-800 dark:text-slate-200 text-[11px] font-bold min-w-0 max-w-[70%]">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+            <span className={`truncate ${!isSubscribed ? 'text-blur-locked opacity-50' : ''}`}>
+              {sanitizeTextForReviewer((localized.issuingAuthority || 'Official Authority').split('(')[0].trim(), isReviewer)}
+            </span>
           </div>
 
           {onToggleFavorite && (
