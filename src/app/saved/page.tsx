@@ -532,7 +532,7 @@ export default function SavedPage() {
                 </div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 pt-3">
                 {savedOpportunities.map((opp) => (
                   <OpportunityCard
                     key={opp.id}

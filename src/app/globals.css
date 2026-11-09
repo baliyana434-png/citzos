@@ -293,7 +293,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
   border: 1.5px solid #e2e8f0;
   content-visibility: auto;
   contain-intrinsic-size: auto 340px;
-  contain: layout style paint;
+  contain: layout style;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   box-shadow: 
@@ -475,7 +475,7 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
   background: #ffffff;
   content-visibility: auto;
   contain-intrinsic-size: auto 320px;
-  contain: layout style paint;
+  contain: layout style;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
   box-shadow: 
