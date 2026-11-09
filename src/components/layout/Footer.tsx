@@ -106,24 +106,6 @@ export const Footer: React.FC = () => {
                   <span>{t('subfilters.favorites')}</span>
                 </Link>
               </li>
-              <li>
-                <Link href="/forms" className="hover:text-white transition-colors flex items-center gap-1.5">
-                  <FileText className="w-3 h-3 text-blue-400" />
-                  <span>
-                    {language === 'hi'
-                      ? 'आधिकारिक प्रपत्र डाउनलोड'
-                      : language === 'es'
-                      ? 'Formularios Oficiales'
-                      : language === 'fr'
-                      ? 'Formulaires Officiels'
-                      : language === 'de'
-                      ? 'Amtliche Formulare'
-                      : language === 'ar'
-                      ? 'نماذج التقديم الرسمية'
-                      : 'Official PDF Forms'}
-                  </span>
-                </Link>
-              </li>
             </ul>
           </div>
 

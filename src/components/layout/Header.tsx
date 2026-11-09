@@ -130,10 +130,10 @@ export const Header: React.FC<HeaderProps> = ({
       )}
 
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-2 sm:gap-3">
+        <div className="flex items-center justify-between h-16 gap-1.5 sm:gap-3">
           
           {/* 1. App Identity - Official CITZ [OS] Brand Logo */}
-          <div className="flex items-center gap-2 shrink-0 min-w-[105px] sm:min-w-[130px]">
+          <div className="flex items-center gap-2 shrink-0 min-w-[92px] sm:min-w-[130px]">
             <Link
               href="/"
               className="flex items-center group cursor-pointer block hover:opacity-95 transition-opacity"
@@ -208,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={() => setIsMobileSearchOpen(true)}
-              className="sm:hidden h-8 px-2.5 rounded-xl bg-slate-100 dark:bg-[#141417] hover:bg-slate-200 dark:hover:bg-[#1c1c20] border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1 text-slate-700 dark:text-zinc-200 transition-all cursor-pointer shrink-0 shadow-2xs"
+              className="sm:hidden h-8 px-2 sm:px-2.5 rounded-xl bg-slate-100 dark:bg-[#141417] hover:bg-slate-200 dark:hover:bg-[#1c1c20] border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1 text-slate-700 dark:text-zinc-200 transition-all cursor-pointer shrink-0 shadow-2xs"
               title={t('search_placeholder')}
               aria-label={t('search_placeholder')}
             >
@@ -221,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Skills & Video Learning Navigation Link */}
             <Link
               href="/skills"
-              className="h-8 sm:h-9 px-2 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
+              className="h-8 sm:h-9 px-1.5 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
               title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
             >
               <GraduationCap className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
@@ -304,7 +304,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               type="button"
               onClick={onOpenProfile}
-              className="h-8 w-8 sm:h-9 sm:w-auto p-0 sm:pl-1 sm:pr-3 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center sm:gap-2 transition-all focus:ring-2 focus:ring-emerald-500/30 relative overflow-hidden cursor-pointer shrink-0 shadow-2xs active:scale-[0.98]"
+              className="h-8 w-8 sm:h-9 sm:w-auto p-0 sm:pl-1 sm:pr-3 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center sm:gap-2 transition-all focus:ring-2 focus:ring-emerald-500/30 relative overflow-hidden cursor-pointer shrink-0 shadow-2xs active:scale-[0.98] mr-0.5 sm:mr-0"
               aria-label={t('profile_btn')}
             >
               <div className="w-full h-full sm:w-7 sm:h-7 rounded-full bg-slate-900 dark:bg-zinc-800 text-white flex items-center justify-center text-xs font-bold overflow-hidden shrink-0">
