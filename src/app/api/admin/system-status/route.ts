@@ -4,8 +4,21 @@ import { AdminSecurityService } from '@/lib/security';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { isOpportunityDeadlinePassed } from '@/lib/dateUtils';
 
+function verifyAdminAuth(req: NextRequest): boolean {
+  const adminToken = req.headers.get('x-admin-token');
+  if (adminToken && AdminSecurityService.verifyAdminToken(adminToken)) {
+    return true;
+  }
+  const adminKey = req.headers.get('x-admin-key');
+  const serverAdminKey = process.env.ADMIN_API_KEY;
+  if (serverAdminKey && adminKey && adminKey === serverAdminKey) {
+    return true;
+  }
+  return false;
+}
+
 export async function GET(req: NextRequest) {
-  if (!AdminSecurityService.verifyAdminRequest(req)) {
+  if (!verifyAdminAuth(req)) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized. Admin authorization required.' },
       { status: 401 }

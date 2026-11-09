@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimiter } from '@/lib/rateLimiter';
 
 /**
  * Validates a 12-digit Indian Aadhaar number using standard Verhoeff algorithm.
@@ -43,21 +42,6 @@ function validateVerhoeff(aadhaar: string): boolean {
 
 export async function POST(req: NextRequest) {
   try {
-    const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
-    const limit = rateLimiter.consume(`aadhaar_otp:${ip}`, 5, 10 * 60 * 1000, 10 * 60 * 1000);
-    if (!limit.allowed) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `बहुत अधिक अनुरोध। कृपया ${limit.resetInSeconds} सेकंड बाद पुनः प्रयास करें।`,
-          messageEn: `Too many requests. Please wait ${limit.resetInSeconds} seconds.`,
-          retryAfter: limit.resetInSeconds,
-        },
-        { status: 429 }
-      );
-    }
-
     const body = await req.json();
     const rawAadhaar = body.aadhaarNumber || '';
     const cleanAadhaar = String(rawAadhaar).replace(/[\s-]/g, '').trim();

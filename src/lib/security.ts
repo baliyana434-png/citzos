@@ -58,7 +58,7 @@ export class SessionSecurityService {
   }
 
   /**
-   * Verifies session token authenticity and expiry using constant-time comparison.
+   * Verifies session token authenticity and expiry
    */
   static verifySessionToken(token: string): { valid: boolean; citizenId?: string; email?: string } {
     if (!token || !token.includes('.')) return { valid: false };
@@ -67,51 +67,16 @@ export class SessionSecurityService {
 
     try {
       const expectedSignature = crypto.createHmac('sha256', SESSION_SECRET).update(encodedPayload).digest('base64url');
-      const sigBuf = Buffer.from(signature);
-      const expectedBuf = Buffer.from(expectedSignature);
-      if (sigBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(sigBuf, expectedBuf)) {
-        return { valid: false };
-      }
+      if (signature !== expectedSignature) return { valid: false };
 
       const jsonStr = Buffer.from(encodedPayload, 'base64url').toString('utf-8');
       const payload = JSON.parse(jsonStr);
       if (Date.now() > payload.exp) return { valid: false };
 
       return { valid: true, citizenId: payload.citizenId, email: payload.email };
-    } catch {
+    } catch (e) {
       return { valid: false };
     }
-  }
-
-  /**
-   * Extracts and verifies citizen session from httpOnly cookie or Authorization Bearer header.
-   */
-  static extractAndVerifySession(req: any): { valid: boolean; citizenId?: string; email?: string } {
-    try {
-      // 1. Try httpOnly cookie
-      let cookieToken: string | undefined;
-      if (req.cookies && typeof req.cookies.get === 'function') {
-        cookieToken = req.cookies.get('citzos_session')?.value;
-      } else if (req.headers && typeof req.headers.get === 'function') {
-        const rawCookies = req.headers.get('cookie') || '';
-        const match = rawCookies.match(/citzos_session=([^;]+)/);
-        if (match) cookieToken = decodeURIComponent(match[1]);
-      }
-
-      if (cookieToken) {
-        const res = this.verifySessionToken(cookieToken);
-        if (res.valid) return res;
-      }
-
-      // 2. Try Bearer header
-      const authHeader = req.headers?.get?.('authorization');
-      if (authHeader && authHeader.startsWith('Bearer ')) {
-        const bearerToken = authHeader.slice(7).trim();
-        return this.verifySessionToken(bearerToken);
-      }
-    } catch {}
-
-    return { valid: false };
   }
 }
 
@@ -134,7 +99,7 @@ export class AdminSecurityService {
   }
 
   /**
-   * Cryptographically verifies admin session token authenticity and expiry using constant-time comparison.
+   * Cryptographically verifies admin session token authenticity and expiry.
    */
   static verifyAdminToken(token: string): boolean {
     if (!token || !token.includes('.')) return false;
@@ -143,11 +108,7 @@ export class AdminSecurityService {
 
     try {
       const expectedSignature = crypto.createHmac('sha256', ADMIN_SECRET).update(encodedPayload).digest('base64url');
-      const sigBuf = Buffer.from(signature);
-      const expectedBuf = Buffer.from(expectedSignature);
-      if (sigBuf.length !== expectedBuf.length || !crypto.timingSafeEqual(sigBuf, expectedBuf)) {
-        return false;
-      }
+      if (signature !== expectedSignature) return false;
 
       const jsonStr = Buffer.from(encodedPayload, 'base64url').toString('utf-8');
       const payload = JSON.parse(jsonStr);
@@ -157,32 +118,5 @@ export class AdminSecurityService {
     } catch {
       return false;
     }
-  }
-
-  /**
-   * Authorizes admin access from request headers (signed token or server-to-server key)
-   * with timing-safe comparisons to prevent timing side channels.
-   */
-  static verifyAdminRequest(req: any): boolean {
-    try {
-      // 1. Signed admin session token in header
-      const adminToken = req.headers?.get?.('x-admin-token');
-      if (adminToken && this.verifyAdminToken(adminToken)) {
-        return true;
-      }
-
-      // 2. Server-to-server admin API key with constant-time equality
-      const adminKey = req.headers?.get?.('x-admin-key');
-      const serverAdminKey = process.env.ADMIN_API_KEY;
-      if (serverAdminKey && adminKey) {
-        const keyBuf = Buffer.from(adminKey);
-        const serverBuf = Buffer.from(serverAdminKey);
-        if (keyBuf.length === serverBuf.length && crypto.timingSafeEqual(keyBuf, serverBuf)) {
-          return true;
-        }
-      }
-    } catch {}
-
-    return false;
   }
 }

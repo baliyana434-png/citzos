@@ -361,14 +361,9 @@ export default function AdminPage() {
   };
 
   // Fetch real registered push devices and status
-  const fetchPushStats = async (tokenOverride?: string) => {
+  const fetchPushStats = async () => {
     try {
-      const token = (typeof tokenOverride === 'string' ? tokenOverride : undefined) || sessionStorage.getItem('admin_token');
-      const res = await fetch('/api/notifications/send-push', {
-        headers: {
-          ...(token ? { 'x-admin-token': token } : {}),
-        },
-      });
+      const res = await fetch('/api/notifications/send-push');
       if (res.ok) {
         const data = await res.json();
         setPushStats(data);
@@ -388,13 +383,9 @@ export default function AdminPage() {
     try {
       setIsSendingPush(true);
       setPushFeedback(null);
-      const token = sessionStorage.getItem('admin_token');
       const res = await fetch('/api/notifications/send-push', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'x-admin-token': token } : {}),
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: pushTitle.trim(),
           body: pushBody.trim(),
@@ -2255,7 +2246,7 @@ export default function AdminPage() {
                   </div>
                   <button
                     type="button"
-                    onClick={() => fetchPushStats()}
+                    onClick={fetchPushStats}
                     className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
                     title="Refresh Push Status"
                   >

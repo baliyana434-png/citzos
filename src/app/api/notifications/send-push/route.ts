@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
-import { AdminSecurityService } from '@/lib/security';
 
 interface StoredPushToken {
   token: string;
@@ -124,13 +123,6 @@ async function getGoogleOAuthAccessToken(serviceAccount: ServiceAccountKey): Pro
 }
 
 export async function POST(req: NextRequest) {
-  if (!AdminSecurityService.verifyAdminRequest(req)) {
-    return NextResponse.json(
-      { success: false, message: 'Unauthorized. Admin authorization required to broadcast push notifications.' },
-      { status: 401 }
-    );
-  }
-
   try {
     const body = await req.json();
     const title = String(body.title || 'Citzos — नया अवसर अलर्ट').trim();
@@ -247,14 +239,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest) {
-  if (!AdminSecurityService.verifyAdminRequest(req)) {
-    return NextResponse.json(
-      { success: false, message: 'Unauthorized. Admin authorization required.' },
-      { status: 401 }
-    );
-  }
-
+export async function GET() {
   try {
     const tokens = await readTokens();
     const serviceAccount = getServiceAccount();

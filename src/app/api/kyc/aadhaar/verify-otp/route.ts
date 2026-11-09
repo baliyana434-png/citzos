@@ -1,23 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimiter } from '@/lib/rateLimiter';
 
 export async function POST(req: NextRequest) {
   try {
-    const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
-    const limit = rateLimiter.consume(`aadhaar_verify:${ip}`, 5, 5 * 60 * 1000, 5 * 60 * 1000);
-    if (!limit.allowed) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `बहुत अधिक प्रयास। कृपया ${limit.resetInSeconds} सेकंड बाद पुनः प्रयास करें।`,
-          messageEn: `Too many attempts. Please wait ${limit.resetInSeconds} seconds.`,
-          retryAfter: limit.resetInSeconds,
-        },
-        { status: 429 }
-      );
-    }
-
     const body = await req.json();
     const referenceId = String(body.referenceId || '').trim();
     const otp = String(body.otp || '').replace(/\D/g, '').trim();

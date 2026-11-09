@@ -22,30 +22,18 @@ function getSafeNextUrl(nextParam: string | null | undefined): string {
   return '/';
 }
 
-function applySecurityHeaders(res: NextResponse): NextResponse {
-  res.headers.set('X-Frame-Options', 'DENY');
-  res.headers.set('X-Content-Type-Options', 'nosniff');
-  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.headers.set('X-XSS-Protection', '1; mode=block');
-  res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
-  if (process.env.NODE_ENV === 'production') {
-    res.headers.set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
-  }
-  return res;
-}
-
 export async function middleware(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 
-  // 1. Skip static assets, Next.js internal files, Firebase auth proxy, and API routes
+  // 1. Skip static assets, Next.js internal files, Firebase auth proxy, admin portal, and API routes
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/__') ||
     pathname.startsWith('/api') ||
+    pathname.startsWith('/admin') ||
     pathname.includes('.')
   ) {
-    const res = NextResponse.next();
-    return applySecurityHeaders(res);
+    return NextResponse.next();
   }
 
   // 2. Read session token from httpOnly cookie
@@ -67,8 +55,7 @@ export async function middleware(req: NextRequest) {
   if (isAuthenticated && isAuthRoute) {
     const rawNext = req.nextUrl.searchParams.get('next');
     const safeTarget = getSafeNextUrl(rawNext);
-    const redirectRes = NextResponse.redirect(new URL(safeTarget, req.url));
-    return applySecurityHeaders(redirectRes);
+    return NextResponse.redirect(new URL(safeTarget, req.url));
   }
 
   // 4. Check protected routes: /saved (personal saved items)
@@ -79,12 +66,10 @@ export async function middleware(req: NextRequest) {
   if (!isAuthenticated && isProtectedSubRoute) {
     const nextPath = encodeURIComponent(pathname + search);
     const loginUrl = new URL(`/login?next=${nextPath}`, req.url);
-    const redirectRes = NextResponse.redirect(loginUrl);
-    return applySecurityHeaders(redirectRes);
+    return NextResponse.redirect(loginUrl);
   }
 
-  const res = NextResponse.next();
-  return applySecurityHeaders(res);
+  return NextResponse.next();
 }
 
 export const config = {

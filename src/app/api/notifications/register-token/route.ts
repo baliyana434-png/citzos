@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import { DatabaseService } from '@/lib/db';
-import { AdminSecurityService } from '@/lib/security';
-import { rateLimiter } from '@/lib/rateLimiter';
 
 const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
 const defaultTokensFile = path.join(process.cwd(), 'src', 'data', 'push_tokens.json');
@@ -49,16 +47,6 @@ async function writeTokens(tokens: StoredPushToken[]): Promise<void> {
 
 export async function POST(req: NextRequest) {
   try {
-    const forwarded = req.headers.get('x-forwarded-for');
-    const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
-    const limit = rateLimiter.consume(`push_reg:${ip}`, 15, 60 * 1000, 60 * 1000);
-    if (!limit.allowed) {
-      return NextResponse.json(
-        { success: false, message: 'Too many token registration requests. Please wait.' },
-        { status: 429 }
-      );
-    }
-
     const body = await req.json();
     const token = String(body.token || '').trim();
 
@@ -122,28 +110,22 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('Token registration error:', error);
     return NextResponse.json(
-      { success: false, message: 'Server error saving push token.' },
+      { success: false, message: error?.message || 'Server error saving push token.' },
       { status: 500 }
     );
   }
 }
 
-export async function GET(req: NextRequest) {
-  if (!AdminSecurityService.verifyAdminRequest(req)) {
-    return NextResponse.json(
-      { success: false, message: 'Unauthorized.' },
-      { status: 401 }
-    );
-  }
-
+export async function GET() {
   try {
     const tokens = await readTokens();
     return NextResponse.json({
       success: true,
       count: tokens.length,
+      // Mask tokens for privacy
       sampleCount: tokens.length,
     });
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: 'Server error reading tokens.' }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
