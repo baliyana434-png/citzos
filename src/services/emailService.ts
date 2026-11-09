@@ -309,7 +309,42 @@ export class EmailService {
 </html>
 `;
 
-    // 1. Try Nodemailer SMTP First (Real Gmail SMTP / Custom SMTP)
+    // 1. Primary Priority: Resend REST API (Verified Domain -> Lands in Primary Inbox)
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resendId = await this.sendResendEmail(toEmail, subject, htmlContent, plainText);
+        if (resendId) {
+          console.log(`[EmailService] Resend delivered successfully to ${toEmail}:`, resendId);
+          return {
+            success: true,
+            method: 'RESEND',
+            messageId: resendId,
+            info: `Email delivered to ${toEmail} via Resend Primary`,
+          };
+        }
+      } catch (resendErr: any) {
+        console.warn('[EmailService] Resend quota/error, falling back to secondary:', resendErr?.message);
+      }
+    }
+
+    // 2. Secondary Priority: Brevo REST API
+    if (process.env.BREVO_API_KEY) {
+      try {
+        const brevoId = await this.sendBrevoEmail(toEmail, citizenName, subject, htmlContent, plainText);
+        if (brevoId) {
+          return {
+            success: true,
+            method: 'BREVO',
+            messageId: brevoId,
+            info: `Email delivered to ${toEmail} via Brevo`,
+          };
+        }
+      } catch (brevoErr: any) {
+        console.warn('[EmailService] Brevo error, falling back to SMTP:', brevoErr?.message);
+      }
+    }
+
+    // 3. Automatic Free Fallback: Nodemailer SMTP (Gmail / Custom SMTP)
     if (this.isSmtpConfigured()) {
       try {
         const transporter = this.getTransporter();
@@ -335,36 +370,10 @@ export class EmailService {
           success: true,
           method: 'SMTP',
           messageId: info.messageId,
-          info: `Email successfully delivered to ${toEmail} via SMTP`,
+          info: `Email successfully delivered to ${toEmail} via SMTP Fallback`,
         };
       } catch (smtpErr: any) {
-        console.warn('[EmailService] SMTP failed, attempting secondary dispatch:', smtpErr.message);
-      }
-    }
-
-    // 2. Try Resend REST API
-    if (process.env.RESEND_API_KEY) {
-      const resendId = await this.sendResendEmail(toEmail, subject, htmlContent, plainText);
-      if (resendId) {
-        return {
-          success: true,
-          method: 'RESEND',
-          messageId: resendId,
-          info: `Email delivered to ${toEmail} via Resend`,
-        };
-      }
-    }
-
-    // 3. Try Brevo REST API
-    if (process.env.BREVO_API_KEY) {
-      const brevoId = await this.sendBrevoEmail(toEmail, citizenName, subject, htmlContent, plainText);
-      if (brevoId) {
-        return {
-          success: true,
-          method: 'BREVO',
-          messageId: brevoId,
-          info: `Email delivered to ${toEmail} via Brevo`,
-        };
+        console.warn('[EmailService] SMTP failed, attempting Firebase fallback:', smtpErr.message);
       }
     }
 
@@ -450,6 +459,27 @@ export class EmailService {
 </html>
 `;
 
+    // 1. Primary: Resend REST API (Verified Domain -> Primary Inbox)
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const resendId = await this.sendResendEmail(toEmail, subject, htmlContent, plainText);
+        if (resendId) return { success: true, method: 'RESEND', messageId: resendId };
+      } catch (e) {
+        console.warn('[EmailService] Resend OTP error, falling back to SMTP:', e);
+      }
+    }
+
+    // 2. Secondary: Brevo REST API
+    if (process.env.BREVO_API_KEY) {
+      try {
+        const brevoId = await this.sendBrevoEmail(toEmail, citizenName, subject, htmlContent, plainText);
+        if (brevoId) return { success: true, method: 'BREVO', messageId: brevoId };
+      } catch (e) {
+        console.warn('[EmailService] Brevo OTP error, falling back to SMTP:', e);
+      }
+    }
+
+    // 3. Automatic Free Fallback: Nodemailer SMTP
     if (this.isSmtpConfigured()) {
       try {
         const transporter = this.getTransporter();
@@ -465,16 +495,6 @@ export class EmailService {
       } catch (e) {
         console.warn('[EmailService] SMTP verification dispatch error:', e);
       }
-    }
-
-    if (process.env.RESEND_API_KEY) {
-      const resendId = await this.sendResendEmail(toEmail, subject, htmlContent, plainText);
-      if (resendId) return { success: true, method: 'RESEND', messageId: resendId };
-    }
-
-    if (process.env.BREVO_API_KEY) {
-      const brevoId = await this.sendBrevoEmail(toEmail, citizenName, subject, htmlContent, plainText);
-      if (brevoId) return { success: true, method: 'BREVO', messageId: brevoId };
     }
 
     return { success: true, method: 'FALLBACK', info: `Verification OTP generated for ${toEmail}` };
