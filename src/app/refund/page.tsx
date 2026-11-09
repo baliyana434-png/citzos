@@ -12,9 +12,9 @@ export default function RefundPage() {
   const r = REFUND_LOCALES[language] || REFUND_LOCALES.en;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 antialiased flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white antialiased flex flex-col">
       {/* Top Bar */}
-      <header className="sticky top-0 z-30 w-full bg-white/95 backdrop-blur-md border-b border-slate-200">
+      <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0c0d12]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 transform translate-z-0">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             href="/"

@@ -947,14 +947,9 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-hidden">
-      {/* Ambient Glassmorphic Aura Background Orbs - Static Non-pulsing Clean Backdrop */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-96 h-96 bg-emerald-400/15 dark:bg-emerald-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-1/4 -right-32 w-96 h-96 bg-teal-400/15 dark:bg-teal-500/10 rounded-full blur-3xl" />
-        <div className="absolute top-2/3 left-1/4 w-80 h-80 bg-cyan-400/15 dark:bg-cyan-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-32 right-1/4 w-96 h-96 bg-emerald-500/15 dark:bg-emerald-600/10 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-x-clip">
+      {/* Ambient Aura Background - GPU-Accelerated Zero-Lag Radial Gradient */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.12),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.08),rgba(0,0,0,0))]" />
 
       {/* 1. Header */}
       <Header

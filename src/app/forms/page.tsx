@@ -251,7 +251,7 @@ export default function FormsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col antialiased">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased">
       {/* Top Banner Strip - Theme Adaptive */}
       <div className="w-full bg-white dark:bg-[#0c0d12] text-slate-700 dark:text-slate-300 text-[11px] py-1.5 px-4 sm:px-8 border-b border-slate-300 dark:border-zinc-800 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-2">
@@ -269,7 +269,7 @@ export default function FormsPage() {
       </div>
 
       {/* Navigation Header */}
-      <header className="sticky top-0 z-30 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+      <header className="sticky top-0 z-30 w-full bg-white/95 dark:bg-[#0c0d12]/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10 shadow-xs transform translate-z-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-3">
             <div className="flex items-center gap-3">
