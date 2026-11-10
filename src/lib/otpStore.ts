@@ -28,7 +28,10 @@ class OtpStore {
     this.loadFromDisk();
     // Run cleanup every 2 minutes
     if (typeof setInterval !== 'undefined') {
-      setInterval(() => this.cleanup(), 2 * 60 * 1000);
+      const timer = setInterval(() => this.cleanup(), 2 * 60 * 1000);
+      if (timer && typeof timer.unref === 'function') {
+        timer.unref();
+      }
     }
   }
 

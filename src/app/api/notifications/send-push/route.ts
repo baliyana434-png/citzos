@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
+import { AdminSecurityService } from '@/lib/security';
+
+function verifyAdminAuth(req: NextRequest): boolean {
+  const adminToken = req.headers.get('x-admin-token');
+  if (adminToken && AdminSecurityService.verifyAdminToken(adminToken)) {
+    return true;
+  }
+  const adminKey = req.headers.get('x-admin-key');
+  const serverAdminKey = process.env.ADMIN_API_KEY;
+  if (serverAdminKey && adminKey && adminKey === serverAdminKey) {
+    return true;
+  }
+  return false;
+}
 
 interface StoredPushToken {
   token: string;
@@ -123,6 +137,13 @@ async function getGoogleOAuthAccessToken(serviceAccount: ServiceAccountKey): Pro
 }
 
 export async function POST(req: NextRequest) {
+  if (!verifyAdminAuth(req)) {
+    return NextResponse.json(
+      { success: false, message: 'Unauthorized. Admin authorization required.' },
+      { status: 401 }
+    );
+  }
+
   try {
     const body = await req.json();
     const title = String(body.title || 'Citzos — नया अवसर अलर्ट').trim();
@@ -239,7 +260,14 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!verifyAdminAuth(req)) {
+    return NextResponse.json(
+      { success: false, message: 'Unauthorized. Admin authorization required.' },
+      { status: 401 }
+    );
+  }
+
   try {
     const tokens = await readTokens();
     const serviceAccount = getServiceAccount();

@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "tsx --test tests/security.test.mjs tests/date_utils.test.mjs tests/api_security.test.mjs",
+    "test:e2e": "tsx --test tests/e2e/production_suite.test.mjs",
     "sync:opportunities": "node scripts/autonomous-opportunity-pipeline.js",
     "lint": "next lint"
   },
@@ -37,6 +39,7 @@
     "playwright": "^1.64.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.23.15",
     "typescript": "^5.7.2"
   }
 }

@@ -14,7 +14,10 @@ class InMemoryRateLimiter {
 
   constructor() {
     if (typeof setInterval !== 'undefined') {
-      setInterval(() => this.cleanup(), 5 * 60 * 1000);
+      const timer = setInterval(() => this.cleanup(), 5 * 60 * 1000);
+      if (timer && typeof timer.unref === 'function') {
+        timer.unref();
+      }
     }
   }
 

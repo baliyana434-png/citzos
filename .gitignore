@@ -40,3 +40,6 @@ src/data/otp_cache.json
 # scratch docs
 /*.pdf
 /*.html
+
+test-results/
+scratch/

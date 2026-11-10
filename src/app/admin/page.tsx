@@ -361,9 +361,12 @@ export default function AdminPage() {
   };
 
   // Fetch real registered push devices and status
-  const fetchPushStats = async () => {
+  const fetchPushStats = async (tokenOverride?: string | React.MouseEvent) => {
     try {
-      const res = await fetch('/api/notifications/send-push');
+      const token = typeof tokenOverride === 'string' ? tokenOverride : sessionStorage.getItem('admin_token') || '';
+      const res = await fetch('/api/notifications/send-push', {
+        headers: { 'x-admin-token': token },
+      });
       if (res.ok) {
         const data = await res.json();
         setPushStats(data);
@@ -383,9 +386,13 @@ export default function AdminPage() {
     try {
       setIsSendingPush(true);
       setPushFeedback(null);
+      const token = sessionStorage.getItem('admin_token') || '';
       const res = await fetch('/api/notifications/send-push', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': token,
+        },
         body: JSON.stringify({
           title: pushTitle.trim(),
           body: pushBody.trim(),
@@ -456,7 +463,7 @@ export default function AdminPage() {
       fetchCitizens(data.token);
       fetchOpportunities(data.token);
       fetchSystemStatus(data.token);
-      fetchPushStats();
+      fetchPushStats(data.token);
     } catch (err: any) {
       setErrorMessage('सर्वर से संपर्क करने में असमर्थ। कृपया नेटवर्क की जांच करें।');
     } finally {
@@ -2246,7 +2253,7 @@ export default function AdminPage() {
                   </div>
                   <button
                     type="button"
-                    onClick={fetchPushStats}
+                    onClick={() => fetchPushStats()}
                     className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
                     title="Refresh Push Status"
                   >

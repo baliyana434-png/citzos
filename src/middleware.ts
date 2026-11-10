@@ -22,6 +22,22 @@ function getSafeNextUrl(nextParam: string | null | undefined): string {
   return '/';
 }
 
+function applySecurityHeaders(res: NextResponse): NextResponse {
+  // Prevent clickjacking: allows rendering only within same origin
+  res.headers.set('X-Frame-Options', 'SAMEORIGIN');
+  // Prevent MIME-sniffing
+  res.headers.set('X-Content-Type-Options', 'nosniff');
+  // Referrer policy: send origin only on cross-origin requests
+  res.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Enforce HSTS (1 year + subdomains)
+  res.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  // Permissions policy (restrict risky browser features)
+  res.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(self)');
+  // DNS prefetch control
+  res.headers.set('X-DNS-Prefetch-Control', 'on');
+  return res;
+}
+
 export async function middleware(req: NextRequest) {
   const { pathname, search, hostname } = req.nextUrl;
 
@@ -32,21 +48,19 @@ export async function middleware(req: NextRequest) {
     const canonicalTarget = new URL(pathname + search, 'https://www.citzos.in');
     const redirectResponse = NextResponse.redirect(canonicalTarget, 301);
     redirectResponse.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    return redirectResponse;
+    return applySecurityHeaders(redirectResponse);
   }
 
   // Redirect apex domain (citzos.in) to primary canonical domain (www.citzos.in)
   if (hostname === 'citzos.in') {
     const canonicalTarget = new URL(pathname + search, 'https://www.citzos.in');
-    return NextResponse.redirect(canonicalTarget, 301);
+    return applySecurityHeaders(NextResponse.redirect(canonicalTarget, 301));
   }
 
-  // 2. Skip static assets, Next.js internal files, Firebase auth proxy, admin portal, and API routes
+  // 2. Skip static assets, Next.js internal files, and Firebase auth proxy
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/__') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/admin') ||
     pathname.includes('.')
   ) {
     return NextResponse.next();
@@ -71,7 +85,7 @@ export async function middleware(req: NextRequest) {
   if (isAuthenticated && isAuthRoute) {
     const rawNext = req.nextUrl.searchParams.get('next');
     const safeTarget = getSafeNextUrl(rawNext);
-    return NextResponse.redirect(new URL(safeTarget, req.url));
+    return applySecurityHeaders(NextResponse.redirect(new URL(safeTarget, req.url)));
   }
 
   // 5. Check protected routes: /saved (personal saved items)
@@ -82,10 +96,10 @@ export async function middleware(req: NextRequest) {
   if (!isAuthenticated && isProtectedSubRoute) {
     const nextPath = encodeURIComponent(pathname + search);
     const loginUrl = new URL(`/login?next=${nextPath}`, req.url);
-    return NextResponse.redirect(loginUrl);
+    return applySecurityHeaders(NextResponse.redirect(loginUrl));
   }
 
-  return NextResponse.next();
+  return applySecurityHeaders(NextResponse.next());
 }
 
 export const config = {
