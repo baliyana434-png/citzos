@@ -6,15 +6,7 @@ import { Landmark, ShieldCheck, PhoneCall, Star, FileText, FileCheck } from 'luc
 import { useTranslation } from '@/i18n/useTranslation';
 
 export const Footer: React.FC = () => {
-  const { t, language, setLanguage } = useTranslation();
-  const languages: { code: 'en' | 'hi' | 'es' | 'fr' | 'de' | 'ar'; label: string }[] = [
-    { code: 'en', label: 'English' },
-    { code: 'hi', label: 'हिन्दी' },
-    { code: 'es', label: 'Español' },
-    { code: 'fr', label: 'Français' },
-    { code: 'de', label: 'Deutsch' },
-    { code: 'ar', label: 'العربية' },
-  ];
+  const { t, language } = useTranslation();
 
   return (
     <footer className="w-full bg-black text-zinc-400 text-xs border-t border-white/10 mt-12 transition-all">
@@ -252,22 +244,6 @@ export const Footer: React.FC = () => {
         {/* 3. Bottom Bar */}
         <div className="border-t border-slate-900 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-500">
           <p>© {new Date().getFullYear()} Citzos. {t('auth.verification_success')}.</p>
-          <div className="flex flex-wrap items-center justify-center gap-1.5">
-            {languages.map((l) => (
-              <button
-                key={l.code}
-                type="button"
-                onClick={() => setLanguage(l.code)}
-                className={`px-2 py-0.5 rounded text-[10px] font-mono transition-colors cursor-pointer ${
-                  language === l.code
-                    ? 'bg-emerald-600 text-white font-bold'
-                    : 'text-zinc-500 hover:text-white bg-slate-900'
-                }`}
-              >
-                {l.label}
-              </button>
-            ))}
-          </div>
           <p>
             {language === 'hi' ? 'भारतीय एवं अंतरराष्ट्रीय नागरिकों के लिए समर्पित।' : 'Designed for national and global citizens.'}
           </p>

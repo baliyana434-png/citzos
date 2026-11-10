@@ -874,14 +874,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="text-center mt-0.5">
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
             {screen === 'login'
-              ? (language === 'hi' ? 'नागरिक लॉगिन' : 'Citizen Log In')
+              ? (language === 'hi' ? 'नागरिक लॉगिन' : language === 'es' ? 'Iniciar Sesión' : language === 'fr' ? 'Connexion Citoyen' : language === 'de' ? 'Bürger-Anmeldung' : language === 'ar' ? 'تسجيل دخول المواطن' : 'Citizen Log In')
               : screen === 'signup' && signUpStep === 1
-              ? (language === 'hi' ? 'खाता बनाएं' : 'Create Account')
+              ? (language === 'hi' ? 'खाता बनाएं' : language === 'es' ? 'Crear Cuenta' : language === 'fr' ? 'Créer un Compte' : language === 'de' ? 'Konto Erstellen' : language === 'ar' ? 'إنشاء حساب' : 'Create Account')
               : screen === 'signup' && signUpStep === 2
-              ? (language === 'hi' ? 'प्रोफ़ाइल विवरण' : 'Profile Details')
+              ? (language === 'hi' ? 'प्रोफ़ाइल विवरण' : language === 'es' ? 'Detalles del Perfil' : language === 'fr' ? 'Détails du Profil' : language === 'de' ? 'Profildetails' : language === 'ar' ? 'تفاصيل الملف الشخصي' : 'Profile Details')
               : screen === 'forgot_password' && forgotPasswordStep === 2
-              ? (language === 'hi' ? 'नया पासवर्ड बनाएं' : 'Set New Password')
-              : (language === 'hi' ? 'पासवर्ड भूल गए?' : 'Forgot Password')}
+              ? (language === 'hi' ? 'नया पासवर्ड बनाएं' : language === 'es' ? 'Nueva Contraseña' : language === 'fr' ? 'Nouveau Mot de Passe' : language === 'de' ? 'Neues Passwort' : language === 'ar' ? 'تعيين كلمة مرور جديدة' : 'Set New Password')
+              : (language === 'hi' ? 'पासवर्ड भूल गए?' : language === 'es' ? '¿Olvidó su contraseña?' : language === 'fr' ? 'Mot de passe oublié ?' : language === 'de' ? 'Passwort vergessen?' : language === 'ar' ? 'نسيت كلمة المرور؟' : 'Forgot Password')}
           </h2>
 
           {/* Stepper Indicator for Sign Up */}
@@ -913,6 +913,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {screen === 'login'
               ? (language === 'hi'
                   ? 'अपने खाते में सुरक्षित प्रवेश के लिए नाम, Gmail व पासवर्ड दर्ज करें।'
+                  : language === 'es'
+                  ? 'Ingrese su Gmail registrado y contraseña para acceder de forma segura.'
+                  : language === 'fr'
+                  ? 'Entrez votre Gmail enregistré et mot de passe pour accéder en toute sécurité.'
+                  : language === 'de'
+                  ? 'Geben Sie Ihre registrierte Gmail und Ihr Passwort ein, um sicher zuzugreifen.'
+                  : language === 'ar'
+                  ? 'أدخل بريد Gmail المسجل وكلمة المرور للدخول بأمان إلى حسابك.'
                   : 'Enter your legal name, registered Gmail and password to securely access your profile.')
               : screen === 'signup' && signUpStep === 1
               ? (language === 'hi'
@@ -983,7 +991,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={language === 'hi' ? 'पंजीकृत Gmail पता (Registered Gmail) *' : 'Registered Gmail Address *'}
+                  placeholder={
+                    language === 'hi'
+                      ? 'पंजीकृत Gmail पता (Registered Gmail) *'
+                      : language === 'es'
+                      ? 'Dirección de Gmail registrada *'
+                      : language === 'fr'
+                      ? 'Adresse Gmail enregistrée *'
+                      : language === 'de'
+                      ? 'Registrierte Gmail-Adresse *'
+                      : language === 'ar'
+                      ? 'عنوان Gmail المسجل *'
+                      : 'Registered Gmail Address *'
+                  }
                   className={`w-full pl-10 pr-4 py-2.5 sm:py-3 rounded-2xl bg-slate-50 border text-xs sm:text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white outline-none transition-all ${
                     emailValidation && !emailValidation.valid
                       ? 'border-red-400 focus:border-red-500'
@@ -1008,7 +1028,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder={language === 'hi' ? 'पासवर्ड (Password) *' : 'Password *'}
+                placeholder={
+                  language === 'hi'
+                    ? 'पासवर्ड (Password) *'
+                    : language === 'es'
+                    ? 'Contraseña *'
+                    : language === 'fr'
+                    ? 'Mot de passe *'
+                    : language === 'de'
+                    ? 'Passwort *'
+                    : language === 'ar'
+                    ? 'كلمة المرور *'
+                    : 'Password *'
+                }
                 className="w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:bg-white focus:border-emerald-500 outline-none transition-all"
               />
               <button
@@ -1029,7 +1061,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   onChange={(e) => setRememberMe(e.target.checked)}
                   className="w-4 h-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer"
                 />
-                <span>{language === 'hi' ? 'याद रखें' : 'Remember me'}</span>
+                <span>
+                  {language === 'hi'
+                    ? 'याद रखें'
+                    : language === 'es'
+                    ? 'Recordarme'
+                    : language === 'fr'
+                    ? 'Se souvenir de moi'
+                    : language === 'de'
+                    ? 'Angemeldet bleiben'
+                    : language === 'ar'
+                    ? 'تذكرني'
+                    : 'Remember me'}
+                </span>
               </label>
 
               <button
@@ -1042,7 +1086,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 }}
                 className="font-bold text-slate-700 hover:text-emerald-700 transition-colors cursor-pointer"
               >
-                {language === 'hi' ? 'पासवर्ड भूल गए?' : 'Forgot Password'}
+                {language === 'hi'
+                  ? 'पासवर्ड भूल गए?'
+                  : language === 'es'
+                  ? '¿Olvidó su contraseña?'
+                  : language === 'fr'
+                  ? 'Mot de passe oublié ?'
+                  : language === 'de'
+                  ? 'Passwort vergessen?'
+                  : language === 'ar'
+                  ? 'نسيت كلمة المرور؟'
+                  : 'Forgot Password'}
               </button>
             </div>
 
@@ -1055,14 +1109,38 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-white" />
               ) : (
-                <span>{language === 'hi' ? 'लॉगिन करें' : 'Login'}</span>
+                <span>
+                  {language === 'hi'
+                    ? 'लॉगिन करें'
+                    : language === 'es'
+                    ? 'Iniciar Sesión'
+                    : language === 'fr'
+                    ? 'Se connecter'
+                    : language === 'de'
+                    ? 'Anmelden'
+                    : language === 'ar'
+                    ? 'تسجيل الدخول'
+                    : 'Login'}
+                </span>
               )}
             </button>
 
             {/* Switch to Sign Up */}
             <div className="text-center pt-1.5">
               <p className="text-xs text-slate-500">
-                <span>{language === 'hi' ? 'खाता नहीं है? ' : "Don't have an account? "}</span>
+                <span>
+                  {language === 'hi'
+                    ? 'खाता नहीं है? '
+                    : language === 'es'
+                    ? '¿No tiene una cuenta? '
+                    : language === 'fr'
+                    ? 'Pas encore de compte ? '
+                    : language === 'de'
+                    ? 'Noch kein Konto? '
+                    : language === 'ar'
+                    ? 'ليس لديك حساب؟ '
+                    : "Don't have an account? "}
+                </span>
                 <button
                   type="button"
                   onClick={() => {
@@ -1074,7 +1152,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   }}
                   className="font-extrabold text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer"
                 >
-                  {language === 'hi' ? 'साइन अप करें (Sign Up here)' : 'Sign Up here'}
+                  {language === 'hi'
+                    ? 'साइन अप करें (Sign Up here)'
+                    : language === 'es'
+                    ? 'Regístrese aquí'
+                    : language === 'fr'
+                    ? 'Inscrivez-vous ici'
+                    : language === 'de'
+                    ? 'Hier registrieren'
+                    : language === 'ar'
+                    ? 'سجل هنا'
+                    : 'Sign Up here'}
                 </button>
               </p>
             </div>
@@ -1086,7 +1174,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
               <div className="relative flex justify-center text-[11px] font-semibold text-slate-400">
                 <span className="bg-white px-3">
-                  {language === 'hi' ? 'अथवा गूगल द्वारा' : 'Or Continue With Google'}
+                  {language === 'hi'
+                    ? 'अथवा गूगल द्वारा'
+                    : language === 'es'
+                    ? 'O continuar con Google'
+                    : language === 'fr'
+                    ? 'Ou continuer avec Google'
+                    : language === 'de'
+                    ? 'Oder mit Google fortfahren'
+                    : language === 'ar'
+                    ? 'أو متابعة باستخدام Google'
+                    : 'Or Continue With Google'}
                 </span>
               </div>
             </div>
@@ -1106,7 +1204,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
                 </svg>
                 <span className="text-xs sm:text-sm font-bold text-slate-800">
-                  {language === 'hi' ? 'गूगल से लॉगिन करें' : 'Continue with Google'}
+                  {language === 'hi'
+                    ? 'गूगल से लॉगिन करें'
+                    : language === 'es'
+                    ? 'Continuar con Google'
+                    : language === 'fr'
+                    ? 'Continuer avec Google'
+                    : language === 'de'
+                    ? 'Mit Google fortfahren'
+                    : language === 'ar'
+                    ? 'المتابعة باستخدام Google'
+                    : 'Continue with Google'}
                 </span>
               </button>
             </div>
@@ -1850,19 +1958,33 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </button>
 
             {/* Language Switcher */}
-            <div className="relative">
+            <div className="relative z-50">
               <button
                 type="button"
-                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsLangMenuOpen((prev) => !prev);
+                }}
                 className="h-8 sm:h-9 px-3 rounded-xl bg-white/90 dark:bg-[#18181b] hover:bg-slate-100 dark:hover:bg-[#222227] border border-slate-200 dark:border-white/10 text-slate-800 dark:text-zinc-200 text-xs font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95"
+                aria-label="Language selector"
+                aria-expanded={isLangMenuOpen}
               >
                 <Globe className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                 <span className="uppercase">{language}</span>
               </button>
               {isLangMenuOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setIsLangMenuOpen(false)} />
-                  <div className="absolute right-0 mt-1.5 w-44 bg-white dark:bg-[#121215] rounded-2xl shadow-xl border border-slate-200 dark:border-white/10 p-1.5 z-50">
+                  <div
+                    className="fixed inset-0 z-40 bg-black/10 backdrop-blur-[1px]"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsLangMenuOpen(false);
+                    }}
+                  />
+                  <div
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-[#121215] rounded-2xl shadow-2xl border border-slate-200 dark:border-white/10 p-1.5 z-50 animate-in fade-in zoom-in-95 duration-100"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {[
                       { code: 'en', label: 'English' },
                       { code: 'hi', label: 'हिन्दी' },
@@ -1874,7 +1996,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       <button
                         key={l.code}
                         type="button"
-                        onClick={() => {
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setLanguage(l.code as any);
+                          setIsLangMenuOpen(false);
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setLanguage(l.code as any);
                           setIsLangMenuOpen(false);
                         }}
@@ -1924,6 +2053,34 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       एक सुरक्षित नागरिक खाता
                     </span>
                   </>
+                ) : language === 'es' ? (
+                  <>
+                    Una cuenta ciudadana segura para{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
+                      todas las oportunidades globales
+                    </span>
+                  </>
+                ) : language === 'fr' ? (
+                  <>
+                    Un compte citoyen sécurisé pour{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
+                      toutes les opportunités officielles
+                    </span>
+                  </>
+                ) : language === 'de' ? (
+                  <>
+                    Ein sicheres Bürgerkonto für{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
+                      alle amtlichen Möglichkeiten
+                    </span>
+                  </>
+                ) : language === 'ar' ? (
+                  <>
+                    حساب مواطن آمن لجميع{' '}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
+                      الفرص الوطنية والعالمية
+                    </span>
+                  </>
                 ) : (
                   <>
                     One Secure Citizen Account for{' '}
@@ -1937,6 +2094,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <p className="text-xs sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed max-w-xl font-medium">
                 {language === 'hi'
                   ? 'बिना किसी फर्जीवाड़े के 250+ सत्यापित सरकारी योजनाएं, प्रतियोगी परीक्षाएं, छात्रवृत्तियां, इंटर्नशिप और रोजगार अवसर सीधे आधिकारिक सरकारी पोर्टलों से।'
+                  : language === 'es'
+                  ? 'Plataforma de descubrimiento cívico 100% verificada. Acceda a más de 250 subvenciones, exámenes, becas y pasantías oficiales sin intermediarios.'
+                  : language === 'fr'
+                  ? 'Portail civique officiel 100% vérifié. Accédez à plus de 250 bourses, concours et subventions directement depuis les plateformes publiques.'
+                  : language === 'de'
+                  ? 'Verifiziertes Bürgerportal. Zugang zu über 250 amtlichen Förderprogrammen, Prüfungen und Stipendien direkt von offiziellen Portalen.'
+                  : language === 'ar'
+                  ? 'منصة مدنية موثوقة بنسبة 100%. اكتشف أكثر من 250 برنامجاً حكومياً ومنحة دراسية مباشرة من البوابات الرسمية بدون وسطاء.'
                   : 'Zero-scam civic discovery platform. Access 250+ verified government schemes, competitive exams, national scholarships, and career roadmaps directly from official sources.'}
               </p>
 
@@ -1945,10 +2110,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
-                      {language === 'hi' ? '100% सत्यापित पोर्टल' : '100% Verified Portals'}
+                      {language === 'hi' ? '100% सत्यापित पोर्टल' : language === 'es' ? 'Portales 100% Verificados' : language === 'fr' ? 'Portails 100% Vérifiés' : language === 'de' ? '100% Geprüfte Portale' : language === 'ar' ? 'بوابات رسمية 100%' : '100% Verified Portals'}
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
-                      {language === 'hi' ? 'केवल आधिकारिक डायरेक्ट लिंक्स' : 'Direct official application URLs'}
+                      {language === 'hi' ? 'केवल आधिकारिक डायरेक्ट लिंक्स' : language === 'es' ? 'Enlaces de solicitud oficiales' : language === 'fr' ? 'Liens officiels directs' : language === 'de' ? 'Direkte amtliche Links' : language === 'ar' ? 'روابط تقديم رسمية مباشرة' : 'Direct official application URLs'}
                     </p>
                   </div>
                 </div>
@@ -1957,10 +2122,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
-                      {language === 'hi' ? 'आयु व पात्रता ऑटो-मैच' : 'Instant Eligibility Match'}
+                      {language === 'hi' ? 'आयु व पात्रता ऑटो-मैच' : language === 'es' ? 'Coincidencia de Elegibilidad' : language === 'fr' ? 'Éligibilité Instantanée' : language === 'de' ? 'Sofortige Prüfung' : language === 'ar' ? 'مطابقة الأهلية الفورية' : 'Instant Eligibility Match'}
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
-                      {language === 'hi' ? 'राज्य व श्रेणी अनुसार फिल्टर' : 'Auto-filtered by state and role'}
+                      {language === 'hi' ? 'राज्य व श्रेणी अनुसार फिल्टर' : language === 'es' ? 'Filtrado por estado y función' : language === 'fr' ? 'Filtré selon votre statut' : language === 'de' ? 'Gefiltert nach Status und Rolle' : language === 'ar' ? 'مصفى حسب الفئة والعمر' : 'Auto-filtered by state and role'}
                     </p>
                   </div>
                 </div>
@@ -1969,10 +2134,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
-                      {language === 'hi' ? '1-वर्षीय नागरिक पास' : '1-Year Citizen Pass'}
+                      {language === 'hi' ? '1-वर्षीय नागरिक पास' : language === 'es' ? 'Pase Ciudadano Anual' : language === 'fr' ? 'Pass Citoyen Annuel' : language === 'de' ? '1-Jahres-Bürgerpass' : language === 'ar' ? 'تصريح المواطن السنوي' : '1-Year Citizen Pass'}
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
-                      {language === 'hi' ? 'केवल ₹1 में असीमित पहुंच' : 'Full access for just ₹1/year'}
+                      {language === 'hi' ? 'केवल ₹1 में असीमित पहुंच' : language === 'es' ? 'Acceso completo garantizado' : language === 'fr' ? 'Accès complet garanti' : language === 'de' ? 'Voller Zugriff garantiert' : language === 'ar' ? 'وصول كامل وموثق' : 'Full access for just ₹1/year'}
                     </p>
                   </div>
                 </div>
@@ -1981,10 +2146,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">
-                      {language === 'hi' ? '24x7 नागरिक हेल्पलाइन' : '24x7 Citizen Helplines'}
+                      {language === 'hi' ? '24x7 नागरिक हेल्पलाइन' : language === 'es' ? 'Líneas Ciudadanas 24x7' : language === 'fr' ? 'Lignes d\'Aide 24x7' : language === 'de' ? '24x7 Bürger-Helpline' : language === 'ar' ? 'خطوط مساعدة على مدار الساعة' : '24x7 Citizen Helplines'}
                     </p>
                     <p className="text-[11px] text-slate-600 dark:text-zinc-400 mt-0.5">
-                      {language === 'hi' ? 'आपातकालीन सहायता नंबर' : 'National emergency & youth lines'}
+                      {language === 'hi' ? 'आपातकालीन सहायता नंबर' : language === 'es' ? 'Líneas de ayuda nacionales' : language === 'fr' ? 'Numéros d\'urgence nationaux' : language === 'de' ? 'Amtliche Notfallkontakte' : language === 'ar' ? 'أرقام الطوارئ والدعم الوطني' : 'National emergency & youth lines'}
                     </p>
                   </div>
                 </div>

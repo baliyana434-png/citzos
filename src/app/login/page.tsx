@@ -24,6 +24,14 @@ function LoginContent() {
   const initialNotice = fromLogout
     ? language === 'hi'
       ? 'सफलतापूर्वक लॉग आउट हो गया। नागरिक पोर्टल में प्रवेश हेतु पुनः लॉगिन करें।'
+      : language === 'es'
+      ? 'Ha cerrado sesión correctamente. Inicie sesión para continuar.'
+      : language === 'fr'
+      ? 'Vous avez été déconnecté avec succès. Veuillez vous connecter pour continuer.'
+      : language === 'de'
+      ? 'Sie wurden erfolgreich abgemeldet. Bitte melden Sie sich an.'
+      : language === 'ar'
+      ? 'تم تسجيل الخروج بنجاح. يرجى تسجيل الدخول للمتابعة.'
       : 'You have been logged out successfully. Please log in to continue.'
     : undefined;
 
