@@ -3,6 +3,7 @@ import { Opportunity, LifeStage, OpportunityCategory, CountryCode } from '@/type
 import { LiveFeedService } from './liveFeedService';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { resolveOfficialPortalUrl } from '@/lib/officialPortalResolver';
+import { deduplicateOpportunities } from '@/utils/opportunityDeduplication';
 
 interface CrawlerCache {
   timestamp: number;
@@ -321,19 +322,20 @@ export class LiveFeedCrawler {
       if (items.length === 0) {
         items = INITIAL_OPPORTUNITIES.filter((o) => o.country === normCountry).slice(0, 3).map((o) => ({
           ...o,
-          id: `live-${o.id}`,
           isNew: true,
           applicationStatus: 'active_now' as const,
         }));
         source = `Verified National Opportunities Gazette (${normCountry})`;
       }
 
+      const deduplicatedItems = deduplicateOpportunities(items);
+
       const responseData = {
         success: true,
         source,
         lastSyncedAt: formattedTime,
-        count: items.length,
-        newOpportunities: items,
+        count: deduplicatedItems.length,
+        newOpportunities: deduplicatedItems,
       };
 
       countryCaches[normCountry] = {
@@ -654,7 +656,7 @@ export class LiveFeedCrawler {
         ...c,
         country: 'IN' as CountryCode,
       }));
-      const combined = [...liveOpps, ...indianFlagship];
+      const combined = deduplicateOpportunities([...liveOpps, ...indianFlagship]);
 
       const responseData = {
         success: true,
@@ -673,12 +675,13 @@ export class LiveFeedCrawler {
     } catch (err: any) {
       console.warn('Real PIB RSS fetch notice (serving fallback):', err?.message);
 
-      const fallbackOpps = countryCaches['IN']
+      const fallbackRaw = countryCaches['IN']
         ? countryCaches['IN'].data.newOpportunities
         : LiveFeedService.LIVE_INTERNET_CIRCULARS.map((c) => ({
             ...c,
             country: 'IN' as CountryCode,
           }));
+      const fallbackOpps = deduplicateOpportunities(fallbackRaw);
 
       return {
         success: true,

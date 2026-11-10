@@ -2,42 +2,6 @@ import { Opportunity } from '@/types';
 
 export const HEALTH_OPPORTUNITIES: Opportunity[] = [
   {
-    id: 'opp-ayushman-01',
-    title: 'Ayushman Bharat PM-JAY: ₹5,00,000 Free Cashless Hospital Care',
-    titleHi: 'आयुष्मान भारत प्रधानमंत्री जन आरोग्य योजना: ₹5,00,000 निःशुल्क कैशलेस उपचार',
-    category: 'healthcare_free',
-    lifeStage: 'health',
-    targetAges: [0, 99],
-    stateEligibility: ['ALL'],
-    targetOccupations: ['farmer', 'homemaker', 'senior_citizen', 'job_seeker', 'business_owner', 'employed'],
-    benefitHeadline: '₹5 Lakh per Family per Year for Surgery, ICU & Serious Illnesses in 27,000+ Hospitals',
-    benefitHeadlineHi: 'प्रति परिवार ₹5 लाख प्रतिवर्ष तक का ऑपरेशन, आईसीयू एवं गंभीर बीमारियों का निःशुल्क उपचार',
-    benefitAmount: 500000,
-    deadline: 'OPEN_ROUND',
-    description: 'The world\'s largest health assurance scheme providing secondary and tertiary care hospitalization across public and private empaneled hospitals.',
-    descriptionHi: 'विश्व की सबसे बड़ी स्वास्थ्य आश्वासन योजना जिसके तहत देश के 27,000 से अधिक सरकारी व निजी अस्पतालों में कैशलेस उपचार मिलता है।',
-    gazette: {
-      circularNumber: 'NHA/AB-PMJAY/2026/EXP-SENIOR',
-      issuingAuthority: 'National Health Authority (NHA)',
-      gazetteDate: '2026-09-01',
-      lastVerifiedAt: 'Live verified 10 mins ago',
-      officialPortalUrl: 'https://beneficiary.nha.gov.in',
-      scamAlertWarning: 'Ayushman Card creation is 100% free on the official app or at Government Hospitals. Do not pay agents for Ayushman card.',
-      officialGovtFee: '₹0 (Free of Cost)'
-    },
-    documents: [
-      { id: 'd-ay-1', name: 'Aadhaar Card of all family members', nameHi: 'परिवार के सभी सदस्यों का आधार कार्ड', isMandatory: true },
-      { id: 'd-ay-2', name: 'Ration Card (NFSA)', nameHi: 'राशन कार्ड (पात्रता पर्ची)', isMandatory: true }
-    ],
-    applySteps: [
-      { step: 1, text: 'Download Ayushman App or visit beneficiary.nha.gov.in.', textHi: 'आयुष्मान ऐप डाउनलोड करें अथवा beneficiary.nha.gov.in पर जाएं।' },
-      { step: 2, text: 'Search by Aadhaar or Ration Card number.', textHi: 'आधार या राशन कार्ड नंबर दर्ज करके पात्रता जांचें।' },
-      { step: 3, text: 'Complete instant Face-Auth to download digital Golden Card.', textHi: 'फेस-ऑथ या ओटीपी द्वारा तुरंत डिजिटल गोल्डन कार्ड डाउनलोड करें।' }
-    ],
-    tags: ['Healthcare', 'Cashless Hospital', 'Life Saving', 'Ayushman'],
-    is100PercentFree: true
-  },
-  {
     id: 'opp-jan-aushadhi-01',
     title: 'Pradhan Mantri Jan Aushadhi: 80% Discounted Generic Salt Medicines',
     titleHi: 'प्रधानमंत्री भारतीय जनऔषधि केंद्र: 80% तक सस्ती प्रमाणित जेनेरिक दवाइयां',

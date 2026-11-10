@@ -14,6 +14,7 @@ import { SubscriptionModal } from '@/components/subscription/SubscriptionModal';
 import { PushNotificationBanner } from '@/components/notifications/PushNotificationBanner';
 import { GoogleAuthService, getGoogleRedirectResultSafe, isGoogleRedirectPending } from '@/services/googleAuth';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
+import { deduplicateOpportunities } from '@/utils/opportunityDeduplication';
 import { getLocalizedOpportunity } from '@/data/localization/opportunityTranslator';
 import { calculateExactAge } from '@/utils/antiFraudValidation';
 import { BrandSplashScreen } from '@/components/common/BrandSplashScreen';
@@ -773,12 +774,7 @@ export default function HomePage() {
       if (cached) {
         const parsed: Opportunity[] = JSON.parse(cached);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setOpportunities((prev) => {
-            const existingIds = new Set(prev.map((o) => o.id));
-            const toAdd = parsed.filter((o) => !existingIds.has(o.id));
-            if (toAdd.length === 0) return prev;
-            return [...toAdd, ...prev];
-          });
+          setOpportunities((prev) => deduplicateOpportunities([...parsed, ...prev]));
         }
       }
     } catch (e) {}
@@ -806,14 +802,11 @@ export default function HomePage() {
       const data = await res.json();
       if (data.newOpportunities && data.newOpportunities.length > 0) {
         setOpportunities((prev) => {
-          const existingIds = new Set(prev.map((o) => o.id));
-          const toAdd = data.newOpportunities.filter((o: Opportunity) => !existingIds.has(o.id));
-          if (toAdd.length === 0) return prev;
-          const updated = [...toAdd, ...prev];
+          const updated = deduplicateOpportunities([...data.newOpportunities, ...prev]);
           try {
             // Persist newly discovered trusted opportunities for offline and instant startup
             const cachedExisting = JSON.parse(localStorage.getItem('citizen_auto_fetched_opportunities') || '[]');
-            const combinedSaved = [...toAdd, ...cachedExisting].slice(0, 50);
+            const combinedSaved = deduplicateOpportunities([...data.newOpportunities, ...cachedExisting]).slice(0, 50);
             localStorage.setItem('citizen_auto_fetched_opportunities', JSON.stringify(combinedSaved));
           } catch (e) {}
           return updated;
@@ -853,12 +846,9 @@ export default function HomePage() {
     if (!searchQuery.trim()) return null;
     const query = searchQuery.trim().toLowerCase();
     const counts: Partial<Record<LifeStage, number>> = {};
-    const seen = new Set<string>();
+    const uniqueOpportunities = deduplicateOpportunities(opportunities);
 
-    opportunities.forEach((opp) => {
-      if (seen.has(opp.id)) return;
-      seen.add(opp.id);
-
+    uniqueOpportunities.forEach((opp) => {
       const isStudyAbroad = opp.lifeStage === 'abroad_jobs' || opp.category === 'study_abroad';
       const isGlobalFreebie = opp.lifeStage === 'freebies' && (opp.stateEligibility.includes('ALL') || !opp.country);
       if (!isStudyAbroad && !isGlobalFreebie && opp.country !== country) return;
@@ -933,15 +923,8 @@ export default function HomePage() {
 
   // Filtered and Scored Opportunities (Sector-Agnostic Global Search)
   const filteredOpportunities = useMemo(() => {
-    const seen = new Set<string>();
-
-    return opportunities.filter((opp) => {
-      // 0. Deduplicate identical opportunities
-      const key = opp.id;
-      if (seen.has(key)) return false;
-      seen.add(key);
-
-      // 0B. Automatic Deadline Expiration (Opportunity disappears once deadline closing date passes)
+    const rawFiltered = opportunities.filter((opp) => {
+      // 0. Automatic Deadline Expiration (Opportunity disappears once deadline closing date passes)
       if (isOpportunityDeadlinePassed(opp.deadline)) {
         return false;
       }
@@ -1013,16 +996,14 @@ export default function HomePage() {
       // Priority 3: Higher benefit value first
       return (b.benefitAmount || 0) - (a.benefitAmount || 0);
     });
+
+    // Final guarantee: strictly deduplicate all opportunities so identical cards never appear
+    return deduplicateOpportunities(rawFiltered);
   }, [activeTab, activeSubFilter, searchQuery, activeProfile.age, activeProfile.gender, activeProfile.state, activeProfile.administrativeDivision, opportunities, country]);
 
   // Sovereign Portal Opportunities (Strictly count opportunities belonging to the active Country Portal)
   const portalOpportunities = useMemo(() => {
-    const seen = new Set<string>();
-    return opportunities.filter((opp) => {
-      // 0. Deduplicate
-      if (seen.has(opp.id)) return false;
-      seen.add(opp.id);
-
+    const raw = opportunities.filter((opp) => {
       // Strict Country / Portal Matching
       const isStudyAbroad = opp.lifeStage === 'abroad_jobs' || opp.category === 'study_abroad';
       const isGlobalFreebie = opp.lifeStage === 'freebies' && (opp.stateEligibility.includes('ALL') || !opp.country);
@@ -1049,6 +1030,8 @@ export default function HomePage() {
 
       return true;
     });
+
+    return deduplicateOpportunities(raw);
   }, [opportunities, country, activeProfile]);
 
   // Total Available Benefit Amount across OVERALL matched opportunities in the portal

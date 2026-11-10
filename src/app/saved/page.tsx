@@ -27,6 +27,7 @@ import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { getLocalizedOpportunity } from '@/data/localization/opportunityTranslator';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { LiveFeedService } from '@/services/liveFeedService';
+import { deduplicateOpportunities } from '@/utils/opportunityDeduplication';
 import { Opportunity } from '@/types';
 import { OpportunityCard } from '@/components/cards/OpportunityCard';
 import { DetailBottomSheet } from '@/components/drawers/DetailBottomSheet';
@@ -73,15 +74,7 @@ export default function SavedPage() {
 
   // Combine initial catalog with live-synced crawler circulars
   const ALL_OPPORTUNITIES = useMemo(() => {
-    const seen = new Set<string>();
-    const list: Opportunity[] = [];
-    for (const opp of [...INITIAL_OPPORTUNITIES, ...LiveFeedService.LIVE_INTERNET_CIRCULARS]) {
-      if (!seen.has(opp.id)) {
-        seen.add(opp.id);
-        list.push(opp);
-      }
-    }
-    return list;
+    return deduplicateOpportunities([...INITIAL_OPPORTUNITIES, ...LiveFeedService.LIVE_INTERNET_CIRCULARS]);
   }, []);
 
   // Read saved IDs & profile from localStorage with safe client mount hydration & auth gate

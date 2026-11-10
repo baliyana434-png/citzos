@@ -36,7 +36,7 @@ export class LiveFeedService {
    */
   public static readonly LIVE_INTERNET_CIRCULARS: Opportunity[] = [
     {
-      id: 'live-agniveer-armed-forces-2026',
+      id: 'live-gov-defence-recruit-2026',
       title: 'Indian Armed Forces Agniveer Intake 2026: Army, Navy & Air Force Recruitment Rallies',
       titleHi: 'भारतीय सशस्त्र सेना अग्निवीर भर्ती 2026: थल सेना, नौसेना व वायु सेना भर्ती रैली',
       category: 'govt_job',
@@ -197,7 +197,7 @@ export class LiveFeedService {
       isNew: true,
     },
     {
-      id: 'live-aicte-internship-portal-2026',
+      id: 'live-gov-aicte-internship-2026',
       title: 'AICTE National Government & Smart Cities Internship Portal 2026: 1 Lakh+ Paid Internships',
       titleHi: 'एआईसीटीई राष्ट्रीय सरकारी एवं स्मार्ट सिटीज इंटर्नशिप पोर्टल 2026: 1 लाख+ सवेतन इंटर्नशिप',
       category: 'internship',
@@ -317,7 +317,7 @@ export class LiveFeedService {
       isNew: true,
     },
     {
-      id: 'live-pib-pm-surya-2026',
+      id: 'live-gov-surya-ghar-2026',
       title: 'PM Surya Ghar 2026 Live Phase 2: Instant ₹78,000 Rooftop Solar Subsidy',
       titleHi: 'प्रधानमंत्री सूर्य घर 2026 चरण-2: ₹78,000 त्वरित सोलर रूफटॉप सब्सिडी सीधे बैंक में',
       category: 'govt_scheme',

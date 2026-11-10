@@ -2,44 +2,6 @@ import { Opportunity } from '@/types';
 
 export const INTERNSHIP_OPPORTUNITIES: Opportunity[] = [
   {
-    id: 'opp-aicte-portal-intern-01',
-    title: 'AICTE National Internship Portal: 1,00,000+ Verified Corporate Internships for College Students',
-    titleHi: 'एआईसीटीई राष्ट्रीय इंटर्नशिप पोर्टल: कॉलेज छात्रों हेतु 1,00,000+ सत्यापित कॉर्पोरेट इंटर्नशिप्स',
-    category: 'internship',
-    applicationStatus: 'active_now',
-    lifeStage: 'internships',
-    targetAges: [17, 26],
-    stateEligibility: ['ALL'],
-    targetOccupations: ['college_student', 'job_seeker'],
-    benefitHeadline: 'Pan-India Corporate & Govt Internships (₹8,000 - ₹35,000/Month Stipend) + Academic Credit Transfer',
-    benefitHeadlineHi: 'अखिल भारतीय स्तर पर ₹8,000 से ₹35,000 मासिक वजीफे पर इंटर्नशिप + कॉलेज क्रेडिट प्रमाण पत्र',
-    benefitAmount: 25000,
-    deadline: 'OPEN_ROUND',
-    description: 'Official portal launched by All India Council for Technical Education connecting engineering, diploma, management, and general degree students with direct verified internships in top companies (CISCO, IBM, NHAI, smart cities, and tech giants).',
-    descriptionHi: 'अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE) का आधिकारिक पोर्टल जिसके माध्यम से बीटेक, पॉलीटेक्निक, बीबीए, बीकॉम व बीएससी के छात्र देश की अग्रणी कंपनियों और सरकारी विभागों में सवेतन इंटर्नशिप प्राप्त कर सकते हैं।',
-    gazette: {
-      circularNumber: 'AICTE/INTERNSHIP/PORTAL/2026',
-      issuingAuthority: 'All India Council for Technical Education (AICTE)',
-      gazetteDate: '2026-09-01',
-      lastVerifiedAt: 'Live verified 15 mins ago',
-      officialPortalUrl: 'https://internship.aicte-india.org',
-      scamAlertWarning: 'AICTE portal never charges any application fees from college students. All student registrations and job applications are 100% free.',
-      officialGovtFee: '₹0 (100% Free Public Portal)'
-    },
-    documents: [
-      { id: 'd-aicte-1', name: 'College Student ID Card or Bonafide Letter', nameHi: 'कॉलेज पहचान पत्र अथवा बोनाफाइड प्रमाण पत्र', isMandatory: true },
-      { id: 'd-aicte-2', name: 'Resume & Aadhaar Card', nameHi: 'बायोडाटा एवं आधार कार्ड', isMandatory: true }
-    ],
-    applySteps: [
-      { step: 1, text: 'Register as Student on internship.aicte-india.org with your university/college enrollment number.', textHi: 'internship.aicte-india.org पर स्टूडेंट के रूप में पंजीकरण करें।' },
-      { step: 2, text: 'Search internships by your branch (Computer Science, Civil, Mechanical, Marketing, HR).', textHi: 'अपनी शैक्षणिक शाखा के अनुसार इंटर्नशिप सर्च करें।' },
-      { step: 3, text: 'Click "Apply Now" directly to companies with your digital profile.', textHi: 'सीधे कंपनियों के इंटर्नशिप पदों पर अप्लाई करें।' }
-    ],
-    tags: ['AICTE', 'Internships', 'College Students', 'Paid Internships', 'Engineering', 'Govt Verified'],
-    is100PercentFree: true,
-    isNew: true
-  },
-  {
     id: 'opp-pm-internship-01',
     title: 'PM Internship Scheme 2026: 12-Month Paid Internship in Top 500 Companies',
     titleHi: 'प्रधानमंत्री इंटर्नशिप योजना 2026: भारत की शीर्ष 500 कंपनियों में 1 वर्ष की सवेतन इंटर्नशिप',

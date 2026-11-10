@@ -1,4 +1,5 @@
 import { Opportunity } from '@/types';
+import { deduplicateOpportunities } from '@/utils/opportunityDeduplication';
 import { LIVE_ANNOUNCEMENT_OPPORTUNITIES } from './categories/live_announcements';
 import { EXAM_OPPORTUNITIES } from './categories/exams';
 import { PRIVATE_JOB_OPPORTUNITIES } from './categories/private_jobs';
@@ -35,7 +36,7 @@ const tagCountry = (opps: Opportunity[], countryCode: Opportunity['country']): O
   }));
 };
 
-export const INITIAL_OPPORTUNITIES: Opportunity[] = [
+const RAW_INITIAL_OPPORTUNITIES: Opportunity[] = [
   // Live Official Gazette & Government Announcements (Top Priority)
   ...tagCountry(LIVE_ANNOUNCEMENT_OPPORTUNITIES, 'IN'),
 
@@ -69,3 +70,5 @@ export const INITIAL_OPPORTUNITIES: Opportunity[] = [
   ...SOUTH_AFRICA_OPPORTUNITIES,
   ...ITALY_OPPORTUNITIES,
 ];
+
+export const INITIAL_OPPORTUNITIES: Opportunity[] = deduplicateOpportunities(RAW_INITIAL_OPPORTUNITIES);

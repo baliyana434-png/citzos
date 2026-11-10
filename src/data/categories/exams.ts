@@ -465,43 +465,6 @@ export const EXAM_OPPORTUNITIES: Opportunity[] = [
   // 5. RAILWAY & POSTAL RECRUITMENTS
   // =========================================================================
   {
-    id: 'opp-rrb-ntpc-01',
-    title: 'Indian Railways RRB NTPC 2026 (11,500+ Station Master & Clerk Posts)',
-    titleHi: 'भारतीय रेलवे आरआरबी एनटीपीसी 2026 (11,500+ स्टेशन मास्टर एवं क्लर्क पद)',
-    category: 'govt_job',
-    lifeStage: 'exams',
-    targetAges: [18, 33],
-    stateEligibility: ['ALL'],
-    targetOccupations: ['job_seeker', 'employed', 'college_student'],
-    benefitHeadline: 'Central Railway Jobs (Level 2 to Level 6) with Free Railway Family Passes & Housing',
-    benefitHeadlineHi: 'केंद्रीय रेलवे पद (वेतनमान लेवल 2 से 6) + परिवार हेतु निःशुल्क रेलवे पास एवं आवास',
-    benefitAmount: 45000,
-    deadline: 'UPCOMING_ANNUAL_CYCLE',
-    applicationStatus: 'upcoming',
-    description: 'Indian Railways CEN recruitment cycle for Non-Technical Popular Categories (NTPC). Check official notification calendar and application status at rrbapply.gov.in.',
-    descriptionHi: 'भारतीय रेल द्वारा एनटीपीसी गैर-तकनीकी पदों (स्टेशन मास्टर, क्लर्क आदि) हेतु आधिकारिक परीक्षा कैलेंडर चक्र। अधिसूचना अपडेट rrbapply.gov.in पर देखें।',
-    gazette: {
-      circularNumber: 'CEN-05/2026/RRB-NTPC',
-      issuingAuthority: 'Railway Recruitment Control Board, Ministry of Railways',
-      gazetteDate: '2026-08-30',
-      lastVerifiedAt: 'Live verified 45 mins ago',
-      officialPortalUrl: 'https://rrbapply.gov.in',
-      scamAlertWarning: 'Railway jobs are filled solely through official computer-based tests. Never pay job racketeers claiming direct railway appointment letters.',
-      officialGovtFee: '₹500 (₹400 refunded after appearing in CBT-1)'
-    },
-    documents: [
-      { id: 'd-rrb-1', name: '12th Pass or Degree Certificate', nameHi: '12वीं अथवा स्नातक उत्तीर्ण प्रमाण पत्र', isMandatory: true },
-      { id: 'd-rrb-2', name: 'Aadhaar Card Linked Bank Account', nameHi: 'आधार से लिंक बैंक खाता विवरण', isMandatory: true }
-    ],
-    applySteps: [
-      { step: 1, text: 'Register on unified portal rrbapply.gov.in.', textHi: 'एकीकृत पोर्टल rrbapply.gov.in पर पंजीकरण करें।' },
-      { step: 2, text: 'Select Regional RRB zone (e.g. RRB Allahabad, RRB Mumbai).', textHi: 'अपने क्षेत्रीय रेलवे भर्ती बोर्ड (आरआरबी) जोन का चयन करें।' },
-      { step: 3, text: 'Submit application and save registration number.', textHi: 'आवेदन पत्र जमा करें और पंजीकरण संख्या सुरक्षित रखें।' }
-    ],
-    tags: ['Railway', 'Govt Job', 'Central Govt', 'RRB NTPC'],
-    is100PercentFree: false
-  },
-  {
     id: 'opp-india-post-gds-01',
     title: 'India Post GDS 2026: Gramin Dak Sevak (44,228 Posts - 100% Zero Exam, 10th Merit)',
     titleHi: 'भारतीय डाक विभाग जीडीएस 2026: ग्रामीण डाक सेवक (44,228 पद - बिना परीक्षा 10वीं मेरिट भर्ती)',

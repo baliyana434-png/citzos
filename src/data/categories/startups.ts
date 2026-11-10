@@ -112,42 +112,6 @@ export const STARTUP_OPPORTUNITIES: Opportunity[] = [
     is100PercentFree: true
   },
   {
-    id: 'opp-solar-rooftop-01',
-    title: 'PM Surya Ghar Muft Bijli Yojana: Up to ₹78,000 Direct Subsidy for 3kW Rooftop Solar',
-    titleHi: 'प्रधानमंत्री सूर्य घर मुफ्त बिजली योजना: 3 किलोवाट सोलर पैनल पर ₹78,000 सीधी सरकारी सब्सिडी',
-    category: 'startup_idea',
-    lifeStage: 'startups',
-    targetAges: [18, 75],
-    stateEligibility: ['ALL'],
-    targetOccupations: ['farmer', 'business_owner', 'homemaker', 'employed', 'senior_citizen'],
-    benefitHeadline: 'Zero Electricity Bills for 25 Years + ₹78,000 Direct Cash DBT Subsidy Deposited Within 30 Days',
-    benefitHeadlineHi: '25 वर्षों तक मुफ्त बिजली + ₹78,000 की सरकारी सब्सिडी सीधे बैंक खाते में',
-    benefitAmount: 78000,
-    deadline: 'OPEN_ROUND',
-    description: 'Central government scheme providing 60% direct capital subsidy for 1kW-2kW and ₹78,000 max subsidy for 3kW systems, allowing families and shops to generate free solar power and sell excess to the grid.',
-    descriptionHi: 'केंद्र सरकार द्वारा छत पर सोलर पैनल लगाने हेतु भारी वित्तीय सहायता, जिससे मासिक बिजली बिल शून्य हो जाता है और अतिरिक्त बिजली बेचकर कमाई होती है।',
-    gazette: {
-      circularNumber: 'MNRE/PM-SURYA-GHAR/2026/POLICY',
-      issuingAuthority: 'Ministry of New & Renewable Energy (Govt of India)',
-      gazetteDate: '2026-07-15',
-      lastVerifiedAt: 'Live verified 1 hr ago',
-      officialPortalUrl: 'https://pmsuryaghar.gov.in',
-      scamAlertWarning: 'Apply strictly on official national portal pmsuryaghar.gov.in. Never pay private solar marketing vendors who demand cash deposits.',
-      officialGovtFee: '₹0 (Free Govt Subsidy Registration)'
-    },
-    documents: [
-      { id: 'd-solar-1', name: 'Latest Electricity Bill (showing consumer number)', nameHi: 'नवीनतम बिजली बिल', isMandatory: true },
-      { id: 'd-solar-2', name: 'Aadhaar Card & Bank Account Passbook', nameHi: 'आधार कार्ड एवं बैंक खाता पासबुक', isMandatory: true }
-    ],
-    applySteps: [
-      { step: 1, text: 'Register on national portal pmsuryaghar.gov.in with consumer account number.', textHi: 'pmsuryaghar.gov.in पर अपने बिजली उपभोक्ता नंबर से रजिस्ट्रेशन करें।' },
-      { step: 2, text: 'Choose registered DISCOM vendor and install net-metering setup.', textHi: 'विद्युत वितरण कंपनी (DISCOM) के पंजीकृत वेंडर से सोलर पैनल लगवाएं।' },
-      { step: 3, text: 'Commissioning inspection leads to ₹78,000 DBT credit in bank account.', textHi: 'निरीक्षण के बाद ₹78,000 की सब्सिडी सीधे आपके बैंक खाते में जमा होगी।' }
-    ],
-    tags: ['Solar Energy', 'Free Electricity', 'Govt Subsidy', 'Clean Tech'],
-    is100PercentFree: true
-  },
-  {
     id: 'opp-biz-mushroom-01',
     title: 'Commercial Mushroom Cultivation & Processing Unit (NABARD 33% Subsidy)',
     titleHi: 'व्यावसायिक मशरूम उत्पादन एवं प्रसंस्करण इकाई (नाबार्ड 33% सरकारी सब्सिडी)',
