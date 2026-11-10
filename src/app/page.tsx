@@ -1004,6 +1004,11 @@ export default function HomePage() {
   // Sovereign Portal Opportunities (Strictly count opportunities belonging to the active Country Portal)
   const portalOpportunities = useMemo(() => {
     const raw = opportunities.filter((opp) => {
+      // 0. Automatic Deadline Expiration (Opportunity disappears once deadline closing date passes)
+      if (isOpportunityDeadlinePassed(opp.deadline)) {
+        return false;
+      }
+
       // Strict Country / Portal Matching
       const isStudyAbroad = opp.lifeStage === 'abroad_jobs' || opp.category === 'study_abroad';
       const isGlobalFreebie = opp.lifeStage === 'freebies' && (opp.stateEligibility.includes('ALL') || !opp.country);
@@ -1036,7 +1041,12 @@ export default function HomePage() {
 
   // Total Available Benefit Amount across OVERALL matched opportunities in the portal
   const totalBenefitSum = useMemo(() => {
-    return portalOpportunities.reduce((acc, curr) => acc + (curr.benefitAmount || 0), 0);
+    return portalOpportunities.reduce((acc, curr) => {
+      const amt = typeof curr.benefitAmount === 'number' && !isNaN(curr.benefitAmount) && curr.benefitAmount > 0
+        ? curr.benefitAmount
+        : 0;
+      return acc + amt;
+    }, 0);
   }, [portalOpportunities]);
 
   // Other matching sections during active search (for one-tap section switching)
@@ -1105,7 +1115,7 @@ export default function HomePage() {
 
         {/* National Citizen Portal Hero Section - Clean Theme Adaptive */}
         <div className={`${searchQuery.trim() ? 'hidden sm:block' : ''} bg-white dark:bg-[#0c0d12] rounded-2xl p-5 sm:p-7 border-2 border-slate-300 dark:border-zinc-700 shadow-sm relative overflow-hidden transition-colors`}>
-          <div className="relative z-10 max-w-3xl">
+          <div className="relative z-10 max-w-4xl lg:max-w-5xl">
             {/* Sovereign State & Registry Badge */}
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-300 text-xs font-medium border border-slate-300 dark:border-white/10">
@@ -1125,7 +1135,7 @@ export default function HomePage() {
             <h1 className="text-lg sm:text-2xl lg:text-[26px] font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
               {t('hero.headline_prefix')}{' '}
               <span className="text-emerald-600 dark:text-emerald-400 font-mono tabular-nums font-extrabold">
-                {countryMeta.currencySymbol}{totalBenefitSum.toLocaleString('en-IN')}
+                {countryMeta.currencySymbol}{totalBenefitSum.toLocaleString(countryMeta.code === 'IN' ? 'en-IN' : 'en-US')}
               </span>{' '}
               {t('hero.headline_suffix')}
             </h1>

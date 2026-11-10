@@ -1,8 +1,12 @@
 import crypto from 'crypto';
 import { CitizenSubscription } from '@/types';
 
+// Ephemeral in-memory fallback secret generated on process startup if environment variables are not provided.
+// This guarantees that even if someone inspects git history or repo defaults, they CANNOT forge tokens.
+const RUNTIME_EPHEMERAL_SECRET = crypto.randomBytes(32).toString('hex');
+
 // Server-side private secret key (Never exposed to browser/client)
-const SERVER_PAYMENT_SECRET = process.env.PAYMENT_SECRET_KEY || 'citizen_life_os_secure_key_f839a04b12c849e79d1a3b5c7e';
+const SERVER_PAYMENT_SECRET = process.env.PAYMENT_SECRET_KEY || RUNTIME_EPHEMERAL_SECRET;
 
 export class PaymentSecurityService {
   /**
@@ -28,7 +32,10 @@ export class PaymentSecurityService {
     if (isNaN(expiry.getTime()) || expiry <= now) return false;
 
     const expectedSignature = this.generateSignature(citizenId, sub.plan, sub.validUntil, sub.amount, sub.currency);
-    return crypto.timingSafeEqual(Buffer.from(sub.signature, 'hex'), Buffer.from(expectedSignature, 'hex'));
+    const subSigBuffer = Buffer.from(sub.signature, 'hex');
+    const expSigBuffer = Buffer.from(expectedSignature, 'hex');
+    if (subSigBuffer.length !== expSigBuffer.length) return false;
+    return crypto.timingSafeEqual(subSigBuffer, expSigBuffer);
   }
 
   /**
@@ -40,7 +47,7 @@ export class PaymentSecurityService {
   }
 }
 
-const SESSION_SECRET = process.env.SESSION_SECRET_KEY || process.env.PAYMENT_SECRET_KEY || 'citizen_session_hmac_secret_998124a87b';
+const SESSION_SECRET = process.env.SESSION_SECRET_KEY || process.env.PAYMENT_SECRET_KEY || RUNTIME_EPHEMERAL_SECRET;
 
 export class SessionSecurityService {
   /**
@@ -58,7 +65,7 @@ export class SessionSecurityService {
   }
 
   /**
-   * Verifies session token authenticity and expiry
+   * Verifies session token authenticity and expiry using timing-safe comparison
    */
   static verifySessionToken(token: string): { valid: boolean; citizenId?: string; email?: string } {
     if (!token || !token.includes('.')) return { valid: false };
@@ -67,20 +74,24 @@ export class SessionSecurityService {
 
     try {
       const expectedSignature = crypto.createHmac('sha256', SESSION_SECRET).update(encodedPayload).digest('base64url');
-      if (signature !== expectedSignature) return { valid: false };
+      const sigBuffer = Buffer.from(signature);
+      const expBuffer = Buffer.from(expectedSignature);
+      if (sigBuffer.length !== expBuffer.length || !crypto.timingSafeEqual(sigBuffer, expBuffer)) {
+        return { valid: false };
+      }
 
       const jsonStr = Buffer.from(encodedPayload, 'base64url').toString('utf-8');
       const payload = JSON.parse(jsonStr);
       if (Date.now() > payload.exp) return { valid: false };
 
       return { valid: true, citizenId: payload.citizenId, email: payload.email };
-    } catch (e) {
+    } catch {
       return { valid: false };
     }
   }
 }
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || process.env.SESSION_SECRET_KEY || 'citizen_admin_hmac_secret_master_998124a87b';
+const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || process.env.SESSION_SECRET_KEY || RUNTIME_EPHEMERAL_SECRET;
 
 export class AdminSecurityService {
   /**
@@ -99,7 +110,7 @@ export class AdminSecurityService {
   }
 
   /**
-   * Cryptographically verifies admin session token authenticity and expiry.
+   * Cryptographically verifies admin session token authenticity and expiry using timing-safe comparison.
    */
   static verifyAdminToken(token: string): boolean {
     if (!token || !token.includes('.')) return false;
@@ -108,7 +119,11 @@ export class AdminSecurityService {
 
     try {
       const expectedSignature = crypto.createHmac('sha256', ADMIN_SECRET).update(encodedPayload).digest('base64url');
-      if (signature !== expectedSignature) return false;
+      const sigBuffer = Buffer.from(signature);
+      const expBuffer = Buffer.from(expectedSignature);
+      if (sigBuffer.length !== expBuffer.length || !crypto.timingSafeEqual(sigBuffer, expBuffer)) {
+        return false;
+      }
 
       const jsonStr = Buffer.from(encodedPayload, 'base64url').toString('utf-8');
       const payload = JSON.parse(jsonStr);

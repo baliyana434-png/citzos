@@ -221,7 +221,18 @@ export async function POST(req: NextRequest) {
         );
       }
     } else {
-      // Sandbox fallback mode (only permitted when no live keys exist):
+      // Sandbox fallback mode (only permitted in local development when no live keys exist):
+      if (process.env.NODE_ENV === 'production') {
+        return NextResponse.json(
+          {
+            success: false,
+            errorType: 'LIVE_GATEWAY_MANDATORY',
+            message: 'उत्पादन वातावरण में केवल आधिकारिक Razorpay गेटवे सत्यापन ही मान्य है। अनधिकृत सिमुलेशन अवरोधित है।',
+          },
+          { status: 403 }
+        );
+      }
+
       // Must follow authentic simulation token format
       if (!orderId.startsWith('ORD-1-') && !orderId.startsWith('ORD-19-')) {
         return NextResponse.json(

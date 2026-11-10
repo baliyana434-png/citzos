@@ -7,9 +7,24 @@ export async function POST(req: NextRequest) {
   try {
     const forwarded = req.headers.get('x-forwarded-for');
     const ip = forwarded ? forwarded.split(',')[0].trim() : '127.0.0.1';
-    const rateKey = `admin_auth:${ip}`;
 
-    // Anti-brute-force: Max 5 attempts per 15 minutes
+    // Anti-brute-force Layer 1: Global system-wide protection (max 15 failed attempts across all IPs in 15 mins)
+    const globalLimit = rateLimiter.consume('admin_auth:global', 15, 15 * 60 * 1000, 15 * 60 * 1000);
+    if (!globalLimit.allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          errorType: 'GLOBAL_ADMIN_LOCKOUT',
+          message: `सुरक्षा अलर्ट: वैश्विक व्यवस्थापक गेट अस्थायी रूप से बंद है। कृपया ${globalLimit.resetInSeconds} सेकंड बाद प्रयास करें।`,
+          messageEn: `Security Alert: Global admin authentication gateway cooldown active for ${globalLimit.resetInSeconds}s.`,
+          retryAfter: globalLimit.resetInSeconds,
+        },
+        { status: 429 }
+      );
+    }
+
+    // Anti-brute-force Layer 2: Per-IP Protection (max 5 attempts per 15 minutes)
+    const rateKey = `admin_auth:${ip}`;
     const limit = rateLimiter.consume(rateKey, 5, 15 * 60 * 1000, 15 * 60 * 1000);
     if (!limit.allowed) {
       return NextResponse.json(
@@ -27,13 +42,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const pin = String(body.pin || '').trim();
 
-    if (!pin) {
+    if (!pin || pin.length < 6) {
       return NextResponse.json(
         {
           success: false,
-          errorType: 'MISSING_PIN',
-          message: 'कृपया व्यवस्थापक सुरक्षा पिन दर्ज करें।',
-          messageEn: 'Please enter admin security clearance PIN.',
+          errorType: 'INVALID_PIN_FORMAT',
+          message: 'कृपया वैध 6-अंकीय व्यवस्थापक सुरक्षा पिन दर्ज करें।',
+          messageEn: 'Please enter a valid 6-digit admin security clearance PIN.',
         },
         { status: 400 }
       );
@@ -63,6 +78,7 @@ export async function POST(req: NextRequest) {
 
     // PIN is authentic: reset rate-limit and generate signed admin session token
     rateLimiter.reset(rateKey);
+    rateLimiter.reset('admin_auth:global');
     const token = AdminSecurityService.generateAdminToken();
 
     return NextResponse.json({
