@@ -203,7 +203,18 @@ export default function HomePage() {
 
   // Master Citizen Account Profile (Individual citizen) - Consistent SSR hydration prevents mismatch
   const [profile, setProfile] = useState<CitizenProfile | null>(null);
-  const [isHydratingAuth, setIsHydratingAuth] = useState<boolean>(true);
+  // Skip splash on subsequent same-session navigations (e.g., back from Skill Hub / Helpline)
+  // Splash only shows on fresh website entry; sessionStorage persists within the browser tab session
+  const [isHydratingAuth, setIsHydratingAuth] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return sessionStorage.getItem('citzos_splash_shown') !== 'true';
+      } catch (_) {
+        return true;
+      }
+    }
+    return true;
+  });
 
   // Internal dynamic age calculation based on Date of Birth (Auto-increments by 1 on every birthday)
   const activeProfile = useMemo(() => {
