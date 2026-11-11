@@ -30,14 +30,12 @@ import {
   ChevronRight,
   Flame,
   Lock,
-  AlertTriangle
 } from 'lucide-react';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useCountry } from '@/context/CountryContext';
 import { SKILL_SECTORS, SKILL_TOPICS, SkillSector, SkillTopic, SkillVideo } from '@/data/skillsData';
 import { SubscriptionModal } from '@/components/subscription/SubscriptionModal';
 import { CitizenProfile, CitizenSubscription } from '@/types';
-import { LanguageSwitcher } from '@/components/common/LanguageSwitcher';
 import { isCitizenSubscribed, verifySubscriptionWithServer } from '@/lib/subscriptionValidator';
 
 export default function SkillsPage() {
@@ -424,7 +422,6 @@ export default function SkillsPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
             <Link
               href="/saved"
               prefetch={true}
@@ -511,22 +508,6 @@ export default function SkillsPage() {
         </div>
       </section>
 
-      {/* 2.5 Legal Transparency & Skill Certificate Advisory Notice */}
-      <section className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 pt-3 pb-1">
-        <div className="p-3 sm:p-4 rounded-2xl bg-amber-50/90 dark:bg-amber-950/20 border border-amber-300 dark:border-amber-700/50 text-[11px] sm:text-xs leading-relaxed text-amber-900 dark:text-amber-200 flex items-start gap-2.5 shadow-2xs">
-          <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-          <div className="space-y-0.5">
-            <strong className="font-bold text-amber-950 dark:text-amber-100 block">
-              {language === 'hi' ? 'महत्वपूर्ण सूचना (कौशल प्रमाणन एवं रोजगार अस्वीकरण):' : 'Important Advisory (Skills Certification & Employment Disclaimer):'}
-            </strong>
-            <p className="text-amber-800 dark:text-amber-300/90">
-              {language === 'hi'
-                ? 'Citzos पर कौशल (Skills) सीखना करियर जागरूकता एवं ज्ञानवर्धन हेतु है। प्रत्येक स्किल को सीखने पर प्रमाणपत्र (Certificate) मिलना अनिवार्य नहीं है—सर्टिफिकेट केवल उन्हीं कोर्सेज में मिलता है जहाँ आधिकारिक प्रदाता (जैसे Swayam, NPTEL, Skill India) इसे प्रदान करते हैं। Citzos प्रत्यक्ष रूप से कोई नौकरी या रोजगार की गारंटी नहीं देता है; हम केवल आपकी पात्रता के अनुसार सही अवसरों को प्रदर्शित करते हैं।'
-                : 'Skills featured on Citzos are curated for self-learning and career readiness. Adopting or learning any skill does NOT guarantee a completion certificate—certificates are issued exclusively by third-party educational providers (e.g. Swayam, NPTEL, Skill India) based on their criteria. Citzos does not provide direct employment or guarantee job selection; we solely display verified opportunities matching your eligibility.'}
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* 3. Sectors Pill Carousel (Apple Liquid Glass Segmented Controls) */}
       <section className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 pt-4 pb-2">
