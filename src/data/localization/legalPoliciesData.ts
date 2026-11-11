@@ -17,6 +17,10 @@ export interface DisclaimerContent {
   helplineTitle: string;
   helplineSub: string;
   helplineBtn: string;
+  sec4Title?: string;
+  sec4Text?: string;
+  sec5Title?: string;
+  sec5Text?: string;
 }
 
 export interface PrivacyContent {
@@ -117,6 +121,10 @@ export const DISCLAIMER_LOCALES: Record<SupportedLanguage, DisclaimerContent> = 
     sec3Text: 'The final decision to select, approve, or disburse benefits for any government program, scholarship, or recruitment exam rests solely with the competent government department, selection board, or ministry. Our platform provides initial eligibility orientation based on your registered criteria.',
     helplineTitle: 'For any emergency or civic assistance:',
     helplineSub: 'Access our 24x7 verified national helpline directory.',
+    sec4Title: 'Zero Direct Employment & Placement Guarantee',
+    sec4Text: 'Citzos does NOT provide direct employment, jobs, or recruitment placement services, nor do we guarantee hiring or exam selection. Citzos functions exclusively as an eligibility-based informational discovery engine. Our objective is solely to aggregate and highlight verified public opportunities and career pathways tailored to your demographic eligibility that you may not have been aware of. Citizens apply directly on the respective official government and institutional portals.',
+    sec5Title: 'Skill Learning & Certificate Non-Guarantee Advisory',
+    sec5Text: 'Acquiring or studying any skill track or video module on Citzos does NOT guarantee the issuance of a completion certificate. Certificates are strictly subject to the independent policies, assessments, and criteria of third-party educational providers (such as Swayam, NPTEL, Skill India, etc.) if and when offered by them.',
     helplineBtn: 'View Helplines',
   },
   hi: {
@@ -140,6 +148,10 @@ export const DISCLAIMER_LOCALES: Record<SupportedLanguage, DisclaimerContent> = 
     sec3Text: 'किसी भी सरकारी योजना, छात्रवृत्ति या परीक्षा में चयन, स्वीकृति या वित्तीय लाभ प्रदान करने का संपूर्ण एवं अंतिम अधिकार केवल संबंधित सरकारी विभाग, चयन बोर्ड या मंत्रालय के पास सुरक्षित रहता है। इस प्लेटफ़ॉर्म द्वारा की गई गणना केवल आपकी दी गई जानकारी पर आधारित प्राथमिक मार्गदर्शन है।',
     helplineTitle: 'किसी भी आपातकालीन या सरकारी सहायता के लिए:',
     helplineSub: 'हमारे 24x7 सत्यापित राष्ट्रीय हेल्पलाइन डायरेक्टरी का उपयोग करें।',
+    sec4Title: 'शून्य प्रत्यक्ष रोजगार व प्लेसमेंट गारंटी अस्वीकरण',
+    sec4Text: 'Citzos प्रत्यक्ष अथवा व्यक्तिगत रूप से कोई नौकरी, रोजगार या भर्ती प्रदान नहीं करता है और न ही किसी चयन या प्लेसमेंट की गारंटी लेता है। Citzos केवल एक सूचनात्मक अवसर खोज इंजन (Discovery Engine) है। हमारा कार्य केवल नागरिक की योग्यता व पात्रता के अनुसार उन प्रामाणिक अवसरों, योजनाओं व सूचनाओं को प्रदर्शित करना है, जिनके बारे में आपको पूर्व जानकारी नहीं थी। नागरिक संबंधित आधिकारिक सरकारी अथवा संस्थान के पोर्टल पर सीधे स्वयं आवेदन करते हैं।',
+    sec5Title: 'कौशल सीखने व प्रमाणपत्र अनिवार्यता अस्वीकरण',
+    sec5Text: 'Citzos पर प्रदर्शित किसी भी कौशल (Skill) या पाठ्यक्रम को सीखने पर प्रमाणपत्र (Certificate) मिलना अनिवार्य नहीं है। प्रमाणपत्र केवल उन्हीं कार्यक्रमों में प्रदान किया जाता है जहाँ आधिकारिक तृतीय-पक्ष संस्था (जैसे Swayam, NPTEL, Skill India आदि) इसे अपनी शर्तों व परीक्षाओं के आधार पर जारी करती है।',
     helplineBtn: 'हेल्पलाइन देखें',
   },
   es: {
@@ -417,7 +429,7 @@ export const TERMS_LOCALES: Record<SupportedLanguage, TermsContent> = {
     sec1Text: 'By accessing or registering on Citzos, you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, please discontinue using the platform.',
     sec2Title: 'Nature of Service',
     sec2Text: 'Our platform operates as an independent EdTech & career readiness software portal, presenting organized educational study materials, competitive exam syllabus, and career skill learning tracks aggregated directly from official institutional publications and recognized educational boards.',
-    sec2Note: 'We are strictly an educational technology and career skill readiness learning dashboard. We do not provide employment, recruitment, or government administrative services. The nominal ₹1 annual subscription is exclusively towards digital software hosting, server maintenance, and learning dashboard technology.',
+    sec2Note: 'We are strictly an educational technology, career skill readiness, and civic opportunity discovery software portal. We do NOT provide employment, recruitment, or placement guarantees, nor do we guarantee completion certificates for external skills. The nominal ₹1 annual subscription is exclusively towards digital software hosting, server maintenance, and eligibility search technology.',
     sec3Title: 'User Obligations & Integrity',
     sec3Points: [
       'Citizens are responsible for providing authentic demographic details (age, category, state) during profile setup.',
@@ -438,7 +450,7 @@ export const TERMS_LOCALES: Record<SupportedLanguage, TermsContent> = {
     sec1Text: 'Citzos का उपयोग करके या इस पर पंजीकरण करके आप इन नियमों व शर्तों से पूर्णतः सहमत होते हैं। यदि आप इनमें से किसी भी शर्त से असहमत हैं, तो कृपया प्लेटफ़ॉर्म का उपयोग न करें।',
     sec2Title: 'सेवा की प्रकृति',
     sec2Text: 'हमारा प्लेटफ़ॉर्म एक स्वतंत्र एडटेक व करियर लर्निंग सॉफ़्टवेयर पोर्टल है, जो विद्यार्थियों व नागरिकों को प्रतियोगी परीक्षा पाठ्यक्रम, कौशल विकास मॉड्यूल और करियर अध्ययन सामग्री को संगठित रूप में प्रदान करता है।',
-    sec2Note: 'हम कोई नौकरी प्रदाता, भर्ती एजेंसी या जॉब लिस्टिंग सेवा संचालित नहीं करते हैं। प्लेटफ़ॉर्म पर लिया जाने वाला ₹1 का वार्षिक शुल्क केवल डिजिटल प्लेटफ़ॉर्म सॉफ़्टवेयर सर्वर रख-रखाव एवं लर्निंग डैशबोर्ड की तकनीकी सेवा हेतु है।',
+    sec2Note: 'हम कोई नौकरी प्रदाता, भर्ती एजेंसी या प्लेसमेंट फर्म नहीं हैं। हम प्रत्यक्ष रूप से कोई जॉब प्रदान नहीं करते और न ही किसी चयन या नौकरी की गारंटी लेते हैं; हम केवल आपकी पात्रता के अनुसार उन अवसरों को एकत्रित करके दिखाते हैं जिनकी सामान्यतः जानकारी नहीं होती। इसके अतिरिक्त, किसी भी स्किल को सीखने पर प्रमाणपत्र मिलना अनिवार्य नहीं है। ₹1 का वार्षिक शुल्क केवल डिजिटल सॉफ़्टवेयर सर्वर रख-रखाव एवं तकनीकी सेवा हेतु है।',
     sec3Title: 'सत्य विवरण एवं आचरण',
     sec3Points: [
       'उपयोगकर्ता पंजीकरण करते समय सत्य एवं प्रामाणिक विवरण (जैसे वास्तविक आयु, वर्ग, राज्य) दर्ज करने के लिए उत्तरदायी है।',

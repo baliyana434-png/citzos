@@ -103,6 +103,32 @@ export default function DisclaimerPage() {
             <p>{d.sec3Text}</p>
           </section>
 
+          {/* Section 4: Zero Direct Job Guarantee & Informational Discovery */}
+          {d.sec4Title && (
+            <section className="space-y-2 p-5 rounded-2xl bg-amber-50/70 border-2 border-amber-300/80">
+              <h3 className="text-base font-black text-amber-950 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-amber-200 text-amber-900 flex items-center justify-center text-xs font-black">
+                  4
+                </span>
+                <span>{d.sec4Title}</span>
+              </h3>
+              <p className="text-amber-900/90 leading-relaxed font-medium">{d.sec4Text}</p>
+            </section>
+          )}
+
+          {/* Section 5: Skill Learning & Certificate Non-Guarantee Advisory */}
+          {d.sec5Title && (
+            <section className="space-y-2 p-5 rounded-2xl bg-sky-50/70 border-2 border-sky-300/80">
+              <h3 className="text-base font-black text-sky-950 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-lg bg-sky-200 text-sky-900 flex items-center justify-center text-xs font-black">
+                  5
+                </span>
+                <span>{d.sec5Title}</span>
+              </h3>
+              <p className="text-sky-900/90 leading-relaxed font-medium">{d.sec5Text}</p>
+            </section>
+          )}
+
           {/* Official Helplines Link */}
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3 text-xs">
             <div>
