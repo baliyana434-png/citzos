@@ -32,7 +32,7 @@ export interface EmailDispatchResult {
 
 const FIREBASE_API_KEY =
   process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
-  '';
+  'AIzaSyAOHH-q4-mKpTHcwUjezHrlBFDo9Xs3u44';
 
 const DEFAULT_SMTP_USER = process.env.SMTP_USER || '';
 const DEFAULT_SMTP_PASS = process.env.SMTP_PASS || '';
