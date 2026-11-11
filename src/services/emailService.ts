@@ -34,8 +34,8 @@ const FIREBASE_API_KEY =
   process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
   'AIzaSyAOHH-q4-mKpTHcwUjezHrlBFDo9Xs3u44';
 
-const DEFAULT_SMTP_USER = 'baliyana434@gmail.com';
-const DEFAULT_SMTP_PASS = 'mhaj gpbw lizc xotk';
+const DEFAULT_SMTP_USER = process.env.SMTP_USER || '';
+const DEFAULT_SMTP_PASS = process.env.SMTP_PASS || '';
 
 export class EmailService {
   /**
