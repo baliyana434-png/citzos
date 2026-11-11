@@ -1,7 +1,7 @@
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth, Auth } from 'firebase/auth';
 
-const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAOHH-q4-mKpTHcwUjezHrlBFDo9Xs3u44';
+const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || '';
 
 // Dynamic custom authDomain: seamlessly uses www.citzos.in when hosted on citzos to prevent firebaseapp.com in browser URL
 export const getCustomAuthDomain = (): string => {
