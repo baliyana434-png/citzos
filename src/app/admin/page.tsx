@@ -886,7 +886,7 @@ export default function AdminPage() {
     }`}>
       {/* Top Header Bar */}
       <header className={`sticky top-0 z-30 border-b px-4 sm:px-6 lg:px-8 py-3 transition-colors ${
-        theme === 'dark' ? 'bg-slate-950/98 border-slate-800' : 'bg-white/98 border-slate-200 shadow-xs'
+        theme === 'dark' ? 'bg-[#0c0d12] border-white/15 shadow-md' : 'bg-white border-slate-300 shadow-sm'
       }`}>
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">

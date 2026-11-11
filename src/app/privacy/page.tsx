@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white antialiased flex flex-col">
       {/* Top Bar */}
-      <header className="sticky top-0 z-30 w-full bg-white/98 dark:bg-[#0c0d12]/98 border-b border-slate-200 dark:border-white/10">
+      <header className="sticky top-0 z-30 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/15">
         <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link
             href="/"
