@@ -143,7 +143,34 @@ interface CrawlerLog {
   status: 'success' | 'error' | 'info';
 }
 
+// Persistent admin token helpers supporting cross-tab persistence and uninterrupted sessions
+const getStoredAdminToken = (): string | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    return localStorage.getItem('admin_token') || sessionStorage.getItem('admin_token');
+  } catch {
+    return null;
+  }
+};
+
+const storeAdminToken = (token: string) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('admin_token', token);
+    sessionStorage.setItem('admin_token', token);
+  } catch {}
+};
+
+const clearStoredAdminToken = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.removeItem('admin_token');
+    sessionStorage.removeItem('admin_token');
+  } catch {}
+};
+
 export default function AdminPage() {
+  const [isInitializing, setIsInitializing] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [pinInput, setPinInput] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -247,12 +274,13 @@ export default function AdminPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Check saved session token on mount
+  // Check saved session token on mount (both localStorage and sessionStorage)
   useEffect(() => {
-    const token = sessionStorage.getItem('admin_token');
+    const token = getStoredAdminToken();
     if (token) {
       setIsAuthenticated(true);
     }
+    setIsInitializing(false);
   }, []);
 
   // Cooldown countdown timer for brute-force lockouts
@@ -275,7 +303,7 @@ export default function AdminPage() {
   const fetchCitizens = async (tokenOverride?: string) => {
     try {
       setIsLoadingCitizens(true);
-      const token = tokenOverride || sessionStorage.getItem('admin_token');
+      const token = tokenOverride || getStoredAdminToken();
       if (!token) {
         setIsAuthenticated(false);
         return;
@@ -286,7 +314,7 @@ export default function AdminPage() {
         },
       });
       if (res.status === 401) {
-        sessionStorage.removeItem('admin_token');
+        clearStoredAdminToken();
         setIsAuthenticated(false);
         setErrorMessage('सुरक्षा सत्र समाप्त हो गया है। कृपया मास्टर पिन (242022) से पुनः लॉगिन करें।');
         return;
@@ -306,7 +334,7 @@ export default function AdminPage() {
   const fetchSystemStatus = async (tokenOverride?: string) => {
     try {
       setIsLoadingStatus(true);
-      const token = tokenOverride || sessionStorage.getItem('admin_token');
+      const token = tokenOverride || getStoredAdminToken();
       if (!token) return;
 
       const res = await fetch('/api/admin/system-status', {
@@ -329,7 +357,7 @@ export default function AdminPage() {
   const fetchOpportunities = async (tokenOverride?: string) => {
     try {
       setIsLoadingOpps(true);
-      const token = tokenOverride || sessionStorage.getItem('admin_token');
+      const token = tokenOverride || getStoredAdminToken();
       if (!token) return;
 
       const res = await fetch('/api/admin/opportunities?dateRange=all', {
@@ -363,7 +391,7 @@ export default function AdminPage() {
   // Fetch real registered push devices and status
   const fetchPushStats = async (tokenOverride?: string | React.MouseEvent) => {
     try {
-      const token = typeof tokenOverride === 'string' ? tokenOverride : sessionStorage.getItem('admin_token') || '';
+      const token = typeof tokenOverride === 'string' ? tokenOverride : getStoredAdminToken() || '';
       const res = await fetch('/api/notifications/send-push', {
         headers: { 'x-admin-token': token },
       });
@@ -386,7 +414,7 @@ export default function AdminPage() {
     try {
       setIsSendingPush(true);
       setPushFeedback(null);
-      const token = sessionStorage.getItem('admin_token') || '';
+      const token = getStoredAdminToken() || '';
       const res = await fetch('/api/notifications/send-push', {
         method: 'POST',
         headers: {
@@ -457,7 +485,7 @@ export default function AdminPage() {
         return;
       }
 
-      sessionStorage.setItem('admin_token', data.token);
+      storeAdminToken(data.token);
       setIsAuthenticated(true);
       setPinInput('');
       fetchCitizens(data.token);
@@ -472,7 +500,7 @@ export default function AdminPage() {
   };
 
   const handleAdminLogout = () => {
-    sessionStorage.removeItem('admin_token');
+    clearStoredAdminToken();
     setIsAuthenticated(false);
     setPinInput('');
     setErrorMessage(null);
@@ -697,6 +725,19 @@ export default function AdminPage() {
   };
 
   // -------------------------------------------------------------
+  if (isInitializing) {
+    return (
+      <div className={`min-h-screen flex items-center justify-center p-4 transition-colors duration-200 ${
+        theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-900'
+      }`}>
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+          <span className="text-xs text-slate-400 font-mono tracking-wider">Verifying Security Clearance...</span>
+        </div>
+      </div>
+    );
+  }
+
   // SCREEN 1: PROFESSIONAL EXECUTIVE AUTHENTICATION GATEWAY
   // -------------------------------------------------------------
   if (!isAuthenticated) {
