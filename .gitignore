@@ -43,3 +43,4 @@ src/data/otp_cache.json
 
 test-results/
 scratch/
+*.backup

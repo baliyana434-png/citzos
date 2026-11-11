@@ -58,6 +58,41 @@ export const Header: React.FC<HeaderProps> = ({
     };
   }, [favoriteCount]);
 
+  // Mobile bfcache & back navigation restore: ensures header/logo visibility and resets overlay state
+  useEffect(() => {
+    const restoreHeaderAndLogo = () => {
+      setIsMobileSearchOpen(false);
+      setIsLangMenuOpen(false);
+
+      const logoEl = document.querySelector('header img[alt="CITZOS"]') as HTMLImageElement | null;
+      if (logoEl) {
+        logoEl.style.opacity = '1';
+        logoEl.style.visibility = 'visible';
+        logoEl.style.display = 'block';
+        if (!logoEl.complete || logoEl.naturalWidth === 0) {
+          const currentSrc = logoEl.src;
+          logoEl.src = '';
+          logoEl.src = currentSrc || '/logo-citzos.png';
+        }
+      }
+    };
+
+    window.addEventListener('pageshow', restoreHeaderAndLogo);
+    window.addEventListener('popstate', restoreHeaderAndLogo);
+    window.addEventListener('hashchange', restoreHeaderAndLogo);
+    const handleVis = () => {
+      if (!document.hidden) restoreHeaderAndLogo();
+    };
+    document.addEventListener('visibilitychange', handleVis);
+
+    return () => {
+      window.removeEventListener('pageshow', restoreHeaderAndLogo);
+      window.removeEventListener('popstate', restoreHeaderAndLogo);
+      window.removeEventListener('hashchange', restoreHeaderAndLogo);
+      document.removeEventListener('visibilitychange', handleVis);
+    };
+  }, []);
+
   const languages: { code: SupportedLanguage; label: string }[] = [
     { code: 'en', label: 'English' },
     { code: 'hi', label: 'हिन्दी' },
@@ -145,6 +180,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform group-hover:scale-102 select-none"
                 loading="eager"
                 decoding="sync"
+                style={{ opacity: 1, visibility: 'visible', display: 'block' }}
               />
             </Link>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden xl:block whitespace-nowrap border-l border-slate-200 dark:border-white/10 pl-2 ml-0.5">

@@ -579,3 +579,16 @@ input::-webkit-contacts-auto-fill-button {
   position: absolute !important;
   right: 0 !important;
 }
+
+
+/* Mobile bfcache & Back Navigation Header Logo Safety Net */
+@media (max-width: 768px) {
+  header, .glass-header {
+    visibility: visible !important;
+  }
+  header img[alt="CITZOS"] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+  }
+}
