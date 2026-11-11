@@ -29,3 +29,21 @@ All agent interactions and tasks must leverage the full power of the installed e
 - Strictly ZERO EMOJIS in all code, comments, responses, and git commits.
 - Hinglish communication style with the user.
 - Clickable markdown links with `file://` scheme for all referenced files.
+
+## Frozen Modules & Strict Zero-Touch Auth Protection Policy
+The following authentication, credentials, and onboarding modules are PERMANENTLY LOCKED and FROZEN in production:
+1. `src/services/firebase.ts` (Firebase Web Client initialization and public fallback keys)
+2. `src/services/googleAuth.ts` (Google OAuth authentication engine and error handler)
+3. `src/services/firebaseAuth.ts` (Mobile phone SMS OTP verification)
+4. `src/services/emailService.ts` (Email dispatch and Firebase client fallback)
+5. `src/components/auth/AuthModal.tsx` (Sign in, Sign up, OTP verification, and Password Reset UI)
+6. `src/components/auth/AadhaarAuthModal.tsx` (Aadhaar KYC verification UI)
+7. `src/app/login/page.tsx` (Citizen Login page route)
+8. `src/app/register/page.tsx` (Citizen Registration page route)
+9. `src/app/api/auth/**` (All authentication API endpoints)
+
+### Permanent Operating Rules for Locked Modules:
+- UNDER NO CIRCUMSTANCES should any agent, automated tool, or audit script modify, refactor, reformat, sanitize, or delete code in these files unless the user explicitly commands: "unlock and modify <exact-file-name>".
+- The Firebase Client Web API Key (`AIzaSyAOHH-q4-mKpTHcwUjezHrlBFDo9Xs3u44`) is a public client-side identifier needed by Firebase Web SDK in the citizen's browser. It is NOT a private secret. It MUST NEVER be purged, replaced with empty strings, or removed.
+- Technical developer error messages (e.g. "Firebase Auth is not configured...") must NEVER be shown to end users or citizens under any circumstance.
+

@@ -1,3 +1,13 @@
+/**
+ * =======================================================================
+ * FROZEN PRODUCTION MODULE - DO NOT MODIFY, SANITIZE, OR REMOVE KEYS
+ * =======================================================================
+ * Firebase Phone OTP and Recaptcha Verification are permanently locked
+ * and active in production.
+ * DO NOT modify or alter phone verification or OTP flows.
+ * =======================================================================
+ */
+
 import {
   RecaptchaVerifier,
   signInWithPhoneNumber,

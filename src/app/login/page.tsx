@@ -1,3 +1,11 @@
+/**
+ * =======================================================================
+ * FROZEN PRODUCTION ROUTE - DO NOT MODIFY OR REFACTOR
+ * =======================================================================
+ * Citizen Login page route is permanently locked and verified for production.
+ * =======================================================================
+ */
+
 'use client';
 
 import React, { Suspense, useEffect, useState } from 'react';

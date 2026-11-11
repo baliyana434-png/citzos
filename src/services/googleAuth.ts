@@ -1,3 +1,13 @@
+/**
+ * =======================================================================
+ * FROZEN PRODUCTION MODULE - DO NOT MODIFY, SANITIZE, OR REMOVE KEYS
+ * =======================================================================
+ * Google OAuth Authentication engine and error handlers are permanently
+ * locked and verified for production at citzos.in.
+ * DO NOT modify or alter authentication flow, popup/redirect handling, or fallbacks.
+ * =======================================================================
+ */
+
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -173,12 +183,12 @@ export function getGoogleAuthErrorMessage(
 
   if (code.includes('not configured') || code.includes('not-configured')) {
     const messages: Record<SupportedLanguage, string> = {
-      en: 'Firebase Auth is not configured. Please check environment variables.',
-      hi: 'Firebase Auth कॉन्फ़िगर नहीं है। कृपया व्यवस्थापक से संपर्क करें।',
-      es: 'Firebase Auth no esta configurado.',
-      fr: 'Firebase Auth n\'est pas configure.',
-      de: 'Firebase Auth ist nicht konfiguriert.',
-      ar: 'Firebase Auth غير مهيا.',
+      en: 'Authentication service temporarily busy. Please try signing in with email or click again.',
+      hi: 'प्रमाणीकरण सेवा अस्थायी रूप से व्यस्त है। कृपया ईमेल से लॉगिन करें या पुनः प्रयास करें।',
+      es: 'Servicio de autenticacion temporalmente ocupado. Por favor use el correo electronico.',
+      fr: 'Service d\'authentification temporairement indisponible. Veuillez vous connecter avec votre adresse e-mail.',
+      de: 'Authentifizierungsdienst vorubergehend beschaftigt. Bitte mit E-Mail anmelden.',
+      ar: 'خدمة المصادقة مشغولة مؤقتا. يرجى تسجيل الدخول باستخدام البريد الإلكتروني.',
     };
     return messages[language] || messages.en;
   }

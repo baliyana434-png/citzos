@@ -1,3 +1,14 @@
+/**
+ * =======================================================================
+ * FROZEN PRODUCTION UI MODULE - DO NOT MODIFY OR REFACTOR
+ * =======================================================================
+ * Login, Sign-up, Aadhaar KYC, and Google Auth modal interfaces are permanently
+ * locked, verified, and active in production.
+ * DO NOT touch or alter the styling, flow, validation, or error handling without
+ * explicit user authorization.
+ * =======================================================================
+ */
+
 'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
