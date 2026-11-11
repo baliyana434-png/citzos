@@ -35,8 +35,6 @@ export const Header: React.FC<HeaderProps> = ({
   const [liveFavCount, setLiveFavCount] = useState<number>(favoriteCount);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
-  const [headerLogoSrc, setHeaderLogoSrc] = useState<string>('/logo-citzos.png');
-  const [headerLogoFailed, setHeaderLogoFailed] = useState<boolean>(false);
 
   useEffect(() => {
     const updateCount = () => {
@@ -139,35 +137,15 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center group cursor-pointer block hover:opacity-95 transition-opacity"
               aria-label="Citzos Home"
             >
-              {!headerLogoFailed ? (
-                <img
-                  src={headerLogoSrc}
-                  alt="CITZOS"
-                  width={130}
-                  height={34}
-                  className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform group-hover:scale-102 select-none"
-                  loading="eager"
-                  decoding="sync"
-                  onError={() => {
-                    if (headerLogoSrc === '/logo-citzos.png') {
-                      setHeaderLogoSrc('/logo-transparent.png');
-                    } else if (headerLogoSrc === '/logo-transparent.png') {
-                      setHeaderLogoSrc('/brand-logo-full.png');
-                    } else {
-                      setHeaderLogoFailed(true);
-                    }
-                  }}
-                />
-              ) : (
-                <div className="flex items-center gap-1.5 select-none py-1">
-                  <div className="w-6 h-6 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-black text-xs shadow-xs">
-                    C
-                  </div>
-                  <span className="text-base font-black tracking-tight text-slate-900 dark:text-white font-mono leading-none">
-                    CITZ<span className="text-emerald-600 dark:text-emerald-400">[OS]</span>
-                  </span>
-                </div>
-              )}
+              <img
+                src="/logo-citzos.png"
+                alt="CITZOS"
+                width={130}
+                height={34}
+                className="h-7 sm:h-8 md:h-8.5 w-auto object-contain transition-transform group-hover:scale-102 select-none"
+                loading="eager"
+                decoding="sync"
+              />
             </Link>
             <p className="text-[11px] text-slate-500 dark:text-slate-400 hidden xl:block whitespace-nowrap border-l border-slate-200 dark:border-white/10 pl-2 ml-0.5">
               {t('app_tagline')}
@@ -308,6 +286,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onOpenProfile}
               className="h-8 w-8 sm:h-9 sm:w-auto p-0 sm:pl-1 sm:pr-3 rounded-full border border-slate-300 dark:border-zinc-700 bg-white dark:bg-[#121318] hover:bg-slate-100 dark:hover:bg-[#1c1d24] text-slate-900 dark:text-white font-bold text-xs flex items-center justify-center sm:gap-2 transition-all focus:ring-2 focus:ring-emerald-500/30 relative overflow-hidden cursor-pointer shrink-0 shadow-2xs active:scale-[0.98] mr-0.5 sm:mr-0"
               aria-label={t('profile_btn')}
+              suppressHydrationWarning
             >
               <div className="w-full h-full sm:w-7 sm:h-7 rounded-full bg-slate-900 dark:bg-zinc-800 text-white flex items-center justify-center text-xs font-bold overflow-hidden shrink-0">
                 {profile.photoURL ? (
@@ -327,7 +306,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <User className="w-4 h-4 text-slate-300" />
                 )}
               </div>
-              <span className="hidden sm:inline text-xs font-bold max-w-[80px] truncate">
+              <span className="hidden sm:inline text-xs font-bold max-w-[80px] truncate" suppressHydrationWarning>
                 {profile.fullName ? profile.fullName.split(' ')[0] : t('profile_btn')}
               </span>
             </button>

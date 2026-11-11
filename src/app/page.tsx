@@ -201,19 +201,33 @@ export default function HomePage() {
   const { t, language } = useTranslation();
   const { country, setCountry, countryMeta } = useCountry();
 
-  // Master Citizen Account Profile (Individual citizen) - Consistent SSR hydration prevents mismatch
-  const [profile, setProfile] = useState<CitizenProfile | null>(null);
-  // Skip splash on subsequent same-session navigations (e.g., back from Skill Hub / Helpline)
-  // Splash only shows on fresh website entry; sessionStorage persists within the browser tab session
-  const [isHydratingAuth, setIsHydratingAuth] = useState<boolean>(() => {
+  // Synchronous citizen profile hydration on frame 0 to guarantee zero layout shift
+  const [profile, setProfile] = useState<CitizenProfile | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('citizen_profile');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.id && parsed.id !== 'cit-guest' && parsed.id !== 'cit-default') {
+            return parsed;
+          }
+        }
+      } catch (_) {}
+    }
+    return null;
+  });
+
+  // Splash animation controller: ONLY active on initial fresh site visit in a browser session.
+  // On returning navigations (e.g., back from Skill Hub or Helpline), splash is strictly disabled.
+  const [showSplash, setShowSplash] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       try {
         return sessionStorage.getItem('citzos_splash_shown') !== 'true';
       } catch (_) {
-        return true;
+        return false;
       }
     }
-    return true;
+    return false;
   });
 
   // Internal dynamic age calculation based on Date of Birth (Auto-increments by 1 on every birthday)
@@ -279,8 +293,16 @@ export default function HomePage() {
     }
   };
 
-  // User Starred / Favorite Opportunities State
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set<string>());
+  // User Starred / Favorite Opportunities State (synchronous init from localStorage for zero-flicker)
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('citizen_favorites');
+        if (saved) return new Set<string>(JSON.parse(saved));
+      } catch (_) {}
+    }
+    return new Set<string>();
+  });
 
   // Safe client mount hydration for master profile, Google redirect result & favorite IDs
   useEffect(() => {
@@ -301,7 +323,7 @@ export default function HomePage() {
               email: redirectUser.email,
               photoURL: redirectUser.photoURL,
             });
-            setIsHydratingAuth(false);
+            setShowSplash(false);
             return;
           }
         } catch (err) {
@@ -314,7 +336,7 @@ export default function HomePage() {
         const isLoggedOut = localStorage.getItem('citizen_logged_out');
         if (isLoggedOut === 'true') {
           setProfile(null);
-          setIsHydratingAuth(false);
+          setShowSplash(false);
           window.location.replace('/login?from=logout');
           return;
         }
@@ -367,7 +389,7 @@ export default function HomePage() {
             if (parsed.country) {
               setCountry(parsed.country);
             }
-            setIsHydratingAuth(false);
+            setShowSplash(false);
             return;
           }
         }
@@ -383,7 +405,7 @@ export default function HomePage() {
             if (meData.citizen.country) {
               setCountry(meData.citizen.country);
             }
-            setIsHydratingAuth(false);
+            setShowSplash(false);
             return;
           }
         } catch (e) {}
@@ -393,7 +415,7 @@ export default function HomePage() {
 
       // 4. Not authenticated -> redirect to /login
       setProfile(null);
-      setIsHydratingAuth(false);
+      setShowSplash(false);
       window.location.replace('/login');
     }
 
@@ -1046,12 +1068,14 @@ export default function HomePage() {
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
-  if (isHydratingAuth) {
-    return <BrandSplashScreen />;
-  }
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-x-hidden">
+      {/* Brand Splash Screen Overlay: ONLY on initial fresh site entry, NEVER on page back navigation */}
+      {showSplash && (
+        <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#0b0b0e] flex items-center justify-center transition-opacity duration-300">
+          <BrandSplashScreen />
+        </div>
+      )}
       {/* Ambient Aura Background - GPU-Accelerated Zero-Lag Radial Gradient */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.12),rgba(255,255,255,0))] dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(16,185,129,0.08),rgba(0,0,0,0))]" />
 
@@ -1112,7 +1136,7 @@ export default function HomePage() {
             {/* Headline */}
             <h1 className="text-lg sm:text-2xl lg:text-[26px] font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
               {t('hero.headline_prefix')}{' '}
-              <span className="text-emerald-600 dark:text-emerald-400 font-mono tabular-nums font-extrabold">
+              <span className="text-emerald-600 dark:text-emerald-400 font-mono tabular-nums font-extrabold" suppressHydrationWarning>
                 {countryMeta.currencySymbol}{totalBenefitSum.toLocaleString(countryMeta.code === 'IN' ? 'en-IN' : 'en-US')}
               </span>{' '}
               {t('hero.headline_suffix')}
