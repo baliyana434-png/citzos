@@ -1069,7 +1069,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased selection:bg-emerald-500 selection:text-white relative overflow-x-clip">
       {/* Brand Splash Screen Overlay: ONLY on initial fresh site entry, NEVER on page back navigation */}
       {showSplash && (
         <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#0b0b0e] flex items-center justify-center transition-opacity duration-300">

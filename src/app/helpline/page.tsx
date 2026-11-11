@@ -90,7 +90,7 @@ export default function HelplinePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white flex flex-col antialiased overflow-x-clip">
       {/* Top Banner Strip - Theme Adaptive */}
       <div className="w-full bg-white dark:bg-[#0c0d12] text-slate-700 dark:text-slate-300 text-[10px] sm:text-[11px] py-1.5 px-3 sm:px-8 border-b border-slate-300 dark:border-zinc-800 flex items-center justify-between transition-colors">
         <div className="flex items-center gap-1.5 sm:gap-2 truncate">
@@ -105,7 +105,7 @@ export default function HelplinePage() {
       </div>
 
       {/* Navigation Header */}
-      <header className="sticky top-0 z-30 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/15 shadow-xs">
+      <header className="sticky top-0 z-50 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/18 shadow-sm citzos-header">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             {/* Left: Back Link */}

@@ -311,7 +311,7 @@ export default function SavedPage() {
       </div>
 
       {/* 1. Header Navigation */}
-      <header className="sticky top-0 z-30 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/15 shadow-xs">
+      <header className="sticky top-0 z-50 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/18 shadow-sm citzos-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 gap-3">
             {/* Back Button & Title */}

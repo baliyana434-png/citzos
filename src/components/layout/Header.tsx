@@ -113,7 +113,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/15 shadow-sm transition-colors duration-150 relative">
+    <header className="sticky top-0 z-50 w-full bg-white dark:bg-[#0c0d12] border-b border-slate-300 dark:border-white/18 shadow-sm transition-colors duration-150 citzos-header">
       {/* Mobile Full-Width Search Bar Overlay (Covers Header completely for effortless typing) */}
       {isMobileSearchOpen && (
         <div className="absolute inset-0 bg-white dark:bg-black px-3 flex items-center gap-2 z-50 sm:hidden animate-in fade-in duration-100">

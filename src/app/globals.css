@@ -113,21 +113,37 @@ h1, h2, h3, h4, h5, h6, p, span, a, button, label, input {
 
 /* Universal 100% Solid Non-Transparent Header (Zero See-Through Bleed on Scroll) */
 header,
-.glass-header {
+.glass-header,
+.citzos-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+  width: 100% !important;
   background-color: #ffffff !important;
   background: #ffffff !important;
   border-bottom: 1.5px solid #cbd5e1 !important;
+  border-color: #cbd5e1 !important;
   box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.08) !important;
   opacity: 1 !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
 }
 
 .dark header,
-.dark .glass-header {
+.dark .glass-header,
+.dark .citzos-header {
   background-color: #0c0d12 !important;
   background: #0c0d12 !important;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.16) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.95) !important;
   opacity: 1 !important;
+  transform: none !important;
+  -webkit-transform: none !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
 }
 
 .dark .border-slate-200,
@@ -138,6 +154,21 @@ header,
 .dark .border-gray-200,
 .dark .border-gray-300 {
   border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Guarantee crisp, visible header bottom borders in both light and dark modes overriding any generic utility */
+header,
+.glass-header,
+.citzos-header {
+  border-bottom: 1.5px solid #cbd5e1 !important;
+  border-bottom-color: #cbd5e1 !important;
+}
+
+.dark header,
+.dark .glass-header,
+.dark .citzos-header {
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.18) !important;
 }
 
 /* Contrast & Word Visibility Booster Across All Themes */
@@ -630,9 +661,7 @@ summary {
   contain-intrinsic-size: 0 170px;
 }
 
-/* 4. GPU-composited rendering for zero jitter on low-end devices */
-header,
-.glass-header,
+/* 4. GPU-composited rendering for zero jitter on interactive controls */
 button,
 a,
 [role="button"] {
@@ -640,9 +669,4 @@ a,
   -webkit-transform: translateZ(0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-}
-
-/* 5. Smooth iOS momentum scrolling */
-* {
-  -webkit-overflow-scrolling: touch;
 }
