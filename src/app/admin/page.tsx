@@ -462,7 +462,7 @@ export default function AdminPage() {
   // Handle Master PIN Authentication
   const handlePinSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!pinInput || pinInput.length < 4 || isVerifying || lockoutTimer > 0) return;
+    if (!pinInput || pinInput.length < 4 || isVerifying) return;
 
     try {
       setIsVerifying(true);
@@ -829,7 +829,7 @@ export default function AdminPage() {
                   type="password"
                   maxLength={6}
                   value={pinInput}
-                  disabled={isVerifying || lockoutTimer > 0}
+                  disabled={isVerifying}
                   onChange={(e) => {
                     setPinInput(e.target.value.replace(/\D/g, ''));
                     setErrorMessage(null);
@@ -849,7 +849,7 @@ export default function AdminPage() {
 
             <button
               type="submit"
-              disabled={pinInput.length < 4 || isVerifying || lockoutTimer > 0}
+              disabled={pinInput.length < 4 || isVerifying}
               className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-800 disabled:text-slate-500 text-white text-xs font-bold transition-all shadow-sm active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isVerifying ? (
