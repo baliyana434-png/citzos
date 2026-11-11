@@ -1172,7 +1172,7 @@ export default function HomePage() {
             </div>
           </div>
           <Link
-            href="/skills"
+            href="/skills" prefetch={true}
             className="w-full sm:w-auto px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs transition-all shadow-sm flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
           >
             <span>{getPageText('explore_skills', language)}</span>

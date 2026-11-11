@@ -110,7 +110,7 @@ export default function HelplinePage() {
           <div className="flex items-center justify-between h-14 sm:h-16 gap-2 sm:gap-3">
             {/* Left: Back Link */}
             <Link
-              href="/"
+              href="/" prefetch={true}
               className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all shrink-0 cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4" />

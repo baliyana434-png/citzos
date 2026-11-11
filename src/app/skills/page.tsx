@@ -402,6 +402,7 @@ export default function SkillsPage() {
           <div className="flex items-center gap-2.5 sm:gap-3">
             <Link
               href="/"
+              prefetch={true}
               className="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-all cursor-pointer border border-slate-200"
               title={language === 'hi' ? 'मुख्य पृष्ठ पर वापस जाएं' : 'Back to Home'}
             >
@@ -425,6 +426,7 @@ export default function SkillsPage() {
             <LanguageSwitcher />
             <Link
               href="/saved"
+              prefetch={true}
               className="h-9 px-3 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-300 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-2xs"
             >
               <Star className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />

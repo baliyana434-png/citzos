@@ -318,6 +318,7 @@ export default function SavedPage() {
             <div className="flex items-center gap-3">
               <Link
                 href="/"
+                prefetch={true}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 text-xs font-bold transition-all"
               >
                 <ArrowLeft className="w-4 h-4" />

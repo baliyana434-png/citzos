@@ -168,7 +168,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* 1. App Identity - Official CITZ [OS] Brand Logo */}
           <div className="flex items-center gap-2 shrink-0 min-w-[92px] sm:min-w-[130px]">
             <Link
-              href="/"
+              href="/" prefetch={true}
               className="flex items-center group cursor-pointer block hover:opacity-95 transition-opacity"
               aria-label="Citzos Home"
             >
@@ -234,7 +234,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Skills & Video Learning Navigation Link */}
             <Link
-              href="/skills"
+              href="/skills" prefetch={true}
               className="h-8 sm:h-9 px-1.5 sm:px-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-950 border border-emerald-300 font-extrabold text-[11px] sm:text-xs transition-all shrink-0 inline-flex items-center justify-center gap-1 sm:gap-1.5 shadow-2xs"
               title={language === 'hi' ? 'कौशल सीखें (शीर्ष 3 यूट्यूब वीडियोज)' : language === 'es' ? 'Cursos y Habilidades' : language === 'fr' ? 'Formations et Compétences' : language === 'de' ? 'Kurse und Weiterbildung' : language === 'ar' ? 'المهارات والدورات التدريبية' : 'Skills Hub (Top 3 YouTube Masterclasses)'}
             >
@@ -291,7 +291,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Helpline Navigation Link */}
             <Link
-              href="/helpline"
+              href="/helpline" prefetch={true}
               className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-900 text-xs font-bold border border-red-200 transition-all shrink-0 shadow-2xs"
               title={language === 'hi' ? '24x7 हेल्पलाइन' : language === 'es' ? 'Líneas 24x7' : language === 'fr' ? 'Urgences 24x7' : language === 'de' ? '24x7 Notruf' : language === 'ar' ? 'طوارئ 24/7' : '24x7 Helplines'}
             >
@@ -303,7 +303,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Favourites / Saved Navigation Button */}
             <Link
-              href="/saved"
+              href="/saved" prefetch={true}
               className="h-8 w-8 sm:h-9 sm:w-auto inline-flex items-center justify-center sm:px-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-300 font-bold text-xs transition-all shrink-0 relative shadow-2xs"
               title={language === 'hi' ? 'सहेजे गए अवसर' : 'Saved Opportunities'}
             >
