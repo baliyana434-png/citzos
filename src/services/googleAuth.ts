@@ -121,15 +121,7 @@ export function getGoogleAuthErrorMessage(
     code.includes('access_denied') ||
     code.includes('cancelled')
   ) {
-    const messages: Record<SupportedLanguage, string> = {
-      en: 'Google sign-in window was closed. Please try again.',
-      hi: 'Google साइन-इन विंडो बंद कर दी गई। कृपया पुनः प्रयास करें।',
-      es: 'La ventana de inicio de sesion de Google se ha cerrado.',
-      fr: 'La fenetre de connexion Google a ete fermee.',
-      de: 'Das Google-Anmeldefenster wurde geschlossen.',
-      ar: 'تم اغلاق نافذة تسجيل الدخول.',
-    };
-    return messages[language] || messages.en;
+    return '';
   }
 
   if (code.includes('timeout')) {

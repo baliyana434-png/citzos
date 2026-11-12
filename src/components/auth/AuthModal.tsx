@@ -374,7 +374,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       await completeGoogleSignIn(result);
     } catch (err: any) {
       console.warn('Google Auth notice:', err);
-      setErrorMessage(getGoogleAuthErrorMessage(err?.code || err?.message, language));
+      const msg = getGoogleAuthErrorMessage(err?.code || err?.message, language);
+      if (msg) {
+        setErrorMessage(msg);
+      } else {
+        setErrorMessage(null);
+      }
       setIsLoading(false);
     }
   };
