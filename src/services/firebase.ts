@@ -14,11 +14,21 @@ import { getAuth, Auth } from 'firebase/auth';
 
 const FIREBASE_API_KEY = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAOHH-q4-mKpTHcwUjezHrlBFDo9Xs3u44';
 
-// Standard Google Firebase Auth Domain: connects directly to Firebase Identity Toolkit at Google Cloud Edge
-// Guarantees ultra-fast popup opening (<200ms), eliminates Vercel reverse-proxy roundtrips,
-// and ensures 100% reliable desktop/laptop popup authentication across all domains.
+// Dynamic custom authDomain: seamlessly uses www.citzos.in when hosted on citzos to prevent firebaseapp.com in browser URL
 export const getCustomAuthDomain = (): string => {
-  return process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'lifeos-7a6f1.firebaseapp.com';
+  if (typeof window !== 'undefined') {
+    const host = window.location.host;
+    if (host.includes('citzos.in')) {
+      return 'www.citzos.in';
+    }
+    if (host.includes('vercel.app')) {
+      return host;
+    }
+    if (host.includes('localhost') || host.includes('127.0.0.1')) {
+      return host;
+    }
+  }
+  return process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'www.citzos.in';
 };
 
 const FIREBASE_PROJECT_ID = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'lifeos-7a6f1';

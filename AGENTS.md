@@ -31,7 +31,7 @@ All agent interactions and tasks must leverage the full power of the installed e
 - Clickable markdown links with `file://` scheme for all referenced files.
 
 ## Frozen Modules & Strict Zero-Touch Auth Protection Policy
-The following authentication, credentials, login, and registration modules are PERMANENTLY SEALED, VERIFIED, and LOCKED in production (as of commit `356e2ac`):
+The following authentication, credentials, login, and registration modules are PERMANENTLY SEALED, VERIFIED, and LOCKED in production (as of commit `2c71897`):
 1. `src/services/firebase.ts` (Firebase Web Client initialization and public fallback keys)
 2. `src/services/googleAuth.ts` (Google OAuth authentication engine and error handler)
 3. `src/services/firebaseAuth.ts` (Mobile phone SMS OTP verification)

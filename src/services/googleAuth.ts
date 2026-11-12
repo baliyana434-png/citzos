@@ -65,11 +65,6 @@ let redirectResultPromise: Promise<GoogleAuthResult | null> | null = null;
 export function getGoogleRedirectResultSafe(): Promise<GoogleAuthResult | null> {
   if (typeof window === 'undefined') return Promise.resolve(null);
 
-  // Ultra-fast guard: if no redirect is pending, resolve immediately without network delay
-  if (!isGoogleRedirectPending()) {
-    return Promise.resolve(null);
-  }
-
   if (!redirectResultPromise) {
     const auth = getFirebaseAuth();
     if (!auth || !isFirebaseConfigured()) {
@@ -222,8 +217,6 @@ export class GoogleAuthService {
 
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: 'select_account' });
-    provider.addScope('email');
-    provider.addScope('profile');
 
     // On mobile devices, always use signInWithRedirect to prevent popup blank-screen hangs
     if (isMobileBrowser()) {
@@ -295,8 +288,8 @@ export class GoogleAuthService {
           const code = (fbErr?.code || '').toLowerCase();
           console.warn('Firebase signInWithPopup error code:', code || fbErr?.message);
 
-          // If popup is explicitly blocked or restricted by browser, fall back to redirect
-          if (code === 'auth/popup-blocked' || code.includes('blocked')) {
+          // If popup is explicitly blocked, fall back to redirect
+          if (code === 'auth/popup-blocked') {
             try {
               markGoogleRedirectPending();
               await signInWithRedirect(auth, provider);
