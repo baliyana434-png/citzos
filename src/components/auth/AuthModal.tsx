@@ -138,6 +138,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   });
   const authThemeToggleRef = useRef<HTMLButtonElement | null>(null);
   const isGoogleAuthActiveRef = useRef<boolean>(false);
+  const dobInputRef = useRef<HTMLInputElement | null>(null);
 
   // Sync theme with document class / localStorage
   useEffect(() => {
@@ -1505,7 +1506,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Full Legal Name (Required) */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 px-0.5">
                 {language === 'hi' ? 'पूरा नाम *' : 'Full Name *'}
               </label>
               <div className="relative">
@@ -1518,7 +1519,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder={language === 'hi' ? 'अपना पूरा नाम दर्ज करें' : 'Enter your full name'}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border text-xs font-bold text-slate-900 focus:bg-white outline-none transition-all ${
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border text-sm font-medium text-slate-800 placeholder:text-slate-400 placeholder:font-normal focus:bg-white outline-none transition-all ${
                     nameValidation && !nameValidation.valid ? 'border-red-400' : 'border-slate-200 focus:border-emerald-500'
                   }`}
                 />
@@ -1532,13 +1533,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Country Selector */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 px-0.5">
                 {language === 'hi' ? 'देश *' : 'Country / Region *'}
               </label>
               <select
                 value={country}
                 onChange={(e) => setCountry(e.target.value as CountryCode)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer transition-all"
               >
                 {Object.values(COUNTRIES).map((c) => (
                   <option key={c.code} value={c.code}>
@@ -1550,26 +1551,39 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Date of Birth & Live Calculated Age */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 flex items-center justify-between px-0.5">
                 <span>{language === 'hi' ? 'जन्म तिथि *' : 'Date of Birth *'}</span>
                 {calculatedAge >= 14 && (
-                  <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-[10px]">
+                  <span className="text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-[11px]">
                     {language === 'hi' ? `आयु: ${calculatedAge} वर्ष` : `Age: ${calculatedAge} yrs`}
                   </span>
                 )}
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <div
+                  onClick={() => {
+                    dobInputRef.current?.focus();
+                    try {
+                      (dobInputRef.current as any)?.showPicker?.();
+                    } catch (_) {}
+                  }}
+                  className="absolute inset-y-0 left-0 pl-3.5 flex items-center cursor-pointer text-slate-400 hover:text-emerald-600 transition-colors"
+                >
                   <Calendar className="w-4 h-4" />
                 </div>
                 <input
+                  ref={dobInputRef}
                   type="date"
                   required
                   value={dob}
                   max={maxDob}
-                  min={minDob}
                   onChange={(e) => setDob(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border text-xs font-bold text-slate-900 focus:bg-white outline-none ${
+                  onClick={(e) => {
+                    try {
+                      (e.currentTarget as any).showPicker?.();
+                    } catch (_) {}
+                  }}
+                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border text-sm font-medium text-slate-800 focus:bg-white outline-none cursor-pointer transition-all ${
                     dobValidation && !dobValidation.valid ? 'border-red-400' : 'border-slate-200 focus:border-emerald-500'
                   }`}
                 />
@@ -1583,13 +1597,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* State / Administrative Division */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 px-0.5">
                 {countryMeta.administrativeLabel} *
               </label>
               <select
                 value={division}
                 onChange={(e) => setDivision(e.target.value)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer transition-all"
               >
                 {countryMeta.divisions.map((d) => (
                   <option key={d} value={d}>
@@ -1601,13 +1615,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Demographic / Caste Category */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 px-0.5">
                 {language === 'hi' ? countryMeta.categoryLabelHi : countryMeta.categoryLabel} *
               </label>
               <select
                 value={casteCategory}
                 onChange={(e) => setCasteCategory(e.target.value)}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer transition-all"
               >
                 {availableCategories.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -1619,13 +1633,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Life Phase / Role Selection */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 px-0.5">
                 {language === 'hi' ? 'पेशा / वर्तमान स्थिति *' : 'Occupation / Role *'}
               </label>
               <select
                 value={selectedRole}
                 onChange={(e) => setSelectedRole(e.target.value as CitizenProfile['lifePhase'])}
-                className="w-full py-2.5 px-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer"
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer transition-all"
               >
                 <option value="school_student">{language === 'hi' ? 'स्कूली छात्र' : 'School Student'}</option>
                 <option value="college_student">{language === 'hi' ? 'कॉलेज छात्र' : 'College Student'}</option>
@@ -1641,20 +1655,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Educational Qualification Selection */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1 flex items-center justify-between">
-                <span>{language === 'hi' ? 'शैक्षणिक योग्यता *' : 'Educational Qualification *'}</span>
-                <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+              <label className="text-xs font-semibold text-slate-700 mb-1.5 px-0.5 flex items-center justify-between gap-2">
+                <span className="truncate">{language === 'hi' ? 'शैक्षणिक योग्यता *' : 'Educational Qualification *'}</span>
+                <span className="shrink-0 text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 whitespace-nowrap">
                   {language === 'hi' ? 'सटीक योजना मिलान' : 'Scheme Matching'}
                 </span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <GraduationCap className="w-4 h-4 text-emerald-600" />
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-emerald-600">
+                  <GraduationCap className="w-4 h-4" />
                 </div>
                 <select
                   value={qualification}
                   onChange={(e) => setQualification(e.target.value as EducationalQualification)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer"
+                  className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-800 focus:bg-white focus:border-emerald-500 outline-none cursor-pointer transition-all"
                 >
                   {QUALIFICATION_OPTIONS.map((q) => (
                     <option key={q.id} value={q.id}>
@@ -1667,7 +1681,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             {/* Gender Selection */}
             <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1.5 px-0.5">
                 {language === 'hi' ? 'लिंग *' : 'Gender *'}
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -1680,9 +1694,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     key={g.id}
                     type="button"
                     onClick={() => setGender(g.id as CitizenProfile['gender'])}
-                    className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all cursor-pointer text-center ${
+                    className={`py-2 px-3 rounded-xl text-xs font-semibold border transition-all cursor-pointer text-center ${
                       gender === g.id
-                        ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-extrabold shadow-2xs'
+                        ? 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold shadow-2xs'
                         : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100'
                     }`}
                   >
@@ -1690,47 +1704,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </button>
                 ))}
               </div>
-            </div>
-
-            {/* National ID / Aadhaar */}
-            <div>
-              <label className="block text-[11px] font-bold text-slate-700 mb-1 px-1">
-                {countryMeta.nationalIdName} ({language === 'hi' ? 'वैकल्पिक' : 'Optional'})
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                  <CreditCard className="w-4 h-4" />
-                </div>
-                <input
-                  type="text"
-                  value={nationalIdInput}
-                  onChange={(e) => setNationalIdInput(e.target.value)}
-                  placeholder={countryMeta.nationalIdPlaceholder}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border text-xs font-bold text-slate-900 focus:bg-white outline-none ${
-                    nationalIdValidation && !nationalIdValidation.valid
-                      ? 'border-red-400'
-                      : nationalIdValidation && nationalIdValidation.valid
-                      ? 'border-emerald-500'
-                      : 'border-slate-200 focus:border-emerald-500'
-                  }`}
-                />
-              </div>
-              {nationalIdValidation && nationalIdValidation.valid && (
-                <p className="text-[10px] font-bold text-emerald-700 mt-1 pl-2 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                  <span>{language === 'hi' ? 'मान्य प्रारूप' : 'Valid Format'}</span>
-                </p>
-              )}
-              {nationalIdValidation && !nationalIdValidation.valid && (
-                <p className="text-[10px] font-semibold text-red-600 mt-1 pl-2">
-                  {nationalIdValidation.error}
-                </p>
-              )}
-              <p className="text-[10px] text-slate-500 mt-1 px-1">
-                {language === 'hi'
-                  ? 'पहचान मिलान हेतु वैकल्पिक। Citzos एक स्वतंत्र निजी मंच है और कोई सरकारी पहचान पत्र जारी नहीं करता।'
-                  : 'Optional for matching. Citzos is an independent private platform and does not issue government IDs.'}
-              </p>
             </div>
 
             {/* Two-Button Bottom Navigation */}
