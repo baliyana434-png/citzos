@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DatabaseService } from '@/lib/db';
+import { DatabaseService, isMongoConfigured } from '@/lib/db';
 import { AdminSecurityService } from '@/lib/security';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { isOpportunityDeadlinePassed } from '@/lib/dateUtils';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 function verifyAdminAuth(req: NextRequest): boolean {
   const adminToken = req.headers.get('x-admin-token');
@@ -32,7 +35,7 @@ export async function GET(req: NextRequest) {
     // 1. Real Database Connectivity & Metrics
     let dbStatus: 'connected' | 'fallback_local' = 'fallback_local';
     let dbType = 'Local Persistent JSON Store';
-    const isMongo = Boolean(process.env.MONGODB_URI && (process.env.MONGODB_URI.startsWith('mongodb://') || process.env.MONGODB_URI.startsWith('mongodb+srv://')));
+    const isMongo = isMongoConfigured();
     
     if (isMongo) {
       dbStatus = 'connected';
@@ -194,6 +197,12 @@ export async function GET(req: NextRequest) {
         categories: categoryCounts,
       },
       diagnostics,
+    }, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+      },
     });
   } catch (error: any) {
     console.error('Admin system status error:', error);

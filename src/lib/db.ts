@@ -25,8 +25,9 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-const uri = process.env.MONGODB_URI || '';
-let clientPromise: Promise<MongoClient> | null = null;
+const DEFAULT_MONGODB_URI =
+  'mongodb+srv://citizenlifeos:CHALNIKAL01@citizenlifeos.cxdc4r0.mongodb.net/citizen_life_os?retryWrites=true&w=majority';
+const uri = process.env.MONGODB_URI || DEFAULT_MONGODB_URI;
 
 export const isMongoConfigured = (): boolean => {
   return Boolean(uri && (uri.startsWith('mongodb://') || uri.startsWith('mongodb+srv://')));
@@ -42,47 +43,30 @@ const MONGO_OPTIONS = {
   maxIdleTimeMS: 60000,
 };
 
-let mongoOfflineUntil = 0;
-
-if (isMongoConfigured()) {
-  if (process.env.NODE_ENV === 'development') {
-    if (!global._mongoClientPromise) {
-      const client = new MongoClient(uri, MONGO_OPTIONS);
-      global._mongoClientPromise = client.connect().catch((err) => {
-        console.warn('MongoDB Atlas connection initial warning:', err?.message);
-        mongoOfflineUntil = Date.now() + 15000;
-        global._mongoClientPromise = undefined;
-        return null as any;
-      });
-    }
-    clientPromise = global._mongoClientPromise;
-  } else {
+function getClientPromise(): Promise<MongoClient> | null {
+  if (!isMongoConfigured()) return null;
+  if (!global._mongoClientPromise) {
     const client = new MongoClient(uri, MONGO_OPTIONS);
-    clientPromise = client.connect().catch((err) => {
-      console.warn('MongoDB Atlas connection warning:', err?.message);
-      mongoOfflineUntil = Date.now() + 15000;
-      return null as any;
+    global._mongoClientPromise = client.connect().catch((err) => {
+      console.warn('MongoDB Atlas connection initial warning:', err?.message);
+      global._mongoClientPromise = undefined;
+      throw err;
     });
   }
+  return global._mongoClientPromise;
 }
 
 async function getMongoDb(): Promise<Db | null> {
-  if (!isMongoConfigured() || !clientPromise) return null;
-  // If MongoDB previously failed or timed out, do not block subsequent requests
-  if (Date.now() < mongoOfflineUntil) return null;
+  const promise = getClientPromise();
+  if (!promise) return null;
 
   try {
-    const client = await Promise.race([
-      clientPromise,
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 3500)),
-    ]);
-    if (!client) {
-      mongoOfflineUntil = Date.now() + 15000;
-      return null;
-    }
+    const client = await promise;
+    if (!client) return null;
     return client.db(process.env.MONGODB_DB_NAME || 'citizen_life_os');
-  } catch (err) {
-    mongoOfflineUntil = Date.now() + 15000;
+  } catch (err: any) {
+    console.warn('getMongoDb connection note:', err?.message);
+    global._mongoClientPromise = undefined;
     return null;
   }
 }
@@ -233,31 +217,19 @@ export const DatabaseService = {
   /**
    * Find a registered citizen by email, phone, ID, or transactionId (Instant 0ms lookup)
    */
+  /**
+   * Find a registered citizen by email, phone, ID, or transactionId (Real-time Cloud + Fast Local)
+   */
   async findCitizen(filter: { email?: string; phone?: string; id?: string; transactionId?: string }): Promise<CitizenRecord | null> {
     const email = filter.email?.trim().toLowerCase();
     const phone = filter.phone?.replace(/\D/g, '').slice(-10);
     const id = filter.id?.trim();
     const transactionId = filter.transactionId?.trim();
 
-    // 1. FAST PATH: Check memory cache / local JSON store (instant <1ms response)
-    const citizens = await getCitizensLocal();
-    const localMatch = citizens.find((c) => {
-      if (email && c.email?.toLowerCase() === email) return true;
-      if (phone && c.phoneNumber === phone) return true;
-      if (transactionId && c.subscription?.transactionId === transactionId) return true;
-      if (id && (c.id === id || c.nationalIdMasked === id || c.aadhaarNumberMasked === id)) return true;
-      return false;
-    });
-
-    if (localMatch) {
-      return localMatch;
-    }
-
-    // 2. SECONDARY: Check Cloud MongoDB Atlas (with 1.5s timeout)
-    const db = await getMongoDb();
-    if (db) {
-      try {
-        const query: any = {};
+    // 1. PRIMARY: Query MongoDB first so newly registered or upgraded paid status is 100% accurate
+    try {
+      const db = await getMongoDb();
+      if (db) {
         const conditions: any[] = [];
         if (email) conditions.push({ email: email });
         if (phone) conditions.push({ phoneNumber: phone });
@@ -269,30 +241,43 @@ export const DatabaseService = {
         }
 
         if (conditions.length > 0) {
-          query.$or = conditions;
-          const citizen = await db.collection<CitizenRecord>('citizens').findOne(query);
-          if (citizen) {
-            citizens.unshift(citizen);
-            await persistCitizensLocal(citizens);
-            return citizen;
+          const cloudMatch = await db.collection<CitizenRecord>('citizens').findOne({ $or: conditions });
+          if (cloudMatch) {
+            // Keep local cache in sync
+            const local = await getCitizensLocal();
+            const idx = local.findIndex((c) => c.id === cloudMatch.id || (email && c.email?.toLowerCase() === email));
+            if (idx >= 0) {
+              local[idx] = cloudMatch;
+            } else {
+              local.unshift(cloudMatch);
+            }
+            return cloudMatch;
           }
         }
-      } catch (err) {
-        // Fallback silently
       }
+    } catch (err: any) {
+      console.warn('MongoDB findCitizen note:', err?.message);
     }
 
-    return null;
+    // 2. FALLBACK: Check memory cache / local JSON store
+    const citizens = await getCitizensLocal();
+    return citizens.find((c) => {
+      if (email && c.email?.toLowerCase() === email) return true;
+      if (phone && c.phoneNumber === phone) return true;
+      if (transactionId && c.subscription?.transactionId === transactionId) return true;
+      if (id && (c.id === id || c.nationalIdMasked === id || c.aadhaarNumberMasked === id)) return true;
+      return false;
+    }) || null;
   },
 
   /**
-   * Save or update citizen profile (Instant local write + non-blocking background MongoDB sync)
+   * Save or update citizen profile (Awaited Cloud Write + Instant Local Memory Cache)
    */
   async saveCitizen(citizen: CitizenRecord): Promise<CitizenRecord> {
     const email = citizen.email?.trim().toLowerCase();
     const phone = citizen.phoneNumber?.replace(/\D/g, '').slice(-10);
 
-    // 1. INSTANT LOCAL UPDATE: Update memory cache and trigger async disk persist
+    // 1. INSTANT LOCAL UPDATE: Update memory cache
     const citizens = await getCitizensLocal();
     const idx = citizens.findIndex((c) => {
       if (email && c.email?.toLowerCase() === email) return true;
@@ -308,21 +293,16 @@ export const DatabaseService = {
     }
     await persistCitizensLocal(citizens);
 
-    // 2. RELIABLE CLOUD SYNC: Awaited in serverless so Vercel does not terminate before write finishes
+    // 2. RELIABLE CLOUD SYNC: Awaited so MongoDB always has the exact up-to-date state immediately
     try {
       const db = await getMongoDb();
       if (db) {
-        const filter: any = {};
         const conditions: any[] = [];
         if (email) conditions.push({ email: email });
         if (phone) conditions.push({ phoneNumber: phone });
         if (citizen.id) conditions.push({ id: citizen.id });
 
-        if (conditions.length > 0) {
-          filter.$or = conditions;
-        } else {
-          filter.id = citizen.id;
-        }
+        const filter = conditions.length > 0 ? { $or: conditions } : { id: citizen.id };
 
         await db.collection('citizens').updateOne(filter, { $set: citizen }, { upsert: true });
       }
@@ -334,24 +314,49 @@ export const DatabaseService = {
   },
 
   /**
-   * Get all registered citizens (Instant local return + background refresh)
+   * Get all registered citizens (Real-time MongoDB Atlas query with local fallback)
    */
   async getAllCitizens(): Promise<CitizenRecord[]> {
-    const local = await getCitizensLocal();
+    // 1. PRIMARY: Query MongoDB directly and await real-time data
+    try {
+      const db = await getMongoDb();
+      if (db) {
+        const cloud = await db
+          .collection<CitizenRecord>('citizens')
+          .find({})
+          .sort({ registeredAt: -1 })
+          .toArray();
 
-    // Background sync from Mongo if available
-    getMongoDb()
-      .then(async (db) => {
-        if (!db) return;
-        const cloud = await db.collection<CitizenRecord>('citizens').find({}).sort({ registeredAt: -1 }).toArray();
-        if (cloud && cloud.length >= local.length) {
-          memoryCitizensCache = cloud;
-          writeJsonFile(CITIZENS_FILE, cloud).catch(() => {});
+        if (Array.isArray(cloud)) {
+          // Merge with any offline local records if any
+          const local = await getCitizensLocal();
+          const map = new Map<string, CitizenRecord>();
+          // Cloud records take precedence as source of truth
+          for (const c of cloud) {
+            const key = (c.email?.toLowerCase() || c.phoneNumber || c.id || '').trim();
+            if (key) map.set(key, c);
+          }
+          // If local has offline-only created records, include them
+          for (const c of local) {
+            const key = (c.email?.toLowerCase() || c.phoneNumber || c.id || '').trim();
+            if (key && !map.has(key)) map.set(key, c);
+          }
+
+          const merged = Array.from(map.values());
+          merged.sort(
+            (a, b) => new Date(b.registeredAt || 0).getTime() - new Date(a.registeredAt || 0).getTime()
+          );
+          memoryCitizensCache = merged;
+          writeJsonFile(CITIZENS_FILE, merged).catch(() => {});
+          return merged;
         }
-      })
-      .catch(() => {});
+      }
+    } catch (err: any) {
+      console.warn('MongoDB getAllCitizens query warning:', err?.message);
+    }
 
-    return local;
+    // 2. FALLBACK: Return local file store if MongoDB is offline
+    return await getCitizensLocal();
   },
 
   /**

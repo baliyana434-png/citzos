@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, CitizenRecord } from '@/lib/db';
 import { AdminSecurityService } from '@/lib/security';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export type RegisteredCitizen = CitizenRecord;
 import {
   validateRealName,
@@ -49,11 +52,20 @@ export async function GET(req: NextRequest) {
       return safe;
     });
 
-    return NextResponse.json({
-      success: true,
-      count: safeCitizens.length,
-      citizens: safeCitizens,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        count: safeCitizens.length,
+        citizens: safeCitizens,
+      },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      }
+    );
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message },

@@ -3,6 +3,9 @@ import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { AdminSecurityService } from '@/lib/security';
 import { isOpportunityDeadlinePassed } from '@/lib/dateUtils';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 function verifyAdminAuth(req: NextRequest): boolean {
   const adminToken = req.headers.get('x-admin-token');
   if (adminToken && AdminSecurityService.verifyAdminToken(adminToken)) {

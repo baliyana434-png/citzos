@@ -180,6 +180,9 @@ export default function AdminPage() {
   // Executive UI Theme: 'dark' (Default Slate 950) | 'light' (Crisp Executive White)
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
+  // Strict Language Mode: 'en' (Strict English by default) | 'hi' (Hindi)
+  const [language, setLanguage] = useState<'en' | 'hi'>('en');
+
   // Real-time ticking Indian Standard Time (IST) clock
   const [liveClock, setLiveClock] = useState<string>('');
 
@@ -192,8 +195,8 @@ export default function AdminPage() {
     isFcmServerConfigured: boolean;
     projectId: string;
   } | null>(null);
-  const [pushTitle, setPushTitle] = useState('Citzos — नया अवसर अलर्ट');
-  const [pushBody, setPushBody] = useState('नई सरकारी योजना व छात्रवृत्ति पोर्टल पर उपलब्ध है। तुरंत देखें।');
+  const [pushTitle, setPushTitle] = useState('Citzos — New Opportunity Alert');
+  const [pushBody, setPushBody] = useState('New official government scheme and scholarship available on portal. Check your eligibility now.');
   const [pushUrl, setPushUrl] = useState('/');
   const [isSendingPush, setIsSendingPush] = useState(false);
   const [pushFeedback, setPushFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
@@ -236,6 +239,15 @@ export default function AdminPage() {
   const [isCrawling, setIsCrawling] = useState(false);
   const [crawlerLogs, setCrawlerLogs] = useState<CrawlerLog[]>([]);
 
+  // Toggle Language between English and Hindi
+  const toggleLanguage = () => {
+    const next = language === 'en' ? 'hi' : 'en';
+    setLanguage(next);
+    try {
+      localStorage.setItem('admin_portal_language', next);
+    } catch {}
+  };
+
   // Toggle Theme between Dark and Light
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
@@ -248,6 +260,10 @@ export default function AdminPage() {
   // Initialize theme from storage and start live ticking IST clock
   useEffect(() => {
     try {
+      const savedLang = localStorage.getItem('admin_portal_language') as 'en' | 'hi' | null;
+      if (savedLang === 'en' || savedLang === 'hi') {
+        setLanguage(savedLang);
+      }
       const savedTheme = localStorage.getItem('admin_portal_theme') as 'dark' | 'light' | null;
       if (savedTheme === 'light' || savedTheme === 'dark') {
         setTheme(savedTheme);
@@ -308,7 +324,7 @@ export default function AdminPage() {
         setIsAuthenticated(false);
         return;
       }
-      const res = await fetch('/api/admin/citizens', {
+      const res = await fetch(`/api/admin/citizens?_t=${Date.now()}`, { cache: 'no-store',
         headers: {
           'x-admin-token': token,
         },
@@ -316,7 +332,7 @@ export default function AdminPage() {
       if (res.status === 401) {
         clearStoredAdminToken();
         setIsAuthenticated(false);
-        setErrorMessage('सुरक्षा सत्र समाप्त हो गया है। कृपया मास्टर पिन (242022) से पुनः लॉगिन करें।');
+        setErrorMessage(language === 'en' ? 'Security session expired. Please re-authenticate with Master PIN (242022).' : 'सुरक्षा सत्र समाप्त हो गया है। कृपया मास्टर पिन (242022) से पुनः लॉगिन करें।');
         return;
       }
       const data = await res.json();
@@ -337,7 +353,7 @@ export default function AdminPage() {
       const token = tokenOverride || getStoredAdminToken();
       if (!token) return;
 
-      const res = await fetch('/api/admin/system-status', {
+      const res = await fetch(`/api/admin/system-status?_t=${Date.now()}`, { cache: 'no-store',
         headers: {
           'x-admin-token': token,
         },
@@ -360,7 +376,7 @@ export default function AdminPage() {
       const token = tokenOverride || getStoredAdminToken();
       if (!token) return;
 
-      const res = await fetch('/api/admin/opportunities?dateRange=all', {
+      const res = await fetch(`/api/admin/opportunities?dateRange=all&_t=${Date.now()}`, { cache: 'no-store',
         headers: {
           'x-admin-token': token,
         },
@@ -408,7 +424,7 @@ export default function AdminPage() {
   const handleBroadcastPush = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pushTitle.trim() || !pushBody.trim()) {
-      setPushFeedback({ type: 'error', message: 'कृपया शीर्षक और संदेश दोनों दर्ज करें।' });
+      setPushFeedback({ type: 'error', message: language === 'en' ? 'Please enter both title and message.' : 'कृपया शीर्षक और संदेश दोनों दर्ज करें।' });
       return;
     }
     try {
@@ -431,19 +447,19 @@ export default function AdminPage() {
       if (res.ok && data.success) {
         setPushFeedback({
           type: 'success',
-          message: data.message || `पुश नोटिफिकेशन ${data.recipientsCount || 0} डिवाइस(ज) पर सफलतापूर्वक भेजा गया।`,
+          message: language === 'en' ? (data.messageEn || `Push notification successfully dispatched to ${data.recipientsCount || 0} device(s).`) : (data.message || `पुश नोटिफिकेशन ${data.recipientsCount || 0} डिवाइस(ज) पर सफलतापूर्वक भेजा गया।`),
         });
         fetchPushStats();
       } else {
         setPushFeedback({
           type: 'error',
-          message: data.message || 'पुश नोटिफिकेशन भेजने में त्रुटि हुई।',
+          message: language === 'en' ? (data.messageEn || 'Error dispatching push notification.') : (data.message || 'पुश नोटिफिकेशन भेजने में त्रुटि हुई।'),
         });
       }
     } catch (err: any) {
       setPushFeedback({
         type: 'error',
-        message: err?.message || 'नेटवर्क समस्या के कारण नोटिफिकेशन नहीं भेजा जा सका।',
+        message: language === 'en' ? (err?.message || 'Failed to dispatch notification due to network error.') : (err?.message || 'नेटवर्क समस्या के कारण नोटिफिकेशन नहीं भेजा जा सका।'),
       });
     } finally {
       setIsSendingPush(false);
@@ -451,12 +467,29 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (!isAuthenticated) return;
+    fetchCitizens();
+    fetchOpportunities();
+    fetchSystemStatus();
+    fetchPushStats();
+
+    // Real-time automatic background sync every 8 seconds
+    const pollInterval = setInterval(() => {
       fetchCitizens();
-      fetchOpportunities();
       fetchSystemStatus();
-      fetchPushStats();
-    }
+    }, 8000);
+
+    // Instant refresh when window tab gains focus
+    const handleFocus = () => {
+      fetchCitizens();
+      fetchSystemStatus();
+    };
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      clearInterval(pollInterval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, [isAuthenticated]);
 
   // Handle Master PIN Authentication
@@ -476,12 +509,12 @@ export default function AdminPage() {
 
       if (res.status === 429) {
         setLockoutTimer(data.retryAfter || 900);
-        setErrorMessage(data.message || 'अत्यधिक प्रयास: सुरक्षा लॉक सक्रिय।');
+        setErrorMessage(language === 'en' ? (data.messageEn || 'Too many attempts: Security lock active.') : (data.message || 'अत्यधिक प्रयास: सुरक्षा लॉक सक्रिय।'));
         return;
       }
 
       if (!res.ok || !data.success) {
-        setErrorMessage(data.message || 'अमान्य मास्टर सुरक्षा पिन। कृपया सही 6-अंकीय पिन दर्ज करें।');
+        setErrorMessage(language === 'en' ? (data.messageEn || 'Invalid Master Security PIN. Please enter the correct 6-digit PIN.') : (data.message || 'अमान्य मास्टर सुरक्षा पिन। कृपया सही 6-अंकीय पिन दर्ज करें।'));
         return;
       }
 
@@ -493,7 +526,7 @@ export default function AdminPage() {
       fetchSystemStatus(data.token);
       fetchPushStats(data.token);
     } catch (err: any) {
-      setErrorMessage('सर्वर से संपर्क करने में असमर्थ। कृपया नेटवर्क की जांच करें।');
+      setErrorMessage(language === 'en' ? 'Unable to connect to server. Please check your network connection.' : 'सर्वर से संपर्क करने में असमर्थ। कृपया नेटवर्क की जांच करें।');
     } finally {
       setIsVerifying(false);
     }
@@ -918,6 +951,21 @@ export default function AdminPage() {
               <Clock className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
               <span>{liveClock || systemStatus?.system.serverTime || 'Synchronizing IST...'}</span>
             </div>
+
+            {/* Language Switcher (EN / HI) */}
+            <button
+              type="button"
+              onClick={toggleLanguage}
+              className={`px-2.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                theme === 'dark'
+                  ? 'bg-slate-900 hover:bg-slate-850 text-slate-200 border-slate-700'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300 shadow-xs'
+              }`}
+              title={language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
+            >
+              <Globe className="w-3.5 h-3.5 text-emerald-500" />
+              <span>{language.toUpperCase()}</span>
+            </button>
 
             {/* Light / Dark Theme Switcher Button */}
             <button
@@ -2311,8 +2359,8 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setPushTitle('Citzos — नई छात्रवृत्ति अधिसूचना');
-                        setPushBody('राष्ट्रीय छात्रवृत्ति पोर्टल पर नए आवेदन शुरू हो गए हैं। अपनी पात्रता तुरंत जांचें।');
+                        setPushTitle(language === 'en' ? 'Citzos — New Scholarship Notification' : 'Citzos — नई छात्रवृत्ति अधिसूचना');
+                        setPushBody(language === 'en' ? 'New applications opened on National Scholarship Portal. Verify your eligibility immediately.' : 'राष्ट्रीय छात्रवृत्ति पोर्टल पर नए आवेदन शुरू हो गए हैं। अपनी पात्रता तुरंत जांचें।');
                         setPushUrl('/?tab=education');
                       }}
                       className="px-2.5 py-1 text-xs rounded-lg border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-300 transition-colors"
@@ -2322,8 +2370,8 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setPushTitle('Citzos — सरकारी भर्ती परीक्षा अलर्ट');
-                        setPushBody('नवीनतम सरकारी रिक्तियां और परीक्षा तिथियां घोषित की गई हैं। आधिकारिक विवरण देखें।');
+                        setPushTitle(language === 'en' ? 'Citzos — Govt Recruitment Exam Alert' : 'Citzos — सरकारी भर्ती परीक्षा अलर्ट');
+                        setPushBody(language === 'en' ? 'Latest official vacancies and exam dates announced. Review the official circular.' : 'नवीनतम सरकारी रिक्तियां और परीक्षा तिथियां घोषित की गई हैं। आधिकारिक विवरण देखें।');
                         setPushUrl('/?tab=career');
                       }}
                       className="px-2.5 py-1 text-xs rounded-lg border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-300 transition-colors"
@@ -2333,8 +2381,8 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setPushTitle('Citzos — कौशल विकास योजना');
-                        setPushBody('युवाओं के लिए निशुल्क तकनीकी प्रशिक्षण व सरकारी प्रमाणन कार्यक्रम शुरू।');
+                        setPushTitle(language === 'en' ? 'Citzos — Skill Training & Certification' : 'Citzos — कौशल विकास योजना');
+                        setPushBody(language === 'en' ? 'Free authorized upskilling and certification programs now active for youth.' : 'युवाओं के लिए निशुल्क तकनीकी प्रशिक्षण व सरकारी प्रमाणन कार्यक्रम शुरू।');
                         setPushUrl('/skills');
                       }}
                       className="px-2.5 py-1 text-xs rounded-lg border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-300 transition-colors"
@@ -2344,8 +2392,8 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setPushTitle('Citzos — नया नागरिक अवसर अलर्ट');
-                        setPushBody('आपके राज्य के लिए नई कल्याणकारी योजनाओं की सूची अपडेट की गई है।');
+                        setPushTitle(language === 'en' ? 'Citzos — Citizen Opportunity Alert' : 'Citzos — नया नागरिक अवसर अलर्ट');
+                        setPushBody(language === 'en' ? 'New verified citizen opportunities and welfare initiatives updated for your region.' : 'आपके राज्य के लिए नई कल्याणकारी योजनाओं की सूची अपडेट की गई है।');
                         setPushUrl('/');
                       }}
                       className="px-2.5 py-1 text-xs rounded-lg border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-300 transition-colors"
@@ -2390,7 +2438,7 @@ export default function AdminPage() {
                       type="text"
                       value={pushTitle}
                       onChange={(e) => setPushTitle(e.target.value)}
-                      placeholder="e.g. Citzos — नया अवसर अलर्ट"
+                      placeholder={language === 'en' ? "e.g. Citzos — New Opportunity Alert" : "e.g. Citzos — नया अवसर अलर्ट"}
                       className={`w-full px-3.5 py-2.5 rounded-lg text-xs border outline-hidden transition-all ${
                         theme === 'dark'
                           ? 'bg-slate-950 border-slate-800 text-white focus:border-emerald-500'

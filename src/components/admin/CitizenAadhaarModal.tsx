@@ -23,12 +23,15 @@ import { RegisteredCitizen } from '@/app/api/admin/citizens/route';
 
 interface CitizenAadhaarModalProps {
   citizen: RegisteredCitizen | null;
+  language?: 'en' | 'hi';
   onClose: () => void;
 }
 
-export const CitizenAadhaarModal: React.FC<CitizenAadhaarModalProps> = ({ citizen, onClose }) => {
+export const CitizenAadhaarModal: React.FC<CitizenAadhaarModalProps> = ({ citizen, language = 'en', onClose }) => {
   const [copied, setCopied] = React.useState(false);
   if (!citizen) return null;
+
+  const isEn = language === 'en';
 
   const rawAadhaar = citizen.aadhaarNumber || citizen.aadhaarNumberMasked || citizen.nationalIdMasked || '';
   const cleanDigits = rawAadhaar.replace(/\D/g, '');
@@ -88,10 +91,10 @@ export const CitizenAadhaarModal: React.FC<CitizenAadhaarModalProps> = ({ citize
             <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-3">
               <div>
                 <span className="text-[11px] font-bold text-slate-800 tracking-wider uppercase block">
-                  भारत सरकार • Government of India
+                  {isEn ? 'Government of India' : 'भारत सरकार • Government of India'}
                 </span>
                 <span className="text-[10px] text-slate-500 font-medium">
-                  मेरा आधार, मेरी पहचान
+                  {isEn ? 'My Aadhaar, My Identity' : 'मेरा आधार, मेरी पहचान'}
                 </span>
               </div>
               <div className="text-right">
@@ -128,25 +131,25 @@ export const CitizenAadhaarModal: React.FC<CitizenAadhaarModalProps> = ({ citize
               {/* Citizen Details */}
               <div className="flex-1 space-y-1.5 text-xs text-slate-800 min-w-0">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">नाम / Full Name</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">{isEn ? 'Full Name' : 'नाम / Full Name'}</span>
                   <span className="text-sm font-extrabold text-slate-900">{citizen.fullName}</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">जन्म तिथि / DOB</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">{isEn ? 'Date of Birth' : 'जन्म तिथि / DOB'}</span>
                     <span className="font-semibold text-slate-800">
                       {citizen.dob || 'Not provided'} ({citizen.age} Yrs)
                     </span>
                   </div>
                   <div>
-                    <span className="text-[10px] uppercase font-bold text-slate-400 block">लिंग / Gender</span>
+                    <span className="text-[10px] uppercase font-bold text-slate-400 block">{isEn ? 'Gender' : 'लिंग / Gender'}</span>
                     <span className="font-semibold text-slate-800 capitalize">{citizen.gender || 'General'}</span>
                   </div>
                 </div>
 
                 <div className="pt-1 border-t border-slate-100">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block">पता / Residential Address</span>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">{isEn ? 'Residential Address' : 'पता / Residential Address'}</span>
                   <p className="text-slate-700 font-medium leading-relaxed">
                     {citizen.district ? `${citizen.district}, ` : ''}
                     {citizen.state || 'India'}
@@ -162,7 +165,7 @@ export const CitizenAadhaarModal: React.FC<CitizenAadhaarModalProps> = ({ citize
                 <QrCode className="w-6 h-6 text-slate-700 shrink-0" />
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] uppercase font-bold text-slate-500 block">आधार संख्या / Aadhaar Number</span>
+                    <span className="text-[9px] uppercase font-bold text-slate-500 block">{isEn ? 'Aadhaar Number' : 'आधार संख्या / Aadhaar Number'}</span>
                     {isFullAadhaar && (
                       <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.2 rounded border border-emerald-300">
                         ORIGINAL UNMASKED
