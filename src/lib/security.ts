@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { CitizenSubscription } from '@/types';
+import { AdminRole, AdminPermission, RBACService } from '@/lib/rbac';
 
 // Ephemeral in-memory fallback secret generated on process startup if environment variables are not provided.
 // This guarantees that even if someone inspects git history or repo defaults, they CANNOT forge tokens.
@@ -95,45 +96,66 @@ export class SessionSecurityService {
 const PERMANENT_ADMIN_SECRET = 'citzos_master_admin_production_security_key_2026_unbroken_auth';
 const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || process.env.SESSION_SECRET_KEY || PERMANENT_ADMIN_SECRET;
 
+export const ADMIN_COOKIE_NAME = 'citzos_admin_session';
+
+export interface AdminTokenPayload {
+  role: AdminRole;
+  email?: string;
+  exp: number;
+  iat: number;
+  nonce: string;
+}
+
 export class AdminSecurityService {
   /**
-   * Generates a signed admin session token: base64(payload).signature
-   * Valid for 30 days from login so administrators are not prematurely locked out during continuous operations.
+   * Generates a signed admin session token with role and email binding
    */
-  static generateAdminToken(): string {
-    const payload = JSON.stringify({
-      role: 'SUPER_ADMIN',
-      exp: Date.now() + 30 * 24 * 60 * 60 * 1000,
+  static generateAdminToken(role: AdminRole = 'SUPER_ADMIN', email?: string): string {
+    const now = Date.now();
+    const payload: AdminTokenPayload = {
+      role,
+      email: email ? email.toLowerCase().trim() : 'master_admin@citzos.in',
+      iat: now,
+      exp: now + 8 * 60 * 60 * 1000, // 8-hour workday session
       nonce: crypto.randomBytes(16).toString('hex'),
-    });
-    const encodedPayload = Buffer.from(payload).toString('base64url');
+    };
+    const encodedPayload = Buffer.from(JSON.stringify(payload)).toString('base64url');
     const signature = crypto.createHmac('sha256', ADMIN_SECRET).update(encodedPayload).digest('base64url');
     return `${encodedPayload}.${signature}`;
   }
 
   /**
-   * Cryptographically verifies admin session token authenticity and expiry using timing-safe comparison.
+   * Cryptographically verifies admin session token authenticity, expiry, and payload
    */
-  static verifyAdminToken(token: string): boolean {
-    if (!token || !token.includes('.')) return false;
+  static verifyAdminSession(token: string): { valid: boolean; role?: AdminRole; email?: string } {
+    if (!token || !token.includes('.')) return { valid: false };
     const [encodedPayload, signature] = token.split('.');
-    if (!encodedPayload || !signature) return false;
+    if (!encodedPayload || !signature) return { valid: false };
 
     try {
       const expectedSignature = crypto.createHmac('sha256', ADMIN_SECRET).update(encodedPayload).digest('base64url');
       const sigBuffer = Buffer.from(signature);
       const expBuffer = Buffer.from(expectedSignature);
       if (sigBuffer.length !== expBuffer.length || !crypto.timingSafeEqual(sigBuffer, expBuffer)) {
-        return false;
+        return { valid: false };
       }
 
       const jsonStr = Buffer.from(encodedPayload, 'base64url').toString('utf-8');
-      const payload = JSON.parse(jsonStr);
-      if (Date.now() > payload.exp) return false;
+      const payload: AdminTokenPayload = JSON.parse(jsonStr);
+      if (Date.now() > payload.exp) return { valid: false };
 
-      return payload.role === 'SUPER_ADMIN';
+      const safeRole = RBACService.sanitizeRole(payload.role);
+      return { valid: true, role: safeRole, email: payload.email };
     } catch {
-      return false;
+      return { valid: false };
     }
+  }
+
+  /**
+   * Backward-compatible verify method
+   */
+  static verifyAdminToken(token: string): boolean {
+    const session = this.verifyAdminSession(token);
+    return session.valid;
   }
 }

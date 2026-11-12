@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, CitizenRecord } from '@/lib/db';
-import { AdminSecurityService } from '@/lib/security';
+import { AdminSecurityService, ADMIN_COOKIE_NAME } from '@/lib/security';
+import { RBACService, AdminRole } from '@/lib/rbac';
+import { SecurityAuditLogger } from '@/lib/auditLogger';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -16,39 +18,54 @@ import {
   validateRealIncome,
 } from '@/utils/antiFraudValidation';
 
-// SECURITY: Sovereign Admin Authorization (Signed token or server-only key)
-function verifyAdminAuth(req: NextRequest): boolean {
-  // 1. Check signed cryptographic admin session token
-  const adminToken = req.headers.get('x-admin-token');
-  if (adminToken && AdminSecurityService.verifyAdminToken(adminToken)) {
-    return true;
+// SECURITY: Sovereign Admin Authorization with RBAC verification
+function getAdminSession(req: NextRequest): { valid: boolean; role?: AdminRole; email?: string } {
+  const cookieToken = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
+  const headerToken = req.headers.get('x-admin-token');
+  const token = cookieToken || headerToken;
+
+  if (token) {
+    const session = AdminSecurityService.verifyAdminSession(token);
+    if (session.valid && session.role) return session;
   }
 
-  // 2. Server-to-server API key (Only if ADMIN_API_KEY is configured in env)
+  // Server-to-server API key fallback
   const adminKey = req.headers.get('x-admin-key');
   const serverAdminKey = process.env.ADMIN_API_KEY;
   if (serverAdminKey && adminKey && adminKey === serverAdminKey) {
-    return true;
+    return { valid: true, role: 'SUPER_ADMIN', email: 'system_service_key' };
   }
 
-  return false;
+  return { valid: false };
 }
 
 export async function GET(req: NextRequest) {
-  if (!verifyAdminAuth(req)) {
+  const session = getAdminSession(req);
+  if (!session.valid || !session.role) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized. Admin authorization required.' },
       { status: 401 }
     );
   }
 
+  if (!RBACService.hasPermission(session.role, 'VIEW_CITIZENS')) {
+    return NextResponse.json(
+      { success: false, message: 'Forbidden. Insufficient RBAC clearance.' },
+      { status: 403 }
+    );
+  }
+
   try {
-    // Read from unified DatabaseService (MongoDB Atlas with fallback to citizens_store.json)
+    // Read from unified DatabaseService
     const citizens = await DatabaseService.getAllCitizens();
-    
+    const canViewUnmasked = RBACService.hasPermission(session.role, 'VIEW_UNMASKED_AADHAAR');
+
     // Sanitize records to exclude sensitive password hashes before returning
     const safeCitizens = citizens.map((c) => {
       const { passwordHash: _ph, passwordSalt: _ps, ...safe } = c;
+      if (!canViewUnmasked) {
+        safe.aadhaarNumber = safe.aadhaarNumberMasked || 'XXXX-XXXX-XXXX';
+      }
       return safe;
     });
 
@@ -75,11 +92,18 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const isAdmin = verifyAdminAuth(req);
-  if (!isAdmin) {
+  const session = getAdminSession(req);
+  if (!session.valid || !session.role) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized. Admin authorization required.' },
       { status: 401 }
+    );
+  }
+
+  if (!RBACService.hasPermission(session.role, 'MODIFY_CITIZENS')) {
+    return NextResponse.json(
+      { success: false, message: 'Forbidden. Insufficient RBAC clearance to modify citizens.' },
+      { status: 403 }
     );
   }
 

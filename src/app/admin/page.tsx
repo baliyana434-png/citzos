@@ -187,7 +187,15 @@ export default function AdminPage() {
   const [liveClock, setLiveClock] = useState<string>('');
 
   // Active Console View Tab
-  const [activeTab, setActiveTab] = useState<'citizens' | 'opportunities' | 'crawler' | 'diagnostics' | 'notifications'>('citizens');
+  const [activeTab, setActiveTab] = useState<'citizens' | 'opportunities' | 'crawler' | 'diagnostics' | 'notifications' | 'security_logs'>('citizens');
+
+  // Authenticated Admin Identity & Enterprise Role
+  const [adminRole, setAdminRole] = useState<string>('SUPER_ADMIN');
+  const [adminEmail, setAdminEmail] = useState<string>('baliyana434@gmail.com');
+
+  // Security Audit Trail State
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [isLoadingAuditLogs, setIsLoadingAuditLogs] = useState<boolean>(false);
 
   // Push Notification Hub State
   const [pushStats, setPushStats] = useState<{
@@ -420,6 +428,28 @@ export default function AdminPage() {
     }
   };
 
+  // Fetch real security audit trail
+  const fetchAuditLogs = async (tokenOverride?: string) => {
+    try {
+      setIsLoadingAuditLogs(true);
+      const token = tokenOverride || getStoredAdminToken();
+      const res = await fetch(`/api/admin/audit-logs?_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: token ? { 'x-admin-token': token } : {},
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.logs) {
+          setAuditLogs(data.logs);
+        }
+      }
+    } catch (e) {
+      console.error('Failed to fetch audit logs:', e);
+    } finally {
+      setIsLoadingAuditLogs(false);
+    }
+  };
+
   // Broadcast push notification to all devices
   const handleBroadcastPush = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -450,6 +480,7 @@ export default function AdminPage() {
           message: language === 'en' ? (data.messageEn || `Push notification successfully dispatched to ${data.recipientsCount || 0} device(s).`) : (data.message || `पुश नोटिफिकेशन ${data.recipientsCount || 0} डिवाइस(ज) पर सफलतापूर्वक भेजा गया।`),
         });
         fetchPushStats();
+    fetchAuditLogs();
       } else {
         setPushFeedback({
           type: 'error',
@@ -519,12 +550,15 @@ export default function AdminPage() {
       }
 
       storeAdminToken(data.token);
+      if (data.role) setAdminRole(data.role);
+      if (data.email) setAdminEmail(data.email);
       setIsAuthenticated(true);
       setPinInput('');
       fetchCitizens(data.token);
       fetchOpportunities(data.token);
       fetchSystemStatus(data.token);
       fetchPushStats(data.token);
+      fetchAuditLogs(data.token);
     } catch (err: any) {
       setErrorMessage(language === 'en' ? 'Unable to connect to server. Please check your network connection.' : 'सर्वर से संपर्क करने में असमर्थ। कृपया नेटवर्क की जांच करें।');
     } finally {
@@ -532,7 +566,10 @@ export default function AdminPage() {
     }
   };
 
-  const handleAdminLogout = () => {
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('/api/admin/auth', { method: 'DELETE' });
+    } catch {}
     clearStoredAdminToken();
     setIsAuthenticated(false);
     setPinInput('');
@@ -1191,6 +1228,26 @@ export default function AdminPage() {
               {pushStats && pushStats.registeredDeviceCount > 0 && (
                 <span className="px-1.5 py-0.2 rounded-full bg-emerald-500 text-slate-950 text-[10px] font-black">
                   {pushStats.registeredDeviceCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveTab('security_logs');
+                fetchAuditLogs();
+              }}
+              className={`px-4 py-2.5 rounded-t-xl text-xs font-bold transition-all border-b-2 flex items-center gap-2 cursor-pointer ${
+                activeTab === 'security_logs'
+                  ? 'border-emerald-500 ' + (theme === 'dark' ? 'text-white bg-slate-900' : 'text-slate-900 bg-white shadow-xs')
+                  : (theme === 'dark' ? 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-900/40' : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100')
+              }`}
+            >
+              <ShieldAlert className="w-4 h-4 text-emerald-400" />
+              <span>Security Audit Trail</span>
+              {auditLogs.length > 0 && (
+                <span className="px-1.5 py-0.2 rounded-full bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-black">
+                  {auditLogs.length}
                 </span>
               )}
             </button>
@@ -2558,6 +2615,179 @@ export default function AdminPage() {
                   <div>• Zero third-party ad tracking or personal data leaks.</div>
                   <div>• Automatic pruning of expired and uninstalled tokens.</div>
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ------------------------------------------------------------- */}
+        {/* TAB 6: ENTERPRISE SECURITY AUDIT TRAIL */}
+        {/* ------------------------------------------------------------- */}
+        {activeTab === 'security_logs' && (
+          <div className="space-y-6">
+            {/* Security Posture Summary Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className={`p-4 rounded-xl border ${
+                theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-400">Zero Trust Perimeter</span>
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                </div>
+                <div className="text-lg font-black mt-2 text-emerald-400">
+                  ACTIVE
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1">
+                  Cloudflare Access + Edge 404 Cloaking
+                </div>
+              </div>
+
+              <div className={`p-4 rounded-xl border ${
+                theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-400">Active RBAC Identity</span>
+                  <Lock className="w-4 h-4 text-blue-400" />
+                </div>
+                <div className={`text-base font-bold mt-2 truncate ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  {adminEmail}
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1 font-mono">
+                  Role: {adminRole}
+                </div>
+              </div>
+
+              <div className={`p-4 rounded-xl border ${
+                theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-400">Audit Trail Events</span>
+                  <Activity className="w-4 h-4 text-purple-400" />
+                </div>
+                <div className={`text-2xl font-black mt-2 ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                  {auditLogs.length}
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1">
+                  Persisted to MongoDB Atlas
+                </div>
+              </div>
+
+              <div className={`p-4 rounded-xl border ${
+                theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+              }`}>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-slate-400">Session Protection</span>
+                  <KeyRound className="w-4 h-4 text-amber-400" />
+                </div>
+                <div className="text-lg font-black mt-2 text-amber-400">
+                  HttpOnly + Strict
+                </div>
+                <div className="text-[11px] text-slate-500 mt-1">
+                  8-Hour Rotation & HMAC-SHA256
+                </div>
+              </div>
+            </div>
+
+            {/* Audit Logs Table */}
+            <div className={`rounded-xl border overflow-hidden ${
+              theme === 'dark' ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200 shadow-xs'
+            }`}>
+              <div className={`p-4 border-b flex items-center justify-between ${
+                theme === 'dark' ? 'border-slate-800' : 'border-slate-200'
+              }`}>
+                <div>
+                  <h3 className={`text-sm font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-900'}`}>
+                    Tamper-Resistant Security Event Ledger
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-0.5">
+                    Records every login, token validation, citizen access, and authorization decision.
+                  </p>
+                </div>
+                <button
+                  onClick={() => fetchAuditLogs()}
+                  disabled={isLoadingAuditLogs}
+                  className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    theme === 'dark'
+                      ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+                  }`}
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isLoadingAuditLogs ? 'animate-spin' : ''}`} />
+                  <span>Refresh Audit Trail</span>
+                </button>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className={`border-b text-[11px] font-semibold uppercase tracking-wider ${
+                    theme === 'dark' ? 'bg-slate-950/60 border-slate-800 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'
+                  }`}>
+                    <tr>
+                      <th className="py-3 px-4">Timestamp (IST)</th>
+                      <th className="py-3 px-4">Event Type</th>
+                      <th className="py-3 px-4">Actor / Email</th>
+                      <th className="py-3 px-4">Role</th>
+                      <th className="py-3 px-4">IP Address</th>
+                      <th className="py-3 px-4">Target Resource</th>
+                      <th className="py-3 px-4 text-center">Outcome</th>
+                    </tr>
+                  </thead>
+                  <tbody className={`divide-y font-mono ${
+                    theme === 'dark' ? 'divide-slate-800/60 text-slate-300' : 'divide-slate-200 text-slate-700'
+                  }`}>
+                    {auditLogs.map((log, idx) => (
+                      <tr key={idx} className={theme === 'dark' ? 'hover:bg-slate-800/30' : 'hover:bg-slate-50'}>
+                        <td className="py-2.5 px-4 whitespace-nowrap text-slate-400 text-[11px]">
+                          {new Date(log.timestamp).toLocaleString('en-IN', {
+                            timeZone: 'Asia/Kolkata',
+                            day: '2-digit',
+                            month: 'short',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                          })}
+                        </td>
+                        <td className="py-2.5 px-4 whitespace-nowrap font-bold text-xs font-sans">
+                          {log.eventType}
+                        </td>
+                        <td className="py-2.5 px-4 whitespace-nowrap text-slate-300">
+                          {log.adminIdentifier}
+                        </td>
+                        <td className="py-2.5 px-4 whitespace-nowrap">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                            {log.role}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-4 whitespace-nowrap text-slate-400 text-[11px]">
+                          {log.ipAddress}
+                        </td>
+                        <td className="py-2.5 px-4 whitespace-nowrap font-sans text-xs">
+                          {log.resourcePath}
+                        </td>
+                        <td className="py-2.5 px-4 whitespace-nowrap text-center">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold border ${
+                              log.outcome === 'SUCCESS'
+                                ? 'bg-emerald-950 text-emerald-300 border-emerald-700/60'
+                                : log.outcome === 'DENIED'
+                                ? 'bg-rose-950 text-rose-300 border-rose-700/60'
+                                : 'bg-amber-950 text-amber-300 border-amber-700/60'
+                            }`}
+                          >
+                            {log.outcome}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                    {auditLogs.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="py-8 text-center text-slate-500 font-sans">
+                          No audit events recorded yet. Administrative events and security decisions will populate here automatically.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

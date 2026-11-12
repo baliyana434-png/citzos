@@ -1,30 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DatabaseService, isMongoConfigured } from '@/lib/db';
-import { AdminSecurityService } from '@/lib/security';
+import { AdminSecurityService, ADMIN_COOKIE_NAME } from '@/lib/security';
+import { RBACService, AdminRole } from '@/lib/rbac';
 import { INITIAL_OPPORTUNITIES } from '@/data/opportunities';
 import { isOpportunityDeadlinePassed } from '@/lib/dateUtils';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-function verifyAdminAuth(req: NextRequest): boolean {
-  const adminToken = req.headers.get('x-admin-token');
-  if (adminToken && AdminSecurityService.verifyAdminToken(adminToken)) {
-    return true;
+function getAdminSession(req: NextRequest): { valid: boolean; role?: AdminRole; email?: string } {
+  const cookieToken = req.cookies.get(ADMIN_COOKIE_NAME)?.value;
+  const headerToken = req.headers.get('x-admin-token');
+  const token = cookieToken || headerToken;
+
+  if (token) {
+    const session = AdminSecurityService.verifyAdminSession(token);
+    if (session.valid && session.role) return session;
   }
+
   const adminKey = req.headers.get('x-admin-key');
   const serverAdminKey = process.env.ADMIN_API_KEY;
   if (serverAdminKey && adminKey && adminKey === serverAdminKey) {
-    return true;
+    return { valid: true, role: 'SUPER_ADMIN', email: 'system_service_key' };
   }
-  return false;
+  return { valid: false };
 }
 
 export async function GET(req: NextRequest) {
-  if (!verifyAdminAuth(req)) {
+  const session = getAdminSession(req);
+  if (!session.valid || !session.role) {
     return NextResponse.json(
       { success: false, message: 'Unauthorized. Admin authorization required.' },
       { status: 401 }
+    );
+  }
+
+  if (!RBACService.hasPermission(session.role, 'VIEW_SYSTEM_TELEMETRY')) {
+    return NextResponse.json(
+      { success: false, message: 'Forbidden. Insufficient RBAC clearance.' },
+      { status: 403 }
     );
   }
 

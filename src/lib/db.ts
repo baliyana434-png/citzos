@@ -56,7 +56,7 @@ function getClientPromise(): Promise<MongoClient> | null {
   return global._mongoClientPromise;
 }
 
-async function getMongoDb(): Promise<Db | null> {
+export async function getMongoDb(): Promise<Db | null> {
   const promise = getClientPromise();
   if (!promise) return null;
 

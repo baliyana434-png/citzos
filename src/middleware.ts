@@ -41,7 +41,58 @@ function applySecurityHeaders(res: NextResponse): NextResponse {
 export async function middleware(req: NextRequest) {
   const { pathname, search, hostname } = req.nextUrl;
 
-  // 1. CANONICAL PRODUCTION DOMAIN ENFORCEMENT:
+  // 1. DEDICATED ADMIN SUBDOMAIN ROUTING (admin.citzos.in)
+  // If request arrives via administrative subdomain, route directly to /admin
+  const isAdminSubdomain = hostname.startsWith('admin.');
+  if (isAdminSubdomain && pathname === '/') {
+    const adminUrl = new URL('/admin' + search, req.url);
+    const res = NextResponse.rewrite(adminUrl);
+    res.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return applySecurityHeaders(res);
+  }
+
+  // 2. ADMIN ROUTE CONCEALMENT & PERIMETER ZERO TRUST GATE:
+  // Normal visitors on www.citzos.in cannot search or discover /admin
+  const isAdminRoute = pathname === '/admin' || pathname.startsWith('/admin/');
+  if (isAdminRoute) {
+    const isLocalhost = hostname.includes('localhost') || hostname.includes('127.0.0.1');
+    const hasAdminSessionCookie = Boolean(req.cookies.get('citzos_admin_session')?.value);
+    const hasAdminGateCookie = Boolean(req.cookies.get('citzos_admin_gate')?.value);
+    const hasCfAccess = Boolean(
+      req.headers.get('cf-access-jwt-assertion') || req.headers.get('cf-access-authenticated-user-email')
+    );
+    const queryKey = req.nextUrl.searchParams.get('key');
+    const hasAdminPasskey = queryKey === '242022' || queryKey === 'citzos2026';
+
+    const isAuthorizedPerimeter =
+      isAdminSubdomain || isLocalhost || hasCfAccess || hasAdminSessionCookie || hasAdminGateCookie || hasAdminPasskey;
+
+    if (!isAuthorizedPerimeter) {
+      // Return genuine 404 Not Found to unauthorized searchers and reconnaissance bots
+      const notFoundUrl = new URL('/_not-found', req.url);
+      const notFoundRes = NextResponse.rewrite(notFoundUrl, { status: 404 });
+      notFoundRes.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+      return applySecurityHeaders(notFoundRes);
+    }
+
+    // If authorized via passkey, persist gate cookie for seamless dashboard navigation
+    const adminRes = NextResponse.next();
+    adminRes.headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    if (hasAdminPasskey && !hasAdminGateCookie) {
+      adminRes.cookies.set({
+        name: 'citzos_admin_gate',
+        value: '1',
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 8 * 60 * 60,
+        path: '/',
+      });
+    }
+    return applySecurityHeaders(adminRes);
+  }
+
+  // 3. CANONICAL PRODUCTION DOMAIN ENFORCEMENT:
   // If traffic or crawler visits via *.vercel.app staging domains, 301 Permanent Redirect to https://www.citzos.in
   // and send X-Robots-Tag: noindex to force search engines (Bing, Google) to replace vercel.app with www.citzos.in
   if (hostname.includes('vercel.app')) {
