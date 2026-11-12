@@ -13,31 +13,83 @@ import { useRouter } from 'next/navigation';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { CitizenProfile } from '@/types';
 import { BrandSplashScreen } from '@/components/common/BrandSplashScreen';
+import { getGoogleRedirectResultSafe } from '@/services/googleAuth';
 
 function RegisterContent() {
   const router = useRouter();
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [pendingPrefill, setPendingPrefill] = useState<{
+    name: string;
+    email: string;
+    photoURL?: string;
+    isGoogle: boolean;
+  } | null>(null);
 
   useEffect(() => {
-    try {
-      const isLoggedOut = localStorage.getItem('citizen_logged_out');
-      const saved = localStorage.getItem('citizen_profile');
-      if (isLoggedOut !== 'true' && saved) {
-        const parsed = JSON.parse(saved);
-        if (
-          parsed &&
-          parsed.id &&
-          parsed.id !== 'cit-guest' &&
-          parsed.id !== 'cit-default' &&
-          (parsed.isAadhaarVerified || parsed.isOnboarded)
-        ) {
-          window.location.replace('/');
+    let cancelled = false;
+
+    async function checkRegisterState() {
+      // 1. Check if returning from a mobile Google OAuth redirect
+      try {
+        const redirectUser = await getGoogleRedirectResultSafe();
+        if (cancelled) return;
+        if (redirectUser && redirectUser.email) {
+          const cleanEmail = redirectUser.email.toLowerCase().trim();
+
+          // Check if citizen is ALREADY REGISTERED in the database
+          try {
+            const res = await fetch(`/api/citizens/profile?email=${encodeURIComponent(cleanEmail)}`, {
+              cache: 'no-store',
+            });
+            const data = await res.json();
+            if (res.ok && data.success && data.citizen && (data.citizen.dob || data.citizen.state || data.citizen.registeredAt)) {
+              // Registered citizen -> instant direct login
+              await handleLoginSuccess(data.citizen);
+              return;
+            }
+          } catch (e) {}
+
+          // Non-registered account -> push directly to Sign Up Step 2 with verified Google data prefilled
+          setPendingPrefill({
+            name: redirectUser.name,
+            email: cleanEmail,
+            photoURL: redirectUser.photoURL,
+            isGoogle: true,
+          });
+          setCheckingAuth(false);
           return;
         }
+      } catch (err) {
+        console.warn('Redirect auth notice:', err);
       }
-    } catch (e) {}
 
-    setCheckingAuth(false);
+      // 2. Check if already logged in with verified profile
+      try {
+        const isLoggedOut = localStorage.getItem('citizen_logged_out');
+        const saved = localStorage.getItem('citizen_profile');
+        if (isLoggedOut !== 'true' && saved) {
+          const parsed = JSON.parse(saved);
+          if (
+            parsed &&
+            parsed.id &&
+            parsed.id !== 'cit-guest' &&
+            parsed.id !== 'cit-default' &&
+            (parsed.isAadhaarVerified || parsed.isOnboarded)
+          ) {
+            window.location.replace('/');
+            return;
+          }
+        }
+      } catch (e) {}
+
+      setCheckingAuth(false);
+    }
+
+    checkRegisterState();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const handleLoginSuccess = async (profile: Partial<CitizenProfile>) => {
@@ -67,7 +119,9 @@ function RegisterContent() {
       isFullPageGate={true}
       onClose={() => {}}
       initialScreen="signup"
+      prefillData={pendingPrefill || undefined}
       onLoginSuccess={handleLoginSuccess}
+      showBellLight={true}
     />
   );
 }
