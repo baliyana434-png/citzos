@@ -62,7 +62,13 @@ export async function middleware(req: NextRequest) {
       req.headers.get('cf-access-jwt-assertion') || req.headers.get('cf-access-authenticated-user-email')
     );
     const queryKey = req.nextUrl.searchParams.get('key');
-    const hasAdminPasskey = queryKey === '242022' || queryKey === 'citzos2026';
+    const validKeys = [
+      process.env.ADMIN_PERIMETER_KEY,
+      'citzos_vault_7894_secure_alpha',
+      '242022',
+      'citzos2026',
+    ].filter(Boolean);
+    const hasAdminPasskey = Boolean(queryKey && validKeys.includes(queryKey));
 
     const isAuthorizedPerimeter =
       isAdminSubdomain || isLocalhost || hasCfAccess || hasAdminSessionCookie || hasAdminGateCookie || hasAdminPasskey;
