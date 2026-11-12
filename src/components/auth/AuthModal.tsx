@@ -137,6 +137,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     return false;
   });
   const authThemeToggleRef = useRef<HTMLButtonElement | null>(null);
+  const isGoogleAuthActiveRef = useRef<boolean>(false);
 
   // Sync theme with document class / localStorage
   useEffect(() => {
@@ -238,6 +239,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
     let timer: any = null;
     const handleReturn = () => {
+      // Do not abort or prematurely clear loading if Google Auth is actively processing
+      if (isGoogleAuthActiveRef.current) return;
       if (isLoading) {
         // If this is a mobile redirect flow, window focus should not cancel loading
         try {
@@ -245,8 +248,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         } catch (_) {}
         if (timer) clearTimeout(timer);
         timer = setTimeout(() => {
-          setIsLoading(false);
-        }, 100);
+          if (!isGoogleAuthActiveRef.current) {
+            setIsLoading(false);
+          }
+        }, 800);
       }
     };
 
@@ -353,6 +358,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   // Real Google Sign-In & Registration handler
   // Opens official Google OAuth popup (GIS / Firebase) displaying real Gmail accounts
   const handleGoogleAuthAction = async () => {
+    isGoogleAuthActiveRef.current = true;
     setIsLoading(true);
     setErrorMessage(null);
     setSuccessNotice(null);
@@ -374,13 +380,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       await completeGoogleSignIn(result);
     } catch (err: any) {
       console.warn('Google Auth notice:', err);
-      const msg = getGoogleAuthErrorMessage(err?.code || err?.message, language);
-      if (msg) {
-        setErrorMessage(msg);
-      } else {
+      const code = (err?.code || err?.message || '').toLowerCase();
+      const isPopupClosedByUser =
+        code.includes('popup-closed') ||
+        code.includes('closed-by-user') ||
+        code.includes('window was closed') ||
+        code.includes('cancelled');
+
+      if (isPopupClosedByUser) {
+        // Silently reset loading state when user closes or cancels Google popup: strictly no intrusive error banner
         setErrorMessage(null);
+      } else {
+        const msg = getGoogleAuthErrorMessage(err?.code || err?.message, language);
+        if (msg) {
+          setErrorMessage(msg);
+        }
       }
       setIsLoading(false);
+    } finally {
+      isGoogleAuthActiveRef.current = false;
     }
   };
 

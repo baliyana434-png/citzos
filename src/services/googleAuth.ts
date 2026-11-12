@@ -118,7 +118,6 @@ export function getGoogleAuthErrorMessage(
     code.includes('popup-closed') ||
     code.includes('closed-by-user') ||
     code.includes('window was closed') ||
-    code.includes('access_denied') ||
     code.includes('cancelled')
   ) {
     return '';
